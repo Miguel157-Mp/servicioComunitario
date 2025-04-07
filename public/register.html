@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .contenedor-formulario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Para centrar verticalmente en toda la ventana */
+}
+
+.poppins-bold-italic {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+
+html, body {
+    height: 100%; /* Asegura que el body ocupe toda la altura de la ventana */
+    margin: 0; /* Elimina los márgenes predeterminados del body */
+}
+
+.imagenFondo{
+    background: linear-gradient(to bottom, #174b8a, #4191cf);
+  
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.btn-primary:hover {
+    background-color: #6495ED; /* Un azul más claro que el azul primario de Bootstrap */
+    border-color: #6495ED; /* Opcional: ajusta el color del borde también */
+  }
+</style>
+<head>
+     <!-- Librerias Bootstrap -->
+   <link href="./vendor/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+   <script src="./vendor/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Salones</title>
+</head>
+
+<body class="imagenFondo">
+    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="row g-0" style="max-width: 850px; width: 100%; height: auto;">
+            <div class="col-md-6 d-flex align-items-center" style="background-color: white; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); padding: 20px;">
+                <div class="w-100">
+                    <div class="text-center mb-3 ">
+                        <img src="./img/logousm.png" width="150px">
+                        
+                    </div>
+                    <br>
+                <div style="text-align: center;"> 
+                    <p class="poppins-extralight">Facultad de Ingenieria y Arquitectura</p>
+                </div>
+                    <div class="text-center">
+                        <h4 class="h4 text-gray-900 mb-4 poppins-bold-italic  ">
+                            Registro de Usuario</h4>
+                        <hr>
+                    </div>
+                    <form action="/register" method="post">
+                        <div class="mb-2">
+                            <label class="form-label" for="nombre">Nombre y Apellido</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="cedula">Cédula</label>
+                            <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cedula">
+                        </div>
+                    
+                        <div class="mb-2">
+                            <label class="form-label" for="usuario">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="usuario">
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="contraseña" class="form-label">Contraseña</label>
+                            <input type="password" id="contraseña" name="clave" class="form-control">
+                            <small class="form-text">8-10 caracteres, números y letras.</small>
+                        </div>
+                        <div class="text-center">
+                            <button style="border-radius: 20px; width: 120px;" type="submit" class="btn btn-primary btn-sm">
+                                Registrar
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+                <img src="./img/imagenRegistro.jpg" alt="Imagen al lado del formulario" class="img-fluid"
+                    style="border-radius: 10px; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>

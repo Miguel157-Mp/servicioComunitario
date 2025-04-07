@@ -1,0 +1,43 @@
+
+#content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 250px; /* Reducir el ancho de la columna del calendario */
+    grid-gap: 20px;
+}
+
+
+.calendar {
+    background-color: white;
+    padding: 15px; /* Reducir el padding */
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 0.9em; /* Reducir el tamaño de la fuente */
+}
+
+.calendar table {
+    margin-top: 10px;
+    width: 100%;
+    border-collapse: collapse; /* Añadir esta línea */
+}
+
+.calendar th, .calendar td {
+    padding: 5px; /* Añadir padding a las celdas */
+    border: 1px solid #eee; /* Añadir bordes ligeros */
+}
+
+.calendar th {
+    background-color: #f8f9fa; /* Añadir un fondo ligero a los encabezados */
+}
+@media (max-width: 1200px) {
+    #content {
+        grid-template-columns: 1fr; /* Cambiar a una sola columna en pantallas más pequeñas */
+    }
+
+    .calendar {
+        margin-top: 20px; /* Añadir espacio arriba del calendario */
+    }
+}

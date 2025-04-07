@@ -1,0 +1,9 @@
+Comandos para correr node.js
+
+instalar node.js 
+agregar al path 
+instalar npm 
+instalar express: npm install express
+
+base de datos postgre
+instalar npm: npm install pg
