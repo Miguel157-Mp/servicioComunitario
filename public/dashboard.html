@@ -322,28 +322,63 @@
         }
 
         .calendario {
-            width: 300px;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 20px;
-            left: 85%;
-            transform: translateX(-50%);
-        }
+    width: 300px;
+ padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute; /* Posiciona relativo al contenedor padre */
+    top: 20px; /* Ajusta la distancia desde la parte superior */
+    left: 85%; /* Centra horizontalmente */
+    transform: translateX(-50%); /* Corrige el centrado absoluto */
+}
 
-        .header-calendario {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
 
-        .boton-prev, .boton-next {
-            cursor: pointer;
-            font-size: 24px;
-        }
+.header-calendario {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.boton-prev, .boton-next {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.mes-año {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.dias-semana span {
+    text-align: center;
+}
+
+.dias-mes {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.dias-mes div {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.dias-mes div:hover {
+    background-color: #ddd;
+}
 
         @media (max-width: 768px) {
             .dashboard-container {
