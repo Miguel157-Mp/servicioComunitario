@@ -376,6 +376,12 @@
                 margin-top: 20px;
             }
         }
+        .classroom-id {
+    font-size: 0.9em;
+    color: #555;
+    margin: 5px 0 0 0;
+    text-align: center;
+}
     </style>
 </head>
 <body>
@@ -430,10 +436,10 @@
                 </a>
             </div>
 
-            <div class="building-container">
-                <div class="building-title">Módulo 7</div>
-                <!-- Piso 1 -->
-                <div class="floor-container">
+             <div class="building-container">
+                <!-- <div class="building-title">Módulo 7</div> 
+                Piso 1 -->
+               <!--  <div class="floor-container">
                     <div class="floor-row">
                         <div class="classroom">Piso 0</div>
                         <div class="classroom">Piso 1</div>
@@ -461,7 +467,7 @@
                         <div class="classroom ">Piso 3</div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="calendario">
@@ -564,6 +570,66 @@
                 document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
             }
         });
+
+
+        /*cargar salones */
+
+        document.addEventListener("DOMContentLoaded", async function () {
+    const buildingContainer = document.querySelector('.building-container');
+
+    try {
+        const response = await fetch('/salones/list'); // Llama a la ruta creada en salonesRoutes.js
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+        const salones = await response.json();
+
+        // Mostrar el número total de salones cargados
+        console.log(`Total de salones cargados: ${salones.length}`);
+
+        // Agrupar los salones por módulo
+        const modulos = {};
+        salones.forEach(salon => {
+            if (!modulos[salon.modulo]) {
+                modulos[salon.modulo] = [];
+            }
+            modulos[salon.modulo].push(salon);
+        });
+
+        // Renderizar los módulos y salones
+        buildingContainer.innerHTML = `<p>Total de salones cargados: ${salones.length}</p>`;
+        for (const [modulo, salones] of Object.entries(modulos)) {
+            const moduloDiv = document.createElement('div');
+            moduloDiv.classList.add('floor-container');
+
+            const titulo = document.createElement('div');
+            titulo.classList.add('building-title');
+            titulo.textContent = `Módulo ${modulo}`;
+            moduloDiv.appendChild(titulo);
+
+            const floorRow = document.createElement('div');
+            floorRow.classList.add('floor-row');
+
+            salones.forEach(salon => {
+                const classroomDiv = document.createElement('div');
+                classroomDiv.classList.add('classroom');
+
+                // Crear un elemento <p> para mostrar el ID del salón
+                const idParagraph = document.createElement('p');
+                idParagraph.textContent = `${salon.idSalon}`; // Mostrar el idSalon
+                idParagraph.classList.add('classroom-id'); // Clase para estilos
+                idParagraph.style.color = 'white';
+                classroomDiv.appendChild(idParagraph);
+                floorRow.appendChild(classroomDiv);
+            });
+
+            moduloDiv.appendChild(floorRow);
+            buildingContainer.appendChild(moduloDiv);
+        }
+    } catch (error) {
+        console.error('Error al cargar los salones:', error);
+        buildingContainer.innerHTML = '<p>Error al cargar los salones. Intenta nuevamente más tarde.</p>';
+    }
+});
     </script>
 </body>
 </html>
