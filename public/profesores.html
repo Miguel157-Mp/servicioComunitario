@@ -369,30 +369,16 @@
         .action-button span {
             font-weight: 500;
         }
+        /* formulario */
+        #name-section{
+            margin-top: 40px;
+            padding: 15px;
 
-        /* Estilos para el recuadro de notas */
-        .notes-box {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .notes-box h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            color: #333;
+        .form-group{ 
+            margin-bottom: 8px;
         }
-
-        .notes-box textarea {
-            width: 100%;
-            height: 200px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            resize: vertical;
-        }
+            
     </style>
 </head>
 <body>
@@ -582,10 +568,35 @@
 
                 <!-- ... (mantener el resto de tu contenido existente) ... -->
             </div>
-             <!-- Recuadro de Notas -->
-            <div class="notes-box">
-                <h3>Notas</h3>
-                <textarea placeholder="Escribe tus notas aquí..."></textarea>
+             
+            <!-- Formulario dinámico para añadir/modificar profesores -->
+            <div class="form-container">
+                <h3 id="name-section">Gestión de Profesores</h3>
+                <form id="profesorForm">
+                    <div class="form-group">
+                        <label for="nombreApellido">Nombre y Apellido</label>
+                        <input type="text" id="nombreApellido" class="form-control" placeholder="Nombre y Apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" class="form-control" placeholder="Teléfono" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cedula">Cédula</label>
+                        <input type="text" id="cedula" class="form-control" placeholder="Cédula" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" class="form-control" placeholder="Correo Electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nbprofesor">Número de Profesor</label>
+                        <input type="text" id="nbprofesor" class="form-control" placeholder="Número de Profesor" required>
+                    </div>
+                    <button type="submit" id="submitButton" class="btn btn-primary">Añadir</button>
+                </form>
+
+
             </div>
         </div>
     </div>
@@ -603,5 +614,86 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("profesorForm");
+            const submitButton = document.getElementById("submitButton");
+            const searchInput = document.querySelector(".search-input");
+    
+            let isEditing = false;
+            let editingId = null;
+    
+            // Sincronización con el buscador
+            searchInput.addEventListener("input", async function () {
+                const query = searchInput.value.trim();
+                if (query) {
+                    try {
+                        const response = await fetch(`/buscarProfesor?query=${query}`);
+                        if (!response.ok) throw new Error("Error al buscar profesor");
+                        const profesor = await response.json();
+    
+                        // Autorrellenar el formulario si se encuentra un profesor
+                        if (profesor) {
+                            document.getElementById("nombreApellido").value = profesor.nombreApellido;
+                            document.getElementById("telefono").value = profesor.telefono;
+                            document.getElementById("cedula").value = profesor.cedula;
+                            document.getElementById("email").value = profesor.email;
+                            document.getElementById("nbprofesor").value = profesor.nbprofesor;
+    
+                            isEditing = true;
+                            editingId = profesor.id;
+                            submitButton.textContent = "Modificar";
+                        }
+                    } catch (error) {
+                        console.error("Error al buscar profesor:", error);
+                    }
+                }
+            });
+    
+            // Manejar el envío del formulario
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+    
+                const data = {
+                    nombreApellido: document.getElementById("nombreApellido").value,
+                    telefono: document.getElementById("telefono").value,
+                    cedula: document.getElementById("cedula").value,
+                    email: document.getElementById("email").value,
+                    nbprofesor: document.getElementById("nbprofesor").value,
+                };
+    
+                try {
+                    if (isEditing) {
+                        // Modificar profesor existente
+                        const response = await fetch(`/modificarProfesor/${editingId}`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data),
+                        });
+                        if (!response.ok) throw new Error("Error al modificar profesor");
+                        alert("Profesor modificado con éxito");
+                    } else {
+                        // Añadir nuevo profesor
+                        const response = await fetch("/añadirProfesor", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data),
+                        });
+                        if (!response.ok) throw new Error("Error al añadir profesor");
+                        alert("Profesor añadido con éxito");
+                    }
+    
+                    // Resetear formulario
+                    form.reset();
+                    isEditing = false;
+                    editingId = null;
+                    submitButton.textContent = "Añadir";
+                } catch (error) {
+                    console.error("Error al enviar el formulario:", error);
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
