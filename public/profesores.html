@@ -304,17 +304,15 @@
 
 .suggestions {
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border-radius: 15px;
-    margin-top: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
 }
 
 .search-box:focus-within .suggestions {
@@ -323,9 +321,9 @@
 }
 
 .suggestion-item {
-    padding: 12px 20px;
+    padding: 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease;
 }
 
 .suggestion-item:hover {
@@ -416,154 +414,12 @@
                 <br>
 
                 <!-- NUEVO CONTENIDO -->
-                <div class="search-container">
+                 <div class="search-container">
                     <div class="search-box">
-                        <!-- barra de busqueda -->
-                        <div class="bg-light">
-                            <div class="container py-5">
-                                <div class="search-wrapper">
-                                    <div class="search-box">
-                                        <input type="text" class="search-input form-control" placeholder="Search anything...">
-                                        <i class="fas fa-search search-icon"></i>
-                                            
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tabla de muestra de los profesores -->
-                        <table class="table align-middle mb-0 bg-white">
-                            <thead class="bg-light">
-                              <tr>
-                                <th>Nombre</th>
-                                <th>Titulo</th>
-                                <th>Status</th>
-                                <th>Cargo</th>
-                                <th>Acciones</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <div class="d-flex align-items-center">
-                                    <img
-                                        src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                                        alt=""
-                                        style="width: 45px; height: 45px"
-                                        class="rounded-circle"
-                                        />
-                                    <div class="ms-3">
-                                      <p class="fw-bold mb-1">Juan Pablo Parra</p>
-                                      <p class="text-muted mb-0">juanp@gmail.com</p>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <p class="fw-normal mb-1">Ing. Civil</p>
-                                  <p class="text-muted mb-0">Profesor</p>
-                                </td>
-                                <td>
-                                  <span class="badge badge-success rounded-pill d-inline">Active</span>
-                                </td>
-                                <td>Profesor</td>
-                                <td>
-                                  <button type="button" class="btn btn-link btn-sm btn-rounded">
-                                    Edit
-                                  </button>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div class="d-flex align-items-center">
-                                    <img
-                                        src="https://mdbootstrap.com/img/new/avatars/6.jpg"
-                                        class="rounded-circle"
-                                        alt=""
-                                        style="width: 45px; height: 45px"
-                                        />
-                                    <div class="ms-3">
-                                      <p class="fw-bold mb-1">Carlos Ferrer</p>
-                                      <p class="text-muted mb-0">c.ferrer@gmail.com</p>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <p class="fw-normal mb-1">Ing.Sistemas</p>
-                                  <p class="text-muted mb-0">Consejo de T.E.G</p>
-                                </td>
-                                <td>
-                                  <span class="badge badge-primary rounded-pill d-inline"
-                                        >Onboarding</span
-                                    >
-                                </td>
-                                <td>Profesor</td>
-                                <td>
-                                  <button
-                                          type="button"
-                                          class="btn btn-link btn-rounded btn-sm fw-bold"
-                                          data-mdb-ripple-color="dark"
-                                          >
-                                    Edit
-                                  </button>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div class="d-flex align-items-center">
-                                    <img
-                                        src="https://mdbootstrap.com/img/new/avatars/7.jpg"
-                                        class="rounded-circle"
-                                        alt=""
-                                        style="width: 45px; height: 45px"
-                                        />
-                                    <div class="ms-3">
-                                      <p class="fw-bold mb-1">Hildren Morales</p>
-                                      <p class="text-muted mb-0">hildren.m@gmail.com</p>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td>
-                                  <p class="fw-normal mb-1">Ing.Informatico</p>
-                                  <p class="text-muted mb-0">Analista de sistemas</p>
-                                </td>
-                                <td>
-                                  <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                                </td>
-                                <td>Profesor</td>
-                                <td>
-                                  <button
-                                          type="button"
-                                          class="btn btn-link btn-rounded btn-sm fw-bold"
-                                          data-mdb-ripple-color="dark"
-                                          >
-                                    Edit
-                                  </button>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                        <input type="text" id="searchInput" class="search-input form-control" placeholder="Buscar por nombre, cédula o teléfono...">
+                        <i class="fas fa-search search-icon"></i>
+                        <div id="searchResults" class="suggestions"></div>
                     </div>
-                    <!--Aqui va es la llamada a BD-->
-                    <div class="vertical-buttons">
-                        <div class="action-button">
-                            <a href="profesores.html" style="color: white; text-decoration: none;">
-                                <span>Ver todos</span>
-                                <i class="fas fa-list"></i>
-                            </a>
-                        </div>
-                        <div class="action-button">
-                            <span>Nuevo registro</span>
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="action-button">
-                            <span>Modificar</span>
-                            <i class="fas fa-file-export"></i>
-                        </div>
-                    </div>
-
-
-
-
                 </div>
 
                 <!-- ... (mantener el resto de tu contenido existente) ... -->
@@ -616,83 +472,61 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("profesorForm");
-            const submitButton = document.getElementById("submitButton");
-            const searchInput = document.querySelector(".search-input");
-    
-            let isEditing = false;
-            let editingId = null;
-    
-            // Sincronización con el buscador
-            searchInput.addEventListener("input", async function () {
-                const query = searchInput.value.trim();
-                if (query) {
-                    try {
-                        const response = await fetch(`/buscarProfesor?query=${query}`);
-                        if (!response.ok) throw new Error("Error al buscar profesor");
-                        const profesor = await response.json();
-    
-                        // Autorrellenar el formulario si se encuentra un profesor
-                        if (profesor) {
-                            document.getElementById("nombreApellido").value = profesor.nombreApellido;
-                            document.getElementById("telefono").value = profesor.telefono;
-                            document.getElementById("cedula").value = profesor.cedula;
-                            document.getElementById("email").value = profesor.email;
-                            document.getElementById("nbprofesor").value = profesor.nbprofesor;
-    
-                            isEditing = true;
-                            editingId = profesor.id;
-                            submitButton.textContent = "Modificar";
-                        }
-                    } catch (error) {
-                        console.error("Error al buscar profesor:", error);
-                    }
-                }
-            });
-    
-            // Manejar el envío del formulario
-            form.addEventListener("submit", async function (event) {
-                event.preventDefault();
-    
-                const data = {
-                    nombreApellido: document.getElementById("nombreApellido").value,
-                    telefono: document.getElementById("telefono").value,
-                    cedula: document.getElementById("cedula").value,
-                    email: document.getElementById("email").value,
-                    nbprofesor: document.getElementById("nbprofesor").value,
-                };
-    
-                try {
-                    if (isEditing) {
-                        // Modificar profesor existente
-                        const response = await fetch(`/modificarProfesor/${editingId}`, {
-                            method: "PUT",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(data),
-                        });
-                        if (!response.ok) throw new Error("Error al modificar profesor");
-                        alert("Profesor modificado con éxito");
-                    } else {
-                        // Añadir nuevo profesor
-                        const response = await fetch("/añadirProfesor", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(data),
-                        });
-                        if (!response.ok) throw new Error("Error al añadir profesor");
-                        alert("Profesor añadido con éxito");
-                    }
-    
-                    // Resetear formulario
-                    form.reset();
-                    isEditing = false;
-                    editingId = null;
-                    submitButton.textContent = "Añadir";
-                } catch (error) {
-                    console.error("Error al enviar el formulario:", error);
-                }
-            });
-        });
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
+
+    searchInput.addEventListener("input", async function () {
+        const query = searchInput.value.trim();
+
+        if (query.length > 0) {
+            try {
+                const response = await fetch(`/buscarProfesor?query=${query}`);
+                if (!response.ok) throw new Error("Error al buscar profesores");
+                const profesores = await response.json();
+
+                // Limpiar resultados anteriores
+                searchResults.innerHTML = "";
+
+                // Mostrar nuevos resultados
+                profesores.forEach(profesor => {
+                    const resultItem = document.createElement("div");
+                    resultItem.classList.add("suggestion-item");
+                    resultItem.innerHTML = `
+                        <strong>${profesor.nbProfesor}</strong><br>
+                        ${profesor.cedula ? `Cédula: ${profesor.cedula}<br>` : ''}
+                        ${profesor.Telf ? `Teléfono: ${profesor.Telf}<br>` : ''}
+                        ${profesor.email ? `Email: ${profesor.email}` : ''}
+                    `;
+                    resultItem.addEventListener("click", () => {
+                        // Extraer solo el nombre (eliminando el número inicial)
+                        const nombreCompleto = profesor.nbProfesor.replace(/^\d+\s/, '');
+                        
+                        // Autorrellenar el formulario
+                        document.getElementById("nombreApellido").value = nombreCompleto;
+                        document.getElementById("telefono").value = profesor.Telf || '';
+                        document.getElementById("cedula").value = profesor.cedula || '';
+                        document.getElementById("email").value = profesor.email || '';
+                        document.getElementById("nbprofesor").value = profesor.idProfesor;
+
+                        console.log("Valores asignados al formulario:");
+                        console.log("Nombre y Apellido:", nombreCompleto);
+                        console.log("Teléfono:", profesor.Telf);
+                        console.log("Cédula:", profesor.cedula);
+                        console.log("Email:", profesor.email);
+                        console.log("ID Profesor:", profesor.idProfesor);
+
+                        searchResults.innerHTML = "";
+                    });
+                    searchResults.appendChild(resultItem);
+                });
+            } catch (error) {
+                console.error("Error al buscar profesores:", error);
+            }
+        } else {
+            searchResults.innerHTML = "";
+        }
+    });
+});
     </script>
 
 </body>

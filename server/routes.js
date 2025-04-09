@@ -19,7 +19,7 @@ router.post('/submit', async (req, res, next) => {
 
     try {
 console.log('Ejecutando consulta SQL para /submit:', { usuario, clave });
-        const result = await pool.query('SELECT * FROM "public"."loginUsuario" WHERE usuario = $1 AND clave = $2', [usuario, clave]);
+        const result = await pool.query('SELECT * FROM "public"."loginusuario" WHERE usuario = $1 AND clave = $2', [usuario, clave]);
 
         if (result.rows.length > 0) {
             req.session.usuario = {
@@ -69,11 +69,37 @@ router.post('/register', async (req, res, next) => {
 
     try {
 console.log('Ejecutando consulta SQL para /register:', { usuario, clave, nombre, cedula });
-        await pool.query('INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave) VALUES ($1, $2, $3, $4)', [nombre, cedula, usuario, clave]);
+        await pool.query('INSERT INTO "public"."loginusuario" (nombre, cedula, usuario, clave) VALUES ($1, $2, $3, $4)', [nombre, cedula, usuario, clave]);
         res.redirect('/index.html');
     } catch (error) {
 console.error('Error al registrar usuario en /register:', error.message, error.stack);
         next(error);
+    }
+});
+
+/*busqueda de profesores */ 
+router.get('/buscarProfesor', async (req, res) => {
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({ error: "Falta el parámetro de búsqueda" });
+    }
+
+    try {
+        const result = await pool.query(
+            `SELECT "idProfesor", "nbProfesor", cedula, email, "Telf" 
+             FROM "public"."profesor" 
+             WHERE "nbProfesor" ILIKE $1 
+                OR COALESCE(cedula::text, '') ILIKE $1 
+                OR COALESCE("Telf", '') ILIKE $1 
+                OR COALESCE(email, '') ILIKE $1
+             LIMIT 10`,
+            [`%${query}%`]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Error al buscar profesores:", error);
+        res.status(500).json({ error: "Error al buscar profesores" });
     }
 });
 
