@@ -36,4 +36,18 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Ruta para obtener todos los profesores
+router.get('/', async (req, res) => {
+    try {
+        const query = `SELECT * FROM "public"."profesor" ORDER BY "nbProfesor" ASC;`;
+        const result = await pool.query(query);
+
+        console.log('Profesores obtenidos:', result.rows); // Verifica si hay resultados
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener los profesores:', error.message, error.stack);
+        res.status(500).send(`Error al obtener los profesores: ${error.message}`);
+    }
+});
+
 module.exports = router;
