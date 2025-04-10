@@ -586,15 +586,12 @@
                             <input type="email" id="email" class="form-control" placeholder="Correo Electrónico"
                                 required>
                         </div>
-                        <div class="form-group">
-                            <label for="nbprofesor">Número de Profesor</label>
-                            <input type="text" id="nbprofesor" class="form-control" placeholder="Número de Profesor"
-                                required>
-                        </div>
+
                         <br>
                         <div style="text-align: center;">
                             <button type="submit" id="submitButton" class="btn btn-primary">Añadir</button>
                         </div>
+                        <div id="alertContainer" style="display: none;" class="alert" role="alert"></div>
                     </form>
                 </div>
             </div>
@@ -623,7 +620,7 @@
             telefono: document.getElementById("telefono").value,
             cedula: document.getElementById("cedula").value,
             email: document.getElementById("email").value,
-            nbprofesor: document.getElementById("nbprofesor").value,
+
         };
 
         try {
@@ -636,15 +633,21 @@
             });
 
             if (response.ok) {
-                alert("Profesor registrado exitosamente");
-                document.getElementById("profesorForm").reset(); // Limpia el formulario
-            } else {
-                alert("Error al registrar el profesor");
-            }
-        } catch (error) {
-            console.error("Error al enviar los datos:", error);
-            alert("Error al registrar el profesor");
+            alertContainer.style.display = "block";
+            alertContainer.className = "alert alert-success";
+            alertContainer.textContent = "Profesor registrado exitosamente";
+            document.getElementById("profesorForm").reset(); // Limpia el formulario
+        } else {
+            alertContainer.style.display = "block";
+            alertContainer.className = "alert alert-danger";
+            alertContainer.textContent = "Error al registrar el profesor";
         }
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alertContainer.style.display = "block";
+        alertContainer.className = "alert alert-danger";
+        alertContainer.textContent = "Error al registrar el profesor";
+    }
     });
     </script>
 
