@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
     <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
     <script src="./vendor/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <title>Dashboard - Universidad Santa Maria</title>
     <style>
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             padding: 0;
@@ -72,7 +74,7 @@
             order: 1;
         }
 
-        .h4{
+        .h4 {
             text-size-adjust: 45%;
             display: inline-flex;
         }
@@ -122,12 +124,13 @@
             background-repeat: no-repeat;
         }
 
-        .card > * {
+        .card>* {
             position: relative;
             z-index: 1;
         }
-         /* Estilos del menú lateral (copiados de menulateral.html) */
-         .sidebar {
+
+        /* Estilos del menú lateral (copiados de menulateral.html) */
+        .sidebar {
             height: 100vh;
             width: 250px;
             position: fixed;
@@ -237,9 +240,9 @@
         .white-icon {
             filter: invert(100%);
         }
-      
 
-        
+
+
         /* NUEVOS ESTILOS PARA EL BUSCADOR Y BOTONES */
         .search-container {
             display: grid;
@@ -258,92 +261,94 @@
 
         /* barra de busqueda */
         .search-wrapper {
-    max-width: 600px;
-    margin: 0 auto;
-}
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.search-box {
-    position: relative;
-    background: white;
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-}
+        .search-box {
+            position: relative;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
 
-.search-box:focus-within {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
+        .search-box:focus-within {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
 
-.search-input {
-    border: 2px solid #eee;
-    border-radius: 30px;
-    padding: 15px 25px;
-    padding-right: 50px;
-    width: 100%;
-    transition: all 0.3s ease;
-}
+        .search-input {
+            border: 2px solid #eee;
+            border-radius: 30px;
+            padding: 15px 25px;
+            padding-right: 50px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
 
-.search-input:focus {
-    border-color: #007bff;
-    box-shadow: none;
-}
+        .search-input:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
 
-.search-icon {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    transition: all 0.3s ease;
-}
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: all 0.3s ease;
+        }
 
-.search-box:focus-within .search-icon {
-    color: #007bff;
-}
+        .search-box:focus-within .search-icon {
+            color: #007bff;
+        }
 
-.suggestions {
-    position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        max-height: 300px;
-        overflow-y: auto;
-}
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
 
-.search-box:focus-within .suggestions {
-    opacity: 1;
-    transform: translateY(0);
-}
+        .search-box:focus-within .suggestions {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.suggestion-item {
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-.suggestion-item:hover {
-    background: #f8f9fa;
-}
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
 
-.suggestion-item i {
-    margin-right: 10px;
-    color: #666;
-}
+        .suggestion-item i {
+            margin-right: 10px;
+            color: #666;
+        }
 
-.recent-searches {
-    color: #666;
-    font-size: 0.8rem;
-    padding: 10px 20px;
-    background: #f8f9fa;
-    border-radius: 15px 15px 0 0;
-}
+        .recent-searches {
+            color: #666;
+            font-size: 0.8rem;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 15px 15px 0 0;
+        }
 
-      
+
         .vertical-buttons {
             display: flex;
             flex-direction: column;
@@ -367,36 +372,38 @@
         .action-button span {
             font-weight: 500;
         }
+
         /* formulario */
-        #name-section{
+        #name-section {
             margin-top: 40px;
             padding: 15px;
 
         }
-        .form-group{ 
+
+        .form-group {
             margin-bottom: 8px;
         }
-            
     </style>
 </head>
+
 <body>
     <div class="dashboard-container">
-      <!-- Menú lateral integrado directamente (antes era un iframe) -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
+        <!-- Menú lateral integrado directamente (antes era un iframe) -->
+        <div id="sidebar" class="sidebar">
+            <div class="centered-bars" id="toggleBtn">
+                <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
+            </div>
+            <div class="sidebar-header">
+                Menú
+            </div>
+            <div class="sidebar-content">
+                <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
+                <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
+                <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
+                <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+            </div>
         </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
-    </div>
         <div id="content">
             <div class="main-content">
                 <div class="header-section">
@@ -409,54 +416,190 @@
                     </div>
                     <img src="./img/iconouser.png" alt="Usuario">
                 </div>
-                <h4 id="nombreusuario" >¡Bienvenido!</h4>
+                <h4 id="nombreusuario">¡Bienvenido!</h4>
                 <span style="font: size 30%; ;"> Estás en el Área de Profesores</span>
                 <br>
 
                 <!-- NUEVO CONTENIDO -->
-                 <div class="search-container">
+                <div class="search-container">
                     <div class="search-box">
-                        <input type="text" id="searchInput" class="search-input form-control" placeholder="Buscar por nombre, cédula o teléfono...">
-                        <i class="fas fa-search search-icon"></i>
-                        <div id="searchResults" class="suggestions"></div>
+                        <!-- barra de busqueda -->
+                        <div class="bg-light">
+                            <div class="container py-5">
+                                <div class="search-wrapper">
+                                    <div class="search-box">
+                                        <input type="text" class="search-input form-control"
+                                            placeholder="Search anything...">
+                                        <i class="fas fa-search search-icon"></i>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de muestra de los profesores -->
+                        <table class="table align-middle mb-0 bg-white">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Titulo</th>
+                                    <th>Status</th>
+                                    <th>Cargo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt=""
+                                                style="width: 45px; height: 45px" class="rounded-circle" />
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1">Juan Pablo Parra</p>
+                                                <p class="text-muted mb-0">juanp@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="fw-normal mb-1">Ing. Civil</p>
+                                        <p class="text-muted mb-0">Profesor</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-success rounded-pill d-inline">Active</span>
+                                    </td>
+                                    <td>Profesor</td>
+                                    <td>
+                                        <button type="button" class="btn btn-link btn-sm btn-rounded">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://mdbootstrap.com/img/new/avatars/6.jpg"
+                                                class="rounded-circle" alt="" style="width: 45px; height: 45px" />
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1">Carlos Ferrer</p>
+                                                <p class="text-muted mb-0">c.ferrer@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="fw-normal mb-1">Ing.Sistemas</p>
+                                        <p class="text-muted mb-0">Consejo de T.E.G</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-primary rounded-pill d-inline">Onboarding</span>
+                                    </td>
+                                    <td>Profesor</td>
+                                    <td>
+                                        <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold"
+                                            data-mdb-ripple-color="dark">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://mdbootstrap.com/img/new/avatars/7.jpg"
+                                                class="rounded-circle" alt="" style="width: 45px; height: 45px" />
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1">Hildren Morales</p>
+                                                <p class="text-muted mb-0">hildren.m@gmail.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="fw-normal mb-1">Ing.Informatico</p>
+                                        <p class="text-muted mb-0">Analista de sistemas</p>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
+                                    </td>
+                                    <td>Profesor</td>
+                                    <td>
+                                        <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold"
+                                            data-mdb-ripple-color="dark">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                    <!--Aqui va es la llamada a BD-->
+                    <div class="vertical-buttons">
+                        <div class="action-button">
+                            <a href="profesores.html" style="color: white; text-decoration: none;">
+                                <span>Ver todos</span>
+                                <i class="fas fa-list"></i>
+                            </a>
+                        </div>
+                        <div class="action-button" data-bs-toggle="modal" data-bs-target="#nuevoRegistroModal">
+                            <span>Nuevo registro</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="action-button">
+                            <span>Modificar</span>
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
 
                 <!-- ... (mantener el resto de tu contenido existente) ... -->
             </div>
-             
-            <!-- Formulario dinámico para añadir/modificar profesores -->
-            <div class="form-container">
-                <h3 id="name-section">Gestión de Profesores</h3>
-                <form id="profesorForm">
-                    <div class="form-group">
-                        <label for="nombreApellido">Nombre y Apellido</label>
-                        <input type="text" id="nombreApellido" class="form-control" placeholder="Nombre y Apellido" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" class="form-control" placeholder="Teléfono" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cedula">Cédula</label>
-                        <input type="text" id="cedula" class="form-control" placeholder="Cédula" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" id="email" class="form-control" placeholder="Correo Electrónico" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nbprofesor">Número de Profesor</label>
-                        <input type="text" id="nbprofesor" class="form-control" placeholder="Número de Profesor" required>
-                    </div>
-                    <button type="submit" id="submitButton" class="btn btn-primary">Añadir</button>
-                </form>
 
 
+        </div>
+    </div>
+    <div class="modal fade" id="nuevoRegistroModal" tabindex="-1" aria-labelledby="nuevoRegistroModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nuevoRegistroModalLabel">Gestión de Profesores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profesorForm">
+                        <div class="form-group">
+                            <label for="nombreApellido">Nombre y Apellido</label>
+                            <input type="text" id="nombreApellido" class="form-control" placeholder="Nombre y Apellido"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" class="form-control" placeholder="Teléfono" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cedula">Cédula</label>
+                            <input type="text" id="cedula" class="form-control" placeholder="Cédula" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" id="email" class="form-control" placeholder="Correo Electrónico"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nbprofesor">Número de Profesor</label>
+                            <input type="text" id="nbprofesor" class="form-control" placeholder="Número de Profesor"
+                                required>
+                        </div>
+                        <br>
+                        <div style="text-align: center;">
+                            <button type="submit" id="submitButton" class="btn btn-primary">Añadir</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             try {
@@ -469,65 +612,42 @@
                 document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
             }
         });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const searchResults = document.getElementById("searchResults");
 
-    searchInput.addEventListener("input", async function () {
-        const query = searchInput.value.trim();
 
-        if (query.length > 0) {
-            try {
-                const response = await fetch(`/buscarProfesor?query=${query}`);
-                if (!response.ok) throw new Error("Error al buscar profesores");
-                const profesores = await response.json();
+        /*Funcion para enviar al server (insertar profesores)*/
+        document.getElementById("profesorForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Evita el envío por defecto del formulario
 
-                // Limpiar resultados anteriores
-                searchResults.innerHTML = "";
+        const formData = {
+            nombreApellido: document.getElementById("nombreApellido").value,
+            telefono: document.getElementById("telefono").value,
+            cedula: document.getElementById("cedula").value,
+            email: document.getElementById("email").value,
+            nbprofesor: document.getElementById("nbprofesor").value,
+        };
 
-                // Mostrar nuevos resultados
-                profesores.forEach(profesor => {
-                    const resultItem = document.createElement("div");
-                    resultItem.classList.add("suggestion-item");
-                    resultItem.innerHTML = `
-                        <strong>${profesor.nbProfesor}</strong><br>
-                        ${profesor.cedula ? `Cédula: ${profesor.cedula}<br>` : ''}
-                        ${profesor.Telf ? `Teléfono: ${profesor.Telf}<br>` : ''}
-                        ${profesor.email ? `Email: ${profesor.email}` : ''}
-                    `;
-                    resultItem.addEventListener("click", () => {
-                        // Extraer solo el nombre (eliminando el número inicial)
-                        const nombreCompleto = profesor.nbProfesor.replace(/^\d+\s/, '');
-                        
-                        // Autorrellenar el formulario
-                        document.getElementById("nombreApellido").value = nombreCompleto;
-                        document.getElementById("telefono").value = profesor.Telf || '';
-                        document.getElementById("cedula").value = profesor.cedula || '';
-                        document.getElementById("email").value = profesor.email || '';
-                        document.getElementById("nbprofesor").value = profesor.idProfesor;
+        try {
+            const response = await fetch('/registrarprofesor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-                        console.log("Valores asignados al formulario:");
-                        console.log("Nombre y Apellido:", nombreCompleto);
-                        console.log("Teléfono:", profesor.Telf);
-                        console.log("Cédula:", profesor.cedula);
-                        console.log("Email:", profesor.email);
-                        console.log("ID Profesor:", profesor.idProfesor);
-
-                        searchResults.innerHTML = "";
-                    });
-                    searchResults.appendChild(resultItem);
-                });
-            } catch (error) {
-                console.error("Error al buscar profesores:", error);
+            if (response.ok) {
+                alert("Profesor registrado exitosamente");
+                document.getElementById("profesorForm").reset(); // Limpia el formulario
+            } else {
+                alert("Error al registrar el profesor");
             }
-        } else {
-            searchResults.innerHTML = "";
+        } catch (error) {
+            console.error("Error al enviar los datos:", error);
+            alert("Error al registrar el profesor");
         }
     });
-});
     </script>
 
 </body>
+
 </html>
