@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="./vendor/js/bootstrap.bundle.min.js"></script>
+    
+    <title>Dashboard - Universidad Santa Maria</title>
+    <style>
+        /* Estilos generales */
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Estilos del menú lateral (copiados de menulateral.html) */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #0823ac;
+            transition: width 0.2s ease;
+            padding-top: 70px;
+            color: white;
+            z-index: 1000;
+        }
+
+        .sidebar.closed {
+            width: 60px;
+            left: 0;
+        }
+
+        .sidebar.closed .sidebar-header {
+            display: none;
+        }
+
+        .sidebar.closed .sidebar-content a span {
+            display: none;
+        }
+
+        .sidebar.closed .sidebar-content a {
+            padding: 15px 15px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 16px;
+            color: white;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #0823ac;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #3498db;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background-color: #0823ac;
+        }
+
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        #content.closed {
+            margin-left: 60px;
+        }
+
+        .sidebar-header {
+            padding: 20px 25px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #0823ac;
+        }
+
+        .sidebar-content {
+            padding: 10px 0;
+        }
+
+        .centered-bars {
+            text-align: center;
+            margin: 0 auto;
+            width: 20px;
+            cursor: pointer;
+        }
+
+        .centered-bars img {
+            transition: transform 0.3s ease;
+        }
+
+        .centered-bars.rotated img {
+            transform: rotate(180deg);
+        }
+
+        .white-icon {
+            filter: invert(100%);
+        }
+
+        /* Estilos del dashboard */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+           
+        .header-logo img {
+            display: flexbox;
+            width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+        
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .header-logo {
+            order: 1;
+        }
+
+        .header-text {
+            order: 2;
+        }
+
+        .header-section img {
+            order: 3;
+        }
+
+        .social-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            border: none;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            width: calc(33% - 10px);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            padding-top: 30px;
+            padding-bottom: 70px;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        
+        
+        .building-container {
+            background-color: white;
+            padding: 10px;
+            border-radius: 7px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1010px;
+            top: 0;
+        }
+
+        .building-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .floor-container {
+            margin-bottom: 20px;
+        }
+
+        .floor-title {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .floor-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            min-height: 50px;
+        }
+
+          /* Estilos para la sección de mobiliario */
+    .mobiliario-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .ubicacion-selector {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .ubicacion-btn {
+        padding: 10px 20px;
+        border: none;
+        background-color: #f0f0f0;
+        color: #333;
+        cursor: pointer;
+        border-radius: 5px 0 0 5px;
+        font-weight: bold;
+    }
+
+    .ubicacion-btn:last-child {
+        border-radius: 0 5px 5px 0;
+    }
+
+    .ubicacion-btn.active {
+        background-color: #0823ac;
+        color: white;
+    }
+
+    .mobiliario-seccion {
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .mobiliario-seccion:first-child {
+        border-top: none;
+    }
+
+    .mobiliario-seccion.oculto {
+        display: none;
+    }
+
+    .mobiliario-item {
+        padding: 8px 15px;
+        border: 1px solid #ccc;
+        background-color: white;
+        color: #333;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .seleccion-salon {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+
+    .campo-seleccion {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .campo-seleccion label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .campo-seleccion select {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #listado-mobiliario-piso, #listado-mobiliario-salon {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .acciones-mobiliario {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .acciones-mobiliario button {
+        padding: 10px 15px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .incorporar-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .desincorporar-btn {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .nota-carrito {
+        margin-left: auto;
+        font-style: italic;
+        color: #777;
+    }
+
+    .nota-transaccion {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #ffe0b2;
+        border-radius: 5px;
+        color: #795548;
+        text-align: center;
+    }
+
+    </style>
+</head>
+<body>
+    <!-- Menú lateral integrado directamente (antes era un iframe) -->
+    <div id="sidebar" class="sidebar">
+        <div class="centered-bars" id="toggleBtn">
+            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
+        </div>
+        <div class="sidebar-header">
+            Menú
+        </div>
+        <div class="sidebar-content">
+            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
+            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
+            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
+            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
+            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
+        </div>
+    </div>
+
+    <!-- Contenido principal del dashboard -->
+    <div id="content">
+        <div class="main-content">
+            <div class="header-section">
+                <div class="header-text">
+                    <h1>Universidad Santa Maria</h1>
+                    <p>Sistema de Mobiliario y Agendamientos de Salones</p>
+                </div>
+                <div class="header-logo">
+                    <img src="./img/logousm.png" alt="logo usm" style="width: 120px; height: auto;">
+                </div>
+                
+                <img src="./img/iconouser.png" alt="Usuario">
+            </div>
+            <h4 id="nombreusuario">¡Bienvenido!</h4>
+            
+            <br>
+      
+       
+                <div class="main-content">
+                
+                    <div class="mobiliario-container">
+                        <div class="ubicacion-selector">
+                            <button class="ubicacion-btn active" data-ubicacion="piso">Piso</button>
+                            <button class="ubicacion-btn" data-ubicacion="salon">Salón</button>
+                        </div>
+            
+                        <div id="mobiliario-piso" class="mobiliario-seccion">
+                            <h3>Seleccionar Mobiliario por Piso</h3>
+                            <button class="mobiliario-item" data-tipo="pupitre">Pupitres</button>
+                            <button class="mobiliario-item" data-tipo="mesa">Mesas</button>
+                            <div id="listado-mobiliario-piso">
+                                </div>
+                        </div>
+            
+                        <div id="mobiliario-salon" class="mobiliario-seccion oculto">
+                            <h3>Seleccionar Mobiliario por Salón</h3>
+                            <div class="seleccion-salon">
+                                <div class="campo-seleccion">
+                                    <label for="origen">Origen:</label>
+                                    <select id="origen">
+                                        <option value="">Seleccionar Salón</option>
+                                        </select>
+                                </div>
+                                <div class="campo-seleccion">
+                                    <label for="destino">Destino:</label>
+                                    <select id="destino">
+                                        <option value="">Seleccionar Salón</option>
+                                        </select>
+                                </div>
+                            </div>
+                            <div id="listado-mobiliario-salon">
+                                </div>
+                            <div class="acciones-mobiliario">
+                                <button class="incorporar-btn">+</button>
+                                <button class="desincorporar-btn">-</button>
+                                <p class="nota-carrito">Este apartado va a hacer como un carrito de compras</p>
+                            </div>
+                        </div>
+            
+                        <div class="nota-transaccion">
+                            <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+           
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const ubicacionBtns = document.querySelectorAll('.ubicacion-btn');
+                    const mobiliarioPiso = document.getElementById('mobiliario-piso');
+                    const mobiliarioSalon = document.getElementById('mobiliario-salon');
+            
+                    ubicacionBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            ubicacionBtns.forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            const ubicacion = this.dataset.ubicacion;
+                            mobiliarioPiso.classList.toggle('oculto', ubicacion === 'salon');
+                            mobiliarioSalon.classList.toggle('oculto', ubicacion === 'piso');
+                        });
+                    });
+            
+                    // Aquí puedes agregar la lógica para cargar los salones en los selectores
+                    // y la lógica para mostrar el mobiliario al seleccionar un piso o salón.
+                });
+            </script>   
+
+
+    </div>
+
+   
+
+        
+   
+</body>
+</html>
