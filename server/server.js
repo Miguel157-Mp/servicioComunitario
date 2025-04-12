@@ -5,7 +5,7 @@ const sessionConfig = require('./sessionConfig'); // Importar configuración de 
 const routes = require('./routes'); // Importar rutas
 const salonesRoutes = require('./salonesRoutes'); // Importar las rutas de salones
 const registrarProfesor = require('./registrarprofesor');
-
+const editarprofesor = require('./editarprofesor');
 const app = express();
 const PORT = 3000;
 
@@ -26,6 +26,8 @@ app.use('/salones', salonesRoutes); // Usar las rutas de salones
 //ruta para insertar doctor
 app.use('/registrarprofesor', registrarProfesor);
 
+//ruta para editar doctor
+app.use('/editarprofesor/:id', editarprofesor);
 
 // Middleware global para manejar errores
 app.use((err, req, res, next) => {
