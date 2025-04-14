@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Agendamiento - Universidad Santa Maria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-content {
+            padding: 20px 0;
+        }
+        
+        .sidebar-content a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-content a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-content a.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .toggle-btn {
+            display: none;
+            position: absolute;
+            right: -40px;
+            top: 10px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .schedule-container {
+            flex: 2;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            overflow-x: auto;
+        }
+        
+        .form-container {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            position: sticky;
+            top: 30px;
+            height: fit-content;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+        
+        /* Schedule Table Styles */
+        .schedule-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        .schedule-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            height: 50px;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .time-column {
+            background-color: var(--light-color);
+            font-weight: 500;
+            white-space: nowrap;
+            width: 120px;
+        }
+        
+        .booked {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .booked-room {
+            background-color: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--success-color);
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .available-slot {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .available-slot:hover {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        /* Form Styles */
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-container {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+                position: absolute;
+                height: 100%;
+            }
+            
+            .sidebar.active {
+                width: 250px;
+            }
+            
+            .toggle-btn {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <button class="toggle-btn" id="toggleBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="sidebar-header">
+                Universidad Santa María
+            </div>
+            <div class="sidebar-content">
+                <a href="./dashboard.html" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a>
+                <a href="#"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
+                <a href="#"><i class="fas fa-chalkboard-teacher"></i> <span>Profesores</span></a>
+                <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
+                <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Schedule Container -->
+            <div class="schedule-container">
+                <h1 class="page-title">Horario de Agendamiento</h1>
+                
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <button id="refreshBtn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
+                    <div>
+                        <span class="badge bg-primary">Salón: <span id="currentRoom">Todos</span></span>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="schedule-table" id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th>Bloque Horario</th>
+                                <th>Lun</th>
+                                <th>Mar</th>
+                                <th>Mié</th>
+                                <th>Jue</th>
+                                <th>Vie</th>
+                                <th>Sáb</th>
+                                <th>Dom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se generarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Form Container -->
+            <div class="form-container">
+                <h2 class="form-title">Nueva Reservación</h2>
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="room" class="form-label">Salón</label>
+                        <select id="room" class="form-control" required>
+                            <option value="">Seleccione un salón</option>
+                            <option value="JMA6.711">JMA6.711</option>
+                            <option value="JMA6.712">JMA6.712</option>
+                            <option value="JMA6.721">JMA6.721</option>
+                            <option value="JMA6.722">JMA6.722</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="day" class="form-label">Día</label>
+                        <select id="day" class="form-control" required>
+                            <option value="">Seleccione un día</option>
+                            <option value="1">Lunes</option>
+                            <option value="2">Martes</option>
+                            <option value="3">Miércoles</option>
+                            <option value="4">Jueves</option>
+                            <option value="5">Viernes</option>
+                            <option value="6">Sábado</option>
+                            <option value="7">Domingo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time" class="form-label">Bloque Horario</label>
+                        <select id="time" class="form-control" required>
+                            <option value="">Seleccione un bloque</option>
+                            <option value="1">07:00AM - 07:45AM</option>
+                            <option value="2">07:45AM - 08:30AM</option>
+                            <option value="3">08:30AM - 09:15AM</option>
+                            <option value="4">09:15AM - 10:00AM</option>
+                            <option value="5">10:00AM - 10:45AM</option>
+                            <option value="6">10:45AM - 11:30AM</option>
+                            <option value="7">11:30AM - 12:15PM</option>
+                            <option value="8">12:15PM - 01:00PM</option>
+                            <option value="9">01:00PM - 01:45PM</option>
+                            <option value="10">01:45PM - 02:30PM</option>
+                            <option value="11">02:30PM - 03:15PM</option>
+                            <option value="12">04:00PM - 04:45PM</option>
+                            <option value="13">04:45PM - 05:30PM</option>
+                            <option value="14">05:30PM - 06:15PM</option>
+                            <option value="15">06:15PM - 07:00PM</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course" class="form-label">Código de Curso</label>
+                        <input type="text" id="course" class="form-control" placeholder="Ej: 144110913" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="professor" class="form-label">Profesor</label>
+                        <input type="text" id="professor" class="form-control" placeholder="Nombre del profesor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Notas</label>
+                        <textarea id="notes" class="form-control" rows="3" placeholder="Observaciones adicionales"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span id="submitText">Reservar</span>
+                        <span id="submitLoading" class="loading" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos de ejemplo (esto sería reemplazado por la conexión a tu BD)
+        const timeBlocks = [
+            "07:00AM - 07:45AM",
+            "07:45AM - 08:30AM",
+            "08:30AM - 09:15AM",
+            "09:15AM - 10:00AM",
+            "10:00AM - 10:45AM",
+            "10:45AM - 11:30AM",
+            "11:30AM - 12:15PM",
+            "12:15PM - 01:00PM",
+            "01:00PM - 01:45PM",
+            "01:45PM - 02:30PM",
+            "02:30PM - 03:15PM",
+            "04:00PM - 04:45PM",
+            "04:45PM - 05:30PM",
+            "05:30PM - 06:15PM",
+            "06:15PM - 07:00PM"
+        ];
+        
+        // Toggle sidebar on mobile
+        document.getElementById('toggleBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Generar la tabla de horarios
+        function generateScheduleTable() {
+            const tbody = document.querySelector('#scheduleTable tbody');
+            tbody.innerHTML = '';
+            
+            timeBlocks.forEach((block, index) => {
+                const row = document.createElement('tr');
+                
+                // Columna de tiempo
+                const timeCell = document.createElement('td');
+                timeCell.className = 'time-column';
+                timeCell.textContent = block;
+                row.appendChild(timeCell);
+                
+                // Columnas de días (Lun a Dom)
+                for (let day = 1; day <= 7; day++) {
+                    const dayCell = document.createElement('td');
+                    dayCell.className = 'available-slot';
+                    dayCell.dataset.day = day;
+                    dayCell.dataset.block = index + 1;
+                    dayCell.innerHTML = '&nbsp;'; // Espacio en blanco
+                    
+                    // Agregar evento para seleccionar este slot
+                    dayCell.addEventListener('click', function() {
+                        selectTimeSlot(day, index + 1, block);
+                    });
+                    
+                    row.appendChild(dayCell);
+                }
+                
+                tbody.appendChild(row);
+            });
+            
+            // Cargar datos desde la BD
+            loadScheduleData();
+        }
+        
+        // Seleccionar un slot de tiempo para reservar
+        function selectTimeSlot(day, block, blockText) {
+            document.getElementById('day').value = day;
+            document.getElementById('time').value = block;
+            
+            // Mostrar información en el formulario
+            const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            alert(`Has seleccionado:\nDía: ${dayNames[day-1]}\nBloque: ${blockText}`);
+        }
+        
+        // Cargar datos de horarios desde la BD
+        async function loadScheduleData() {
+            try {
+                // Aquí iría tu conexión real a la base de datos
+                // Esto es un ejemplo simulando una llamada AJAX
+                
+                // Simular retraso de red
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Datos de ejemplo (en un caso real, esto vendría de tu BD)
+                const scheduleData = [
+                    { day: 5, block: 5, room: 'JMA6.712', course: '144110913' },
+                    { day: 5, block: 6, room: 'JMA6.712', course: '144110913' },
+                    { day: 1, block: 7, room: 'JMA6.722', course: '1441110923' },
+                    { day: 4, block: 7, room: 'JMA6.711', course: '1441110934' },
+                    { day: 5, block: 7, room: 'JMA6.712', course: '144110913' },
+                    { day: 1, block: 9, room: 'JMA6.722', course: '1441110923' },
+                    { day: 4, block: 9, room: 'JMA6.711', course: '1441110934' },
+                    { day: 5, block: 9, room: 'JMA6.711', course: '1441100934' }
+                ];
+                
+                // Mostrar los datos en la tabla
+                scheduleData.forEach(item => {
+                    const cell = document.querySelector(`td[data-day="${item.day}"][data-block="${item.block}"]`);
+                    if (cell) {
+                        cell.classList.add('booked');
+                        cell.innerHTML = `
+                            <div><strong>${item.room}</strong></div>
+                            <div>${item.course}</div>
+                        `;
+                        cell.style.cursor = 'default';
+                        cell.removeEventListener('click', selectTimeSlot);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar los horarios:', error);
+                alert('Error al cargar los horarios. Por favor intenta nuevamente.');
+            }
+        }
+        
+        // Enviar formulario de reservación
+        document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitLoading = document.getElementById('submitLoading');
+            
+            // Mostrar loading
+            submitText.textContent = 'Procesando...';
+            submitLoading.style.display = 'inline-block';
+            submitBtn.disabled = true;
+            
+            try {
+                // Simular envío a la BD
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Aquí iría tu código para insertar en la BD
+                const formData = {
+                    room: document.getElementById('room').value,
+                    day: document.getElementById('day').value,
+                    time: document.getElementById('time').value,
+                    course: document.getElementById('course').value,
+                    professor: document.getElementById('professor').value,
+                    notes: document.getElementById('notes').value
+                };
+                
+                console.log('Datos a enviar a BD:', formData);
+                
+                // Mostrar mensaje de éxito
+                alert('Reservación creada con éxito!');
+                
+                // Recargar los datos
+                generateScheduleTable();
+                
+                // Resetear formulario
+                this.reset();
+                
+            } catch (error) {
+                console.error('Error al crear reservación:', error);
+                alert('Error al crear reservación. Por favor intenta nuevamente.');
+            } finally {
+                // Ocultar loading
+                submitText.textContent = 'Reservar';
+                submitLoading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Botón de actualizar
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            generateScheduleTable();
+        });
+        
+        // Filtrar por salón
+        document.getElementById('room').addEventListener('change', function() {
+            const room = this.value;
+            document.getElementById('currentRoom').textContent = room || 'Todos';
+            // Aquí podrías implementar el filtrado real
+        });
+        
+        // Inicializar la tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', generateScheduleTable);
+    </script>
+</body>
+
+</html>
