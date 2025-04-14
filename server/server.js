@@ -27,7 +27,7 @@ app.use('/salones', salonesRoutes); // Usar las rutas de salones
 app.use('/registrarprofesor', registrarProfesor);
 
 //ruta para editar doctor
-app.use('/editarprofesor/:id', editarprofesor);
+app.use('/editarprofesor', editarprofesor);
 
 // Middleware global para manejar errores
 app.use((err, req, res, next) => {

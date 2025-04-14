@@ -136,43 +136,49 @@
         </div>
     </div>
     <!-- Modal para editar profesor -->
-    <div class="modal fade" id="editarProfesorModal" tabindex="-1" aria-labelledby="editarProfesorModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarProfesorModalLabel">Editar Profesor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+    <div class="modal fade" id="editarProfesorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Profesor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editarProfesorForm">
                 <div class="modal-body">
                     <input type="hidden" id="profesorId">
                     <div class="mb-3">
-                        <label for="editarNombreApellido" class="form-label">Nombre y Apellido</label>
-                        <input type="text" class="form-control" id="editarNombreApellido">
+                        <label class="form-label">Nombre y Apellido</label>
+                        <input type="text" class="form-control" id="editarNombreApellido" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editarTelefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="editarTelefono">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="editarTelefono" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editarCedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="editarCedula">
+                        <label class="form-label">Cédula</label>
+                        <input type="text" class="form-control" id="editarCedula" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editarEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editarEmail">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editarEmail" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", async function () {
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+    // Variables globales
+    let profesores = [];
+    const editarModal = new bootstrap.Modal(document.getElementById("editarProfesorModal"));
+    
+    // 1. Cargar datos del usuario
     try {
         const responseUsuario = await fetch('/usuario');
         if (!responseUsuario.ok) throw new Error('No autorizado');
@@ -182,58 +188,23 @@
         console.error('Error obteniendo el usuario:', error);
         document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
     }
-});
 
-/*Funcion para enviar al server (insertar profesores)*/
-document.getElementById("profesorForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Evita el envío por defecto del formulario
-
-    const formData = {
-        nombreApellido: document.getElementById("nombreApellido").value,
-        telefono: document.getElementById("telefono").value,
-        cedula: document.getElementById("cedula").value,
-        email: document.getElementById("email").value,
-    };
-
-    try {
-        const response = await fetch('/registrarprofesor', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-
-        if (response.ok) {
-            alertContainer.style.display = "block";
-            alertContainer.className = "alert alert-success";
-            alertContainer.textContent = "Profesor registrado exitosamente";
-            document.getElementById("profesorForm").reset(); // Limpia el formulario
-        } else {
-            alertContainer.style.display = "block";
-            alertContainer.className = "alert alert-danger";
-            alertContainer.textContent = "Error al registrar el profesor";
+    // 2. Función para cargar profesores
+    async function cargarProfesores() {
+        try {
+            const response = await fetch('/registrarprofesor');
+            if (!response.ok) throw new Error('Error al obtener profesores');
+            profesores = await response.json();
+            renderizarTabla(profesores);
+        } catch (error) {
+            console.error('Error al cargar profesores:', error);
         }
-    } catch (error) {
-        console.error("Error al enviar los datos:", error);
-        alertContainer.style.display = "block";
-        alertContainer.className = "alert alert-danger";
-        alertContainer.textContent = "Error al registrar el profesor";
     }
-});
 
-/*cargar profesores*/
-document.addEventListener("DOMContentLoaded", async function () {
-    const tbody = document.querySelector("tbody");
-    const searchInput = document.querySelector(".search-input");
-
-    try {
-        const responseProfesores = await fetch('/registrarprofesor');
-        if (!responseProfesores.ok) throw new Error('Error al obtener los profesores');
-
-        const profesores = await responseProfesores.json();
-
-        tbody.innerHTML = ''; // Limpia el contenido del tbody
+    // 3. Función para renderizar la tabla
+    function renderizarTabla(profesores) {
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = '';
 
         profesores.forEach(profesor => {
             const row = `
@@ -257,7 +228,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                     </td>
                     <td>Profesor</td>
                     <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" data-id="${profesor.idProfesor}">
+                        <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" 
+                                data-id="${profesor.idProfesor}">
                             Editar
                         </button>
                     </td>
@@ -266,83 +238,106 @@ document.addEventListener("DOMContentLoaded", async function () {
             tbody.innerHTML += row;
         });
 
-        // Agregar funcionalidad de búsqueda después de cargar las filas
+        // Configurar búsqueda
+        const searchInput = document.querySelector(".search-input");
         searchInput.addEventListener("input", function () {
             const searchText = searchInput.value.toLowerCase();
             const tableRows = document.querySelectorAll("table tbody tr");
 
             tableRows.forEach(row => {
                 const rowText = row.textContent.toLowerCase();
-                if (rowText.includes(searchText)) {
-                    row.style.display = ""; // Muestra la fila
-                } else {
-                    row.style.display = "none"; // Oculta la fila
-                }
+                row.style.display = rowText.includes(searchText) ? "" : "none";
             });
         });
-
-       
-
-    } catch (error) {
-        console.error('Error al cargar los profesores:', error);
     }
-});
- // Inicializar el modal fuera del listener de clic
- const editarProfesorModalElement = document.getElementById("editarProfesorModal");
-        const editarModal = new bootstrap.Modal(editarProfesorModalElement);
 
-        // Agregar eventos a los botones "Editar"
-        document.addEventListener("click", function (event) {
-            if (event.target.classList.contains("editar-btn")) {
-                console.log("Se hizo clic en el botón Editar");
+    // 4. Manejar envío del formulario de nuevo profesor
+    document.getElementById("profesorForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const alertContainer = document.getElementById("alertContainer");
 
-                const profesorId = event.target.getAttribute("data-id");
-                const profesor = profesores.find(p => p.id == profesorId);
+        try {
+            const response = await fetch('/registrarprofesor', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    nombreApellido: document.getElementById("nombreApellido").value,
+                    telefono: document.getElementById("telefono").value,
+                    cedula: document.getElementById("cedula").value,
+                    email: document.getElementById("email").value
+                })
+            });
 
-                if (profesor) {
-                    // Cargar datos en el modal
-                    document.getElementById("profesorId").value = profesor.id;
-                    document.getElementById("editarNombreApellido").value = profesor.nbProfesor;
-                    document.getElementById("editarEmail").value = profesor.email;
-
-                    // Abrir el modal usando la instancia pre-existente
-                    editarModal.show();
-                }
+            if (response.ok) {
+                alertContainer.style.display = "block";
+                alertContainer.className = "alert alert-success";
+                alertContainer.textContent = "Profesor registrado exitosamente";
+                document.getElementById("profesorForm").reset();
+                await cargarProfesores(); // Recargar la tabla
+            } else {
+                throw new Error('Error en la respuesta');
             }
-        });
-// Enviar datos modificados al servidor
-document.getElementById("editarProfesorForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
+        } catch (error) {
+            console.error("Error:", error);
+            alertContainer.style.display = "block";
+            alertContainer.className = "alert alert-danger";
+            alertContainer.textContent = "Error al registrar el profesor";
+        }
+    });
 
-    const profesorId = document.getElementById("profesorId").value;
-    const formData = {
-        nombreApellido: document.getElementById("editarNombreApellido").value,
-        telefono: document.getElementById("editarTelefono").value,
-        cedula: document.getElementById("editarCedula").value,
-        email: document.getElementById("editarEmail").value,
-    };
+    // 5. Manejar clic en botones Editar (usando delegación de eventos)
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('editar-btn')) {
+            const profesorId = event.target.getAttribute('data-id');
+            const profesor = profesores.find(p => p.idProfesor == profesorId);
+            
+            if (profesor) {
+                // Llenar el modal con los datos
+                document.getElementById("profesorId").value = profesor.idProfesor;
+                document.getElementById("editarNombreApellido").value = profesor.nbProfesor;
+                document.getElementById("editarTelefono").value = profesor.Telf || '';
+                document.getElementById("editarCedula").value = profesor.cedula || '';
+                document.getElementById("editarEmail").value = profesor.email || '';
+                
+                // Mostrar el modal
+                editarModal.show();
+            }
+        }
+    });
 
-    try {
-        const response = await fetch(`/editarprofesor/${profesorId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+    // 6. Manejar envío del formulario de edición
+    document.getElementById("editarProfesorForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        try {
+            const response = await fetch(`/editarprofesor/${document.getElementById("profesorId").value}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    nombreApellido: document.getElementById("editarNombreApellido").value,
+                    telefono: document.getElementById("editarTelefono").value,
+                    cedula: document.getElementById("editarCedula").value,
+                    email: document.getElementById("editarEmail").value
+                })
+            });
 
-        if (response.ok) {
-            alert("Profesor actualizado exitosamente");
-            location.reload(); // Recargar la página para reflejar los cambios
-        } else {
+            if (response.ok) {
+                alert("Profesor actualizado exitosamente");
+                editarModal.hide();
+                await cargarProfesores(); // Recargar la tabla
+            } else {
+                throw new Error('Error en la respuesta');
+            }
+        } catch (error) {
+            console.error("Error:", error);
             alert("Error al actualizar el profesor");
         }
-    } catch (error) {
-        console.error("Error al enviar los datos:", error);
-        alert("Error al actualizar el profesor");
-    }
+    });
+
+    // Cargar datos iniciales
+    await cargarProfesores();
 });
-    </script>
+  </script>
 
 </body>
 
