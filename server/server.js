@@ -6,6 +6,7 @@ const routes = require('./routes'); // Importar rutas
 const salonesRoutes = require('./salonesRoutes'); // Importar las rutas de salones
 const registrarProfesor = require('./registrarprofesor');
 const editarprofesor = require('./editarprofesor');
+const mover_mobiliario = require('./mover_mobiliario'); // Importar las rutas de mover mobiliario
 const app = express();
 const PORT = 3000;
 
@@ -23,11 +24,15 @@ app.use(express.static(path.join(__dirname, '../css')));
 app.use(routes);
 app.use('/salones', salonesRoutes); // Usar las rutas de salones
 
-//ruta para insertar doctor
+//ruta para insertar profesor
 app.use('/registrarprofesor', registrarProfesor);
 
-//ruta para editar doctor
+//ruta para editar profesor
 app.use('/editarprofesor', editarprofesor);
+
+//ruta para mover mobiliario
+app.use('/movermobiliario', mover_mobiliario);
+
 
 // Middleware global para manejar errores
 app.use((err, req, res, next) => {

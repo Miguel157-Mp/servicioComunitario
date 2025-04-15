@@ -497,9 +497,41 @@
                         });
                     });
             
-                    // Aquí puedes agregar la lógica para cargar los salones en los selectores
-                    // y la lógica para mostrar el mobiliario al seleccionar un piso o salón.
+                    
                 });
+
+
+                /*funcion para mostrar los salones*/
+                document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/movermobiliario/salones');
+    const salones = await response.json();
+
+    const origenSelect = document.getElementById('origen');
+    const destinoSelect = document.getElementById('destino');
+
+    // Limpia las opciones iniciales (excepto la primera)
+    origenSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
+    destinoSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
+
+    salones.forEach(salon => {
+      // Crea opción para Origen
+      const optionOrigen = document.createElement('option');
+      optionOrigen.value = salon.idSalon;
+      optionOrigen.textContent = `ID: ${salon.idSalon} - Piso ${salon.piso}`;
+      origenSelect.appendChild(optionOrigen);
+
+      // Crea opción para Destino (clona la opción)
+      const optionDestino = optionOrigen.cloneNode(true);
+      destinoSelect.appendChild(optionDestino);
+    });
+
+    console.log('Options creadas:', origenSelect.options.length);
+  } catch (err) {
+    console.error('Error:', err);
+  }
+});
+
             </script>   
 
 

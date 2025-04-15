@@ -13,12 +13,12 @@ router.post('/', async (req, res) => {
         // Inserta el profesor
         const query = `
             INSERT INTO "public"."profesor" (
-                "nbProfesor", cedula, email, "Telf"
+                "nbProfesor", cedula, email 
             )
-            VALUES ($1, $2, $3, $4)
+            VALUES ($1, $2, $3)
             RETURNING *;
         `;
-        const values = [nombreApellido, cedula, email, telefono];
+        const values = [nombreApellido, cedula, email];
 
         console.log('Consulta generada:', query);
         console.log('Valores:', values);

@@ -14,13 +14,12 @@ router.put('/:id', async (req, res) => {
     try {
         const result = await pool.query(
             `UPDATE "profesor" 
-             SET "nbProfesor" = $1, 
-                 "Telf" = $2, 
-                 "cedula" = $3, 
-                 "email" = $4 
-             WHERE "idProfesor" = $5
+             SET "nbProfesor" = $1,
+                 "cedula" = $2, 
+                 "email" = $3 
+             WHERE "idProfesor" = $4
              RETURNING *;`,
-            [nombreApellido, telefono, cedula, email, id]
+            [nombreApellido, cedula, email, id]
         );
 
         if (result.rowCount > 0) {
