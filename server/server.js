@@ -7,6 +7,7 @@ const salonesRoutes = require('./salonesRoutes'); // Importar las rutas de salon
 const registrarProfesor = require('./registrarprofesor');
 const editarprofesor = require('./editarprofesor');
 const mover_mobiliario = require('./mover_mobiliario'); // Importar las rutas de mover mobiliario
+const traspasarMobiliario = require('./mover_mobiliario_traspasar');// Importar las rutas de mover mobiliario para traspasar
 const app = express();
 const PORT = 3000;
 
@@ -32,6 +33,10 @@ app.use('/editarprofesor', editarprofesor);
 
 //ruta para mover mobiliario
 app.use('/movermobiliario', mover_mobiliario);
+
+//ruta para traspasar mobiliario
+app.use('/traspasar', traspasarMobiliario);
+
 
 
 // Middleware global para manejar errores

@@ -6,14 +6,14 @@ const path = require('path');
 const poolConfig = {
     user: 'postgres',
     host: 'localhost',
-    database: 'servicio_comunitario',
+    database: 'servicioComunitario',
     password: '1234',
     port: 5432,
 };
 
 async function restoreDatabase() {
     /*url para importar bd en archivo .sql */
-    const backupFilePath = 'C:\\Users\\Windows 10\\Downloads\\Clinica-main\\servicioComunitario\\serviciocomunitario.sql';
+    const backupFilePath = 'C:\\Users\\Windows 10\\Downloads\\Clinica-main\\servicioComunitario\\ServicioComunitarioConForeignKey.sql';
     const pgRestorePath = 'C:\\Program Files\\PostgreSQL\\17\\bin\\pg_restore.exe'; // Asegúrate de que esta ruta sea correcta
 
     const command = `"${pgRestorePath}" -U ${poolConfig.user} -d "${poolConfig.database}" -h ${poolConfig.host} -p ${poolConfig.port} "${backupFilePath}"`;

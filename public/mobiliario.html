@@ -464,12 +464,12 @@
                                         </select>
                                 </div>
                             </div>
-                            <div id="listado-mobiliario-salon">
-                                </div>
+                            <div id="listadoMobiliarioSalon">
+                            </div>
                             <div class="acciones-mobiliario">
-                                <button class="incorporar-btn">+</button>
-                                <button class="desincorporar-btn">-</button>
-                                <p class="nota-carrito">Este apartado va a hacer como un carrito de compras</p>
+                                <button class="incorporar-btn" id="btnsumar" value="+1" >+</button>
+                                <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
+                                <button class="btn btn-primary" id="enviarDatos" onclick="enviarDatos()">Traspasar Pupitres</button>
                             </div>
                         </div>
             
@@ -532,6 +532,59 @@
   }
 });
 
+/*Sumar o Restar pupitres*/
+document.querySelectorAll("#btnsumar, #btnrestar").forEach(button => {
+    button.addEventListener("click", function() {
+        const action = this.id === "btnsumar" ? "sumar" : "restar";
+        let contador = parseInt(document.getElementById("listadoMobiliarioSalon").innerHTML) || 0; // Inicializa el contador con el valor actual del elemento o 0
+
+        function sumarUno() {
+            contador++;
+            document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
+        }
+
+        function restarUno() {
+            if (contador > 0) {
+                contador--;
+                document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
+            }
+        }
+
+        if (action === "sumar") {
+            sumarUno();
+        } else if (action === "restar") {
+            restarUno();
+        }
+    });
+});
+
+/*Funcion para enviar cantidad de pupitres para mover de un salon a otro*/
+function enviarDatos() {
+    const origen = document.getElementById('origen').value;
+    const destino = document.getElementById('destino').value;
+    const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
+console.log('Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad); // Para depuración
+    fetch('/traspasar/traspasar', { // Asegúrate de que la ruta aquí coincida con la definida en app.use
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ origen, destino, cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Transacción realizada con éxito.');
+           // window.location.href = '/index.html'; // Redirigir después de recibir la confirmación
+        } else {
+            alert('Error al realizar la transacción: ' + (data.error || ''));
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición:', error);
+        alert('Ocurrió un error en la petición.');
+    });
+}
             </script>   
 
 
