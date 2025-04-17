@@ -13,3 +13,5 @@ Base de Datos postgreSQL: npm install pg
 
 Acceder a la carpeta server y ejecutar: node server.js
 Para levantar el servidor.
+
+Ademas dentro de la carpeta database.py ahi un archivo llamado import.js, para importar la base de datos a postgreSQL mas sencillas y eficiente.
