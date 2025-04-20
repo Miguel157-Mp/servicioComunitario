@@ -101,6 +101,14 @@ router.get('/buscarProfesor', async (req, res) => {
         console.error("Error al buscar profesores:", error);
         res.status(500).json({ error: "Error al buscar profesores" });
     }
+
+   
+    
+
+
+
+
+
 });
 
 module.exports = router;

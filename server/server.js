@@ -8,6 +8,11 @@ const registrarProfesor = require('./registrarprofesor');
 const editarprofesor = require('./editarprofesor');
 const mover_mobiliario = require('./mover_mobiliario'); // Importar las rutas de mover mobiliario
 const traspasarMobiliario = require('./mover_mobiliario_traspasar');// Importar las rutas de mover mobiliario para traspasar
+const buscarSeccion = require('./buscarSeccion'); // Importar la ruta para buscar secciones
+const buscarMateria = require('./buscarMateria'); // Importar la ruta para buscar materias
+const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
+const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
+
 const app = express();
 const PORT = 3000;
 
@@ -36,6 +41,23 @@ app.use('/movermobiliario', mover_mobiliario);
 
 //ruta para traspasar mobiliario
 app.use('/traspasar', traspasarMobiliario);
+
+//ruta para visualizar seccion 
+app.use(routes); 
+
+// Ruta para buscar secciones
+app.use('/buscarSeccion', buscarSeccion); 
+
+// Ruta para buscar materias
+app.use('/buscarMateria', buscarMateria); 
+
+// Ruta para guardar una nueva sección
+app.use('/guardarSeccion', guardarSeccion);
+
+// Ruta para actualizar una sección
+app.use('/actualizarSeccion', actualizarSeccion);
+
+// Registrar las rutas
 
 
 
