@@ -374,6 +374,61 @@
             margin: 5px;
         }
 
+        /* Agregar al final de tu sección de estilos */
+.materia-section {
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.materia-section:hover {
+    background-color: #e9ecef;
+}
+
+#agregarMateriaBtn {
+    width: 100%;
+}
+
+#masivoAlertContainer {
+    margin-top: 15px;
+}
+/* Estilos para las sugerencias */
+.position-relative {
+    position: relative;
+}
+
+
+
+.materia-section {
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.materia-section:hover {
+    background-color: #e9ecef;
+}
+.suggestions-list {
+    display: none; /* Inicialmente oculto */
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.suggestions-list .list-group-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestions-list .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+
+
 
         
 
@@ -468,10 +523,41 @@
 
                 <!-- ... (mantener el resto de tu contenido existente) ... -->
          </div>
-             <!-- Recuadro de Notas -->
-            <div class="notes-box">
-                
+<!-- Recuadro de Notas -->
+<div class="notes-box" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h4>Registro Masivo de Secciones</h4>
+    <p>Complete los datos para asignar múltiples materias a un profesor</p>
+    <p style="font-size: 12px; font-style: oblique; font-weight: 600; padding-top: 5px; padding-bottom: 5px;">*solo se podra ingresar hasta un maximo de 8 secciones por profesor</p>
+    
+    <form id="masivoForm">
+        <!-- Campo de profesor (solo uno) -->
+        <div class="form-group mb-3">
+            <label for="profesorMasivoInput">Profesor</label>
+            <div class="position-relative">
+                <input type="text" id="profesorMasivoInput" class="form-control" placeholder="Escribe el nombre del profesor" autocomplete="off" required>
+                <div id="profesorMasivoSuggestions" class="suggestions-list"></div>
             </div>
+            <input type="hidden" id="idProfesorMasivo">
+        </div>
+        
+        <!-- Contenedor para las materias -->
+        <div id="materiasContainer">
+            <!-- Sección 1 -->
+            
+        </div>
+        
+        <!-- Botón para agregar más materias (hasta 8) -->
+        <button type="button" id="agregarMateriaBtn" class="btn btn-secondary mb-3">
+            <i class="fas fa-plus"></i> Agregar otra materia
+        </button>
+        
+        <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary">Registrar Secciones</button>
+        </div>
+        
+        <div id="masivoAlertContainer" style="display: none;" class="alert" role="alert"></div>
+    </form>
+</div>
         </div>
     </div>
 
@@ -600,6 +686,296 @@
     </script>
 
  <!-- Script para manejar datos -->
+<script>
+
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("DOM completamente cargado");
+    
+    // 1. FUNCIONES AUXILIARES
+    function debounce(func, delay) {
+        console.log(`Configurando debounce con delay: ${delay}ms`);
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    function mostrarError(mensaje, tipo = 'danger', contenedorId = "alertContainer") {
+        console.log(`Mostrando error: ${mensaje}`);
+        const alertContainer = document.getElementById(contenedorId);
+        if (!alertContainer) {
+            console.error(`No se encontró el contenedor de alerta con ID: ${contenedorId}`);
+            return;
+        }
+        alertContainer.style.display = "block";
+        alertContainer.className = `alert alert-${tipo}`;
+        alertContainer.textContent = mensaje;
+        setTimeout(() => {
+            alertContainer.style.display = "none";
+        }, 5000);
+    }
+
+    // 2. FUNCIÓN DE AUTOCOMPLETADO (DEFINIR PRIMERO)
+    function setupAutocomplete(inputElement, suggestionsContainer, hiddenInput, endpoint) {
+        console.log(`Configurando autocompletado para: ${endpoint}`);
+        console.log("Elementos recibidos:", {
+            input: inputElement,
+            suggestions: suggestionsContainer,
+            hidden: hiddenInput
+        });
+
+        if (!inputElement || !suggestionsContainer || !hiddenInput) {
+            console.error("Faltan elementos requeridos para el autocompletado");
+            return;
+        }
+
+        inputElement.addEventListener("input", debounce(async function () {
+            const query = this.value.trim().toLowerCase();
+            console.log(`Input detectado. Buscando: "${query}"`);
+
+            // Limpiar sugerencias
+            suggestionsContainer.innerHTML = "";
+            suggestionsContainer.style.display = "none";
+            hiddenInput.value = "";
+            
+            if (query.length < 2) {
+                console.log("Query demasiado corta, mínimo 2 caracteres");
+                return;
+            }
+
+            // DATOS ESTÁTICOS DE PRUEBA (cambiar a false para usar backend)
+            const usarDatosEstaticos = false;
+            let resultados = [];
+
+            if (usarDatosEstaticos) {
+                console.log("Usando datos estáticos de prueba");
+                
+                // Datos de prueba para profesores
+                if (endpoint.includes("Profesor")) {
+                    resultados = [
+                        { idProfesor: 1, nbProfesor: "Juan Pérez" },
+                        { idProfesor: 2, nbProfesor: "María García" },
+                        { idProfesor: 3, nbProfesor: "Carlos López" },
+                        { idProfesor: 4, nbProfesor: "Ana Martínez" }
+                    ].filter(item => 
+                        item.nbProfesor.toLowerCase().includes(query)
+                    );
+                } 
+                // Datos de prueba para materias
+                else if (endpoint.includes("Materia")) {
+                    resultados = [
+                        { idMateria: 1, nbMateria: "Matemáticas Avanzadas" },
+                        { idMateria: 2, nbMateria: "Física Cuántica" },
+                        { idMateria: 3, nbMateria: "Programación Web" },
+                        { idMateria: 4, nbMateria: "Base de Datos" }
+                    ].filter(item => 
+                        item.nbMateria.toLowerCase().includes(query)
+                    );
+                }
+            } else {
+                // Código para usar con backend real
+                try {
+                    console.log(`Consultando endpoint: ${endpoint}?query=${encodeURIComponent(query)}`);
+                    const response = await fetch(`${endpoint}?query=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error(`Error en la respuesta: ${response.status}`);
+                    resultados = await response.json();
+                } catch (error) {
+                    console.error("Error en fetch:", error);
+                    mostrarError("Error al cargar sugerencias", "danger", "masivoAlertContainer");
+                    return;
+                }
+            }
+
+            console.log("Resultados encontrados:", resultados);
+
+            if (resultados.length === 0) {
+                console.log("No se encontraron resultados");
+                return;
+            }
+
+            // Mostrar sugerencias
+            resultados.forEach(item => {
+                const elemento = document.createElement("div");
+                elemento.className = "list-group-item";
+                elemento.textContent = item.nbProfesor || item.nbMateria;
+                elemento.dataset.id = item.idProfesor || item.idMateria;
+                
+                elemento.addEventListener("click", function() {
+                    console.log("Elemento seleccionado:", this.textContent);
+                    inputElement.value = this.textContent;
+                    hiddenInput.value = this.dataset.id;
+                    suggestionsContainer.style.display = "none";
+                });
+                
+                suggestionsContainer.appendChild(elemento);
+            });
+
+            suggestionsContainer.style.display = "block";
+            console.log("Mostrando sugerencias");
+
+        }, 300));
+
+        // Ocultar sugerencias al hacer clic fuera
+        document.addEventListener("click", function(e) {
+    if (!inputElement.contains(e.target)) {
+        suggestionsContainer.style.display = "none";
+    }
+});
+    }
+
+    // 3. FUNCIONES PRINCIPALES
+    function agregarMateriaSection() {
+        console.log("Agregando nueva sección de materia");
+        const container = document.getElementById("materiasContainer");
+        if (!container) {
+            console.error("No se encontró el contenedor de materias");
+            return;
+        }
+
+        const count = container.children.length + 1;
+        
+        if (count > 8) {
+            mostrarError("Máximo 8 materias por registro masivo", "warning", "masivoAlertContainer");
+            return;
+        }
+
+        const section = document.createElement("div");
+        section.className = "materia-section mb-3 p-3 border rounded";
+        section.innerHTML = `
+            <div class="form-group">
+                <label>Materia ${count}</label>
+                <div class="position-relative">
+                    <input type="text" class="form-control materia-input" placeholder="Escribe el nombre de la materia" autocomplete="off">
+                    <div class="materia-suggestions suggestions-list"></div>
+                </div>
+                <input type="hidden" class="idMateria-input">
+            </div>
+            <div class="form-group">
+                <label>Sección</label>
+                <input type="text" class="form-control seccion-input" placeholder="Ej: A, B, C">
+            </div>
+            <div class="form-group">
+                <label>Cantidad de Estudiantes</label>
+                <input type="number" class="form-control cantEstudiantes-input" placeholder="Número de estudiantes">
+            </div>
+        `;
+        
+        container.appendChild(section);
+        
+        // Configurar autocompletado para la nueva materia
+        const materiaInput = section.querySelector(".materia-input");
+        const suggestionsContainer = section.querySelector(".materia-suggestions");
+        const idMateriaInput = section.querySelector(".idMateria-input");
+        
+        if (materiaInput && suggestionsContainer && idMateriaInput) {
+            setupAutocomplete(materiaInput, suggestionsContainer, idMateriaInput, "/buscarMateria");
+        } else {
+            console.error("Error al configurar autocompletado para nueva materia");
+        }
+    }
+
+    // 4. CONFIGURACIÓN INICIAL
+    console.log("Iniciando configuración...");
+    
+    // Configurar autocompletado para profesor
+    const profesorInput = document.getElementById("profesorMasivoInput");
+    const profesorSuggestions = document.getElementById("profesorMasivoSuggestions");
+    const idProfesorInput = document.getElementById("idProfesorMasivo");
+    
+    if (profesorInput && profesorSuggestions && idProfesorInput) {
+        console.log("Configurando autocompletado para profesor...");
+        setupAutocomplete(profesorInput, profesorSuggestions, idProfesorInput, "/buscarProfesor");
+    } else {
+        console.error("Elementos para autocompletado de profesor no encontrados");
+    }
+
+    // Configurar botón para agregar materias
+    const agregarBtn = document.getElementById("agregarMateriaBtn");
+    if (agregarBtn) {
+        agregarBtn.addEventListener("click", agregarMateriaSection);
+    } else {
+        console.error("Botón 'agregarMateriaBtn' no encontrado");
+    }
+
+    // Configurar envío del formulario masivo
+    const masivoForm = document.getElementById("masivoForm");
+    if (masivoForm) {
+        masivoForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            console.log("Formulario masivo enviado");
+            
+            const idProfesor = document.getElementById("idProfesorMasivo")?.value;
+            if (!idProfesor) {
+                mostrarError("Debe seleccionar un profesor", "danger", "masivoAlertContainer");
+                return;
+            }
+            
+            const secciones = [];
+            document.querySelectorAll(".materia-section").forEach(section => {
+                const idMateria = section.querySelector(".idMateria-input")?.value;
+                const seccion = section.querySelector(".seccion-input")?.value;
+                const estudiantes = section.querySelector(".cantEstudiantes-input")?.value;
+                
+                if (idMateria && seccion && estudiantes) {
+                    secciones.push({
+                        idProfesor,
+                        idMateria,
+                        seccion,
+                        cantidadEstudiantes: estudiantes
+                    });
+                }
+            });
+            
+            if (secciones.length === 0) {
+                mostrarError("Complete al menos una materia", "warning", "masivoAlertContainer");
+                return;
+            }
+            
+            console.log("Datos a enviar:", secciones);
+            mostrarError(`Preparado para enviar ${secciones.length} secciones`, "success", "masivoAlertContainer");
+            
+            // Aquí iría el código para enviar al servidor
+            // Descomenta para usar en producción:
+        
+            try {
+                const responses = await Promise.all(
+    secciones.map(sec => fetch('/guardarSeccion', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sec)
+    }))
+);
+                
+                const errors = responses.filter(r => !r.ok);
+                if (errors.length > 0) throw new Error("Algunas secciones no se guardaron");
+                
+                mostrarError(`${secciones.length} secciones guardadas`, "success", "masivoAlertContainer");
+                masivoForm.reset();
+                document.getElementById("materiasContainer").innerHTML = "";
+                agregarMateriaSection();
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                mostrarError(error.message, "danger", "masivoAlertContainer");
+            }
+            
+        });
+    }
+
+    // Agregar primera sección de materia
+    console.log("Agregando primera sección de materia...");
+    agregarMateriaSection();
+    console.log("Configuración inicial completada");
+
+    
+
+
+
+    console.log("Aplicación completamente inicializada");
+});
+    
+
+</script>
 <script>
 
     // Reemplaza todo el script con este código mejorado
@@ -939,5 +1315,6 @@ document.getElementById("confirmarEliminarButton").addEventListener("click", asy
     await cargarSecciones();
 });
 </script>
+
 </body>
 </html>

@@ -13,7 +13,7 @@ const buscarMateria = require('./buscarMateria'); // Importar la ruta para busca
 const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
-const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
+//const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
 
 const app = express();
 const PORT = 3000;
@@ -63,7 +63,7 @@ app.use('/actualizarSeccion', actualizarSeccion);
 app.use('/eliminarSeccion', eliminarSeccion);
 
 // Ruta para carga masiva de secciones
-app.use('/cargaMasivaSeccion', cargaMasivaSeccion); 
+//app.use('/cargaMasivaSeccion', cargaMasivaSeccion); 
 
 // Registrar las rutas
 
