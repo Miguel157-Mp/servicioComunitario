@@ -370,6 +370,10 @@
         .action-button span {
             font-weight: 500;
         }
+        .btn-secondary{
+            margin: 5px;
+        }
+
 
         
 
@@ -557,6 +561,25 @@
     </div>
 </div>
 
+<!-- Modal para confirmar eliminación -->
+<div class="modal fade" id="eliminarRegistroModal" tabindex="-1" aria-labelledby="eliminarRegistroModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarRegistroModalLabel">Eliminar Sección</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar esta sección?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmarEliminarButton" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     
 
     
@@ -577,204 +600,239 @@
     </script>
 
  <!-- Script para manejar datos -->
- <script>
-    document.addEventListener("DOMContentLoaded", async function () {
-        
-        
-        // Función para cargar datos iniciales
-        async function cargarSecciones() {
-            try {
-                const response = await fetch('/buscarSeccion?query=');
-                if (!response.ok) throw new Error('Error al cargar secciones');
-                secciones = await response.json();
-                renderizarTabla(secciones);
-            } catch (error) {
-                console.error('Error al cargar secciones:', error);
-                alert("Error al cargar datos: " + error.message);
-            }
+<script>
+
+    // Reemplaza todo el script con este código mejorado
+document.addEventListener("DOMContentLoaded", async function () {
+    let secciones = []; // Variable global para almacenar las secciones
+    
+     
+    // Función para cargar datos iniciales
+    async function cargarSecciones() {
+        try {
+            const response = await fetch('/buscarSeccion?query=');
+            if (!response.ok) throw new Error('Error al cargar secciones');
+            secciones = await response.json();
+            renderizarTabla(secciones);
+        } catch (error) {
+            console.error('Error al cargar secciones:', error);
+            mostrarError("Error al cargar datos: " + error.message);
         }
+    }
 
-        // Función para renderizar la tabla
-        function renderizarTabla(secciones) {
-            console.log(secciones); // Verifica la estructura de los datos
-            const tbody = document.querySelector("tbody");
-            tbody.innerHTML = '';
+    // Función para renderizar la tabla
+  function renderizarTabla(secciones) {
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = '';
 
-            secciones.forEach(seccion => {
-                const row = `
-                    <tr>
-                <td>${seccion.seccion}</td> <!-- Mostrar el valor de s.seccion -->
-                <td>${seccion.nombremateria}</td> <!-- Mostrar el valor de m.nbMateria -->
-                <td>${seccion.nombreprofesor}</td> <!-- Mostrar el valor de p.nbProfesor -->
-                <td>${seccion.cantEstudiantes}</td> <!-- Mostrar el valor cantEstudiante -->
+    secciones.forEach(seccion => {
+        const row = `
+            <tr>
+                <td>${seccion.seccion}</td>
+                <td>${seccion.nombremateria}</td>
+                <td>${seccion.nombreprofesor}</td>
+                <td>${seccion.cantEstudiantes}</td>
                 <td>
                     <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" 
                             data-id="${seccion.idSeccion}">
                         Editar
                     </button>
+                    <button type="button" class="btn btn-danger btn-sm btn-rounded eliminar-btn" 
+                            data-id="${seccion.idSeccion}">
+                        Eliminar
+                    </button>
                 </td>
             </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
-
-        // Función para buscar en el backend
-        async function buscarSecciones(query) {
-            try {
-                const response = await fetch(`/buscarSeccion?query=${encodeURIComponent(query)}`);
-                if (!response.ok) throw new Error('Error en la búsqueda');
-                return await response.json();
-            } catch (error) {
-                console.error('Error al buscar secciones:', error);
-                return [];
-            }
-        }
-
-        // Búsqueda con debounce (espera 300ms después de escribir)
-        let timeoutId;
-        document.querySelector(".search-input").addEventListener("input", async function() {
-            const searchText = this.value.trim();
-            
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(async () => {
-                if (searchText.length === 0) {
-                    await cargarSecciones();
-                } else {
-                    const resultados = await buscarSecciones(searchText);
-                    
-                    renderizarTabla(resultados);
-                }
-            }, 300);
-        });
-
-        // Cargar datos iniciales
-        
-        await cargarSecciones();
+        `;
+        tbody.innerHTML += row;
     });
-
-    //editar de forma dinamica
-
-        document.addEventListener("DOMContentLoaded", async function () {
-        // Función para manejar el clic en el botón "Editar"
-        document.querySelector("tbody").addEventListener("click", function (event) {
-            if (event.target.classList.contains("editar-btn")) {
-                console.log("Botón Editar clickeado");
-                const idSeccion = event.target.getAttribute("data-id"); // Obtener el ID de la sección
-                const seccion = secciones.find(sec => sec.idSeccion == idSeccion); // Buscar la sección en el array global
-    
-                if (seccion) {
-                    // Rellenar los campos del formulario con los datos de la sección
-                    document.getElementById("seccionInput").value = seccion.seccion;
-                    document.getElementById("profesorInput").value = seccion.nombreprofesor;
-                    document.getElementById("idProfesor").value = seccion.idProfesor; // Si tienes el ID del profesor
-                    document.getElementById("materiaInput").value = seccion.nombremateria;
-                    document.getElementById("idMateria").value = seccion.idMateria; // Si tienes el ID de la materia
-                    document.getElementById("cantidadEstudiantesInput").value = seccion.cantEstudiantes;
-    
-                    // Cambiar el título del modal
-                    document.getElementById("nuevoRegistroModalLabel").textContent = "Editar Sección";
-    
-                    // Cambiar el texto del botón y asociar el evento de actualización
-                    const submitButton = document.getElementById("submitButton");
-                    submitButton.textContent = "Actualizar";
-                    submitButton.onclick = async function () {
-                        await actualizarSeccion(idSeccion); // Llamar a la función para actualizar la sección
-                    };
-    
-                    // Abrir el modal
-                    const modal = new bootstrap.Modal(document.getElementById("nuevoRegistroModal"));
-                    modal.show();
-                }
-            }
-        });
-
-        //funcion para registrar una seccion
-        document.getElementById("seccionForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
-    
-    try {
-        const response = await fetch('/guardarSeccion', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                seccion: document.getElementById("seccionInput").value,
-                idProfesor: document.getElementById("idProfesor").value,
-                idMateria: document.getElementById("idMateria").value,
-                cantidadEstudiantes: document.getElementById("cantidadEstudiantesInput").value
-            })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Error al guardar la sección");
+}
+    // Función para buscar secciones
+    async function buscarSecciones(query) {
+        try {
+            const response = await fetch(`/buscarSeccion?query=${encodeURIComponent(query)}`);
+            if (!response.ok) throw new Error('Error en la búsqueda');
+            return await response.json();
+        } catch (error) {
+            console.error('Error al buscar secciones:', error);
+            return [];
         }
+    }
 
-        const modal = bootstrap.Modal.getInstance(document.getElementById("nuevoRegistroModal"));
-        modal.hide();
-        await cargarSecciones();
-    } catch (error) {
-        console.error("Error al guardar la sección:", error);
+    // Función para mostrar errores
+    function mostrarError(mensaje) {
         const alertContainer = document.getElementById("alertContainer");
         alertContainer.style.display = "block";
         alertContainer.className = "alert alert-danger";
-        alertContainer.textContent = error.message;
+        alertContainer.textContent = mensaje;
+        setTimeout(() => {
+            alertContainer.style.display = "none";
+        }, 5000);
     }
-});
-        // Función para actualizar una sección
-        async function actualizarSeccion(idSeccion) {
-            try {
-                const response = await fetch(`/actualizarSeccion/${idSeccion}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        seccion: document.getElementById("seccionInput").value,
-                        idProfesor: document.getElementById("idProfesor").value,
-                        idMateria: document.getElementById("idMateria").value,
-                        cantidadEstudiantes: document.getElementById("cantidadEstudiantesInput").value
-                    })
-                });
-        
-                if (!response.ok) throw new Error("Error al actualizar la sección");
-        
-                // Cerrar el modal y recargar las secciones
-                const modal = bootstrap.Modal.getInstance(document.getElementById("nuevoRegistroModal"));
-                modal.hide();
-                await cargarSecciones(); // Recargar las secciones
-            } catch (error) {
-                console.error("Error al actualizar la sección:", error);
-                alert("Error al actualizar la sección. Por favor, inténtalo de nuevo.");
+
+    // Función para registrar una nueva sección
+    async function registrarSeccion() {
+        try {
+            const response = await fetch('/guardarSeccion', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                
+                body: JSON.stringify({
+                    seccion: document.getElementById("seccionInput").value,
+                    idProfesor: document.getElementById("idProfesor").value,
+                    idMateria: document.getElementById("idMateria").value,
+                    cantidadEstudiantes: document.getElementById("cantidadEstudiantesInput").value
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Error al guardar la sección");
             }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById("nuevoRegistroModal"));
+            modal.hide();
+            await cargarSecciones();
+        } catch (error) {
+            console.error("Error al guardar la sección:", error);
+            mostrarError(error.message);
+        }
+    }
+
+    // Función para actualizar una sección
+    async function actualizarSeccion(idSeccion) {
+    try {
+        // 1. Obtener los valores del formulario
+        const datosActualizacion = {
+            seccion: document.getElementById("seccionInput").value,
+            idProfesor: document.getElementById("idProfesor").value,
+            idMateria: document.getElementById("idMateria").value,
+            cantidadEstudiantes: document.getElementById("cantidadEstudiantesInput").value
+        };
+
+        console.log("Datos a enviar:", datosActualizacion); // Para depuración
+
+        // 2. Validar que los IDs sean números válidos
+        if (isNaN(parseInt(datosActualizacion.idProfesor))) {
+            throw new Error("El ID del profesor no es válido");
+        }
+        if (isNaN(parseInt(datosActualizacion.idMateria))) {
+            throw new Error("El ID de la materia no es válido");
+        }
+        if (isNaN(parseInt(datosActualizacion.cantidadEstudiantes))) {
+            throw new Error("La cantidad de estudiantes debe ser un número");
+        }
+
+        // 3. Convertir los IDs a números (por si vienen como strings)
+        datosActualizacion.idProfesor = parseInt(datosActualizacion.idProfesor);
+        datosActualizacion.idMateria = parseInt(datosActualizacion.idMateria);
+        datosActualizacion.cantidadEstudiantes = parseInt(datosActualizacion.cantidadEstudiantes);
+
+        // 4. Enviar la solicitud PUT
+        const response = await fetch(`/actualizarSeccion/${idSeccion}`, {
+            method: "PUT",
+            headers: { 
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify(datosActualizacion)
+        });
+
+        // 5. Manejar la respuesta
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error del servidor:", errorData); // Para depuración
+            throw new Error(errorData.error || "Error al actualizar la sección");
+        }
+
+        // 6. Cerrar el modal y refrescar los datos
+        const modal = bootstrap.Modal.getInstance(document.getElementById("nuevoRegistroModal"));
+        modal.hide();
+        await cargarSecciones();
+
+    } catch (error) {
+        console.error("Error completo:", error); // Log completo para depuración
+        mostrarError(error.message);
+        
+        // Mostrar detalles adicionales si están disponibles
+        if (error.details) {
+            console.error("Detalles del error:", error.details);
+        }
+    }
+}
+    // Manejar el envío del formulario
+    document.getElementById("seccionForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const submitButton = document.getElementById("submitButton");
+    
+        
+        if (submitButton.textContent === "Registrar") {
+            await registrarSeccion();
+        } else {
+            const idSeccion = submitButton.dataset.idSeccion;
+            await actualizarSeccion(idSeccion);
         }
     });
 
-//reestablecer el boton modal
-document.getElementById("nuevoRegistroModal").addEventListener("hidden.bs.modal", function () {
-    // Restablecer el título del modal
-    document.getElementById("nuevoRegistroModalLabel").textContent = "Registrar Sección";
+    // Manejar clic en botón Editar
+    document.querySelector("tbody").addEventListener("click", function (event) {
+    if (event.target.classList.contains("editar-btn")) {
+        const idSeccion = event.target.getAttribute("data-id");
+        const seccion = secciones.find(sec => sec.idSeccion == idSeccion);
 
-    // Restablecer el texto y el evento del botón
-    const submitButton = document.getElementById("submitButton");
-    submitButton.textContent = "Registrar";
-    submitButton.onclick = null; // Limpiar cualquier evento previo
-    submitButton.onclick = async function () {
-        await registrarSeccion(); // Asociar la función para registrar una nueva sección
-    };
+        if (seccion) {
+            // Rellenar formulario con nombres visibles pero IDs ocultos
+            document.getElementById("seccionInput").value = seccion.seccion;
+            document.getElementById("profesorInput").value = seccion.nombreprofesor; // Nombre visible
+            document.getElementById("idProfesor").value = seccion.idProfesor;       // ID oculto
+            document.getElementById("materiaInput").value = seccion.nombremateria;  // Nombre visible
+            document.getElementById("idMateria").value = seccion.idMateria;        // ID oculto
+            document.getElementById("cantidadEstudiantesInput").value = seccion.cantEstudiantes;
+            console.log("Sección a editar:", seccion); // Para depuración
+            // Configurar modal para edición
+            document.getElementById("nuevoRegistroModalLabel").textContent = "Editar Sección";
+            const submitButton = document.getElementById("submitButton");
+            submitButton.textContent = "Actualizar";
+            submitButton.dataset.idSeccion = idSeccion;
 
-    // Limpiar los campos del formulario
-    document.getElementById("seccionForm").reset();
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById("nuevoRegistroModal"));
+            modal.show();
+        }
+    }
 });
+    // Restablecer modal cuando se cierra
+    document.getElementById("nuevoRegistroModal").addEventListener("hidden.bs.modal", function () {
+        document.getElementById("nuevoRegistroModalLabel").textContent = "Registrar Sección";
+        const submitButton = document.getElementById("submitButton");
+        submitButton.textContent = "Registrar";
+        delete submitButton.dataset.idSeccion;
+        document.getElementById("seccionForm").reset();
+        document.getElementById("alertContainer").style.display = "none";
+    });
 
-// Función de debounce para limitar las solicitudes
-function debounce(func, delay) {
+    // Búsqueda con debounce
     let timeoutId;
-    return function (...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func.apply(this, args), delay);
-    };
-}
+    document.querySelector(".search-input").addEventListener("input", debounce(async function() {
+        const searchText = this.value.trim();
+        if (searchText.length === 0) {
+            await cargarSecciones();
+        } else {
+            const resultados = await buscarSecciones(searchText);
+            renderizarTabla(resultados);
+            console.log(secciones); // Para depuración
+        }
+    }, 300));
 
-// Manejar sugerencias para el campo de profesor
+    // Función de debounce
+    function debounce(func, delay) {
+        let timeoutId;
+        return function (...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Manejar sugerencias para el campo de profesor
 document.getElementById("profesorInput").addEventListener("input", debounce(async function () {
     const query = this.value.trim(); // Capturar el texto ingresado
     const suggestionsContainer = document.getElementById("profesorSuggestions");
@@ -846,7 +904,40 @@ document.getElementById("materiaInput").addEventListener("input", debounce(async
     }
 }, 300));
 
-</script>
+// Manejar clic en botón Eliminar
+document.querySelector("tbody").addEventListener("click", function (event) {
+    if (event.target.classList.contains("eliminar-btn")) {
+        const idSeccion = event.target.getAttribute("data-id");
+        const modal = new bootstrap.Modal(document.getElementById("eliminarRegistroModal"));
+        document.getElementById("confirmarEliminarButton").dataset.idSeccion = idSeccion; // Guardar el ID en el botón
+        modal.show();
+    }
+});
 
+document.getElementById("confirmarEliminarButton").addEventListener("click", async function () {
+    const idSeccion = this.dataset.idSeccion; // Obtener el ID de la sección
+    try {
+        const response = await fetch(`/eliminarSeccion/${idSeccion}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Error al eliminar la sección");
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById("eliminarRegistroModal"));
+        modal.hide();
+        await cargarSecciones(); // Recargar la tabla
+    } catch (error) {
+        console.error("Error al eliminar la sección:", error);
+        mostrarError(error.message);
+    }
+});
+
+    // Cargar datos iniciales
+    await cargarSecciones();
+});
+</script>
 </body>
 </html>

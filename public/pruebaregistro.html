@@ -370,6 +370,10 @@
         .action-button span {
             font-weight: 500;
         }
+        .btn-secondary{
+            margin: 5px;
+        }
+
 
         
 
@@ -557,6 +561,25 @@
     </div>
 </div>
 
+<!-- Modal para confirmar eliminación -->
+<div class="modal fade" id="eliminarRegistroModal" tabindex="-1" aria-labelledby="eliminarRegistroModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarRegistroModalLabel">Eliminar Sección</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar esta sección?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmarEliminarButton" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     
 
     
@@ -598,29 +621,32 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // Función para renderizar la tabla
-    function renderizarTabla(secciones) {
-        const tbody = document.querySelector("tbody");
-        tbody.innerHTML = '';
+  function renderizarTabla(secciones) {
+    const tbody = document.querySelector("tbody");
+    tbody.innerHTML = '';
 
-        secciones.forEach(seccion => {
-            const row = `
-                <tr>
-                    <td>${seccion.seccion}</td>
-                    <td>${seccion.nombremateria}</td>
-                    <td>${seccion.nombreprofesor}</td>
-                    <td>${seccion.cantEstudiantes}</td>
-                    <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" 
-                                data-id="${seccion.idSeccion}">
-                            Editar
-                        </button>
-                    </td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-    }
-
+    secciones.forEach(seccion => {
+        const row = `
+            <tr>
+                <td>${seccion.seccion}</td>
+                <td>${seccion.nombremateria}</td>
+                <td>${seccion.nombreprofesor}</td>
+                <td>${seccion.cantEstudiantes}</td>
+                <td>
+                    <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" 
+                            data-id="${seccion.idSeccion}">
+                        Editar
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm btn-rounded eliminar-btn" 
+                            data-id="${seccion.idSeccion}">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+}
     // Función para buscar secciones
     async function buscarSecciones(query) {
         try {
@@ -877,6 +903,37 @@ document.getElementById("materiaInput").addEventListener("input", debounce(async
         console.error("Error al buscar materias:", error);
     }
 }, 300));
+
+// Manejar clic en botón Eliminar
+document.querySelector("tbody").addEventListener("click", function (event) {
+    if (event.target.classList.contains("eliminar-btn")) {
+        const idSeccion = event.target.getAttribute("data-id");
+        const modal = new bootstrap.Modal(document.getElementById("eliminarRegistroModal"));
+        document.getElementById("confirmarEliminarButton").dataset.idSeccion = idSeccion; // Guardar el ID en el botón
+        modal.show();
+    }
+});
+
+document.getElementById("confirmarEliminarButton").addEventListener("click", async function () {
+    const idSeccion = this.dataset.idSeccion; // Obtener el ID de la sección
+    try {
+        const response = await fetch(`/eliminarSeccion/${idSeccion}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Error al eliminar la sección");
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById("eliminarRegistroModal"));
+        modal.hide();
+        await cargarSecciones(); // Recargar la tabla
+    } catch (error) {
+        console.error("Error al eliminar la sección:", error);
+        mostrarError(error.message);
+    }
+});
 
     // Cargar datos iniciales
     await cargarSecciones();
