@@ -264,7 +264,7 @@
             min-height: 50px;
         }
 
-          /* Estilos para la sección de mobiliario */
+/* Estilos para la sección de mobiliario */
     .mobiliario-container {
         background-color: white;
         padding: 20px;
@@ -392,6 +392,59 @@
         color: #795548;
         text-align: center;
     }
+ /* ingreso masivo de materias */
+ .materia-section {
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.materia-section:hover {
+    background-color: #e9ecef;
+}
+
+#agregarMateriaBtn {
+    width: 100%;
+}
+
+#masivoAlertContainer {
+    margin-top: 15px;
+}
+/* Estilos para las sugerencias */
+.position-relative {
+    position: relative;
+}
+
+
+
+.materia-section {
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.materia-section:hover {
+    background-color: #e9ecef;
+}
+.suggestions-list {
+    display: none; /* Inicialmente oculto */
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.suggestions-list .list-group-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestions-list .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+    
 
     </style>
 </head>
@@ -472,14 +525,266 @@
                                 <button class="btn btn-primary" id="enviarDatos" onclick="enviarDatos()">Traspasar Pupitres</button>
                             </div>
                         </div>
+
+
             
                         <div class="nota-transaccion">
                             <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.</p>
                         </div>
                     </div>
                 </div>
+
+                
+            </div>
+
+            <div class="notes-box" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <h4 style="text-align: center;">Registro Multiple de Mobiliario</h4>
+                <p style="font-size: 14px;padding-top: 5px;">Complete los datos para asignar mobiliario a los salones correspondientes</p>
+                <p style="font-size: 12px; font-style: oblique; font-weight: 600; padding-top: 5px; padding-bottom: 5px;">*solo se podra ingresar hasta 8 tipos de mobiliario</p>
+                
+                <form id="masivoForm">
+                    <!-- Campo para seleccionar salón -->
+                    <div class="form-group mb-3">
+                        <label for="salonInput">Salón</label>
+                        <div class="position-relative">
+                            <input type="text" id="salonInput" class="form-control" placeholder="Escribe el número o piso del salón" autocomplete="off" required>
+                            <div id="salonSuggestions" class="suggestions-list"></div>
+                        </div>
+                        <input type="hidden" id="idSalon">
+                    </div>
+                    
+                    <!-- Contenedor para asignar el mobiliario -->
+                    <div id="mobiliarioContainer">
+                        <!-- Secciones de mobiliario se agregarán aquí -->
+                    </div>
+                    
+                    <!-- Botón para agregar más mobiliario -->
+                    <button type="button" id="agregarMobiliarioBtn" class="btn btn-secondary mb-3">
+                        <i class="fas fa-plus"></i> Agregar otro tipo de mobiliario
+                    </button>
+                    
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary">Registrar Mobiliario</button>
+                    </div>
+                    
+                    <div id="masivoAlertContainer" style="display: none;" class="alert" role="alert"></div>
+                </form>
             </div>
             
+            <script>
+                document.addEventListener("DOMContentLoaded", async function () {
+                    // 1. FUNCIONES AUXILIARES
+                    function debounce(func, delay) {
+                        let timeoutId;
+                        return function (...args) {
+                            clearTimeout(timeoutId);
+                            timeoutId = setTimeout(() => func.apply(this, args), delay);
+                        };
+                    }
+                
+                    function mostrarError(mensaje, tipo = 'danger', contenedorId = "masivoAlertContainer") {
+                        const alertContainer = document.getElementById(contenedorId);
+                        if (!alertContainer) return;
+                        
+                        alertContainer.style.display = "block";
+                        alertContainer.className = `alert alert-${tipo}`;
+                        alertContainer.textContent = mensaje;
+                        
+                        setTimeout(() => {
+                            alertContainer.style.display = "none";
+                        }, 5000);
+                    }
+                
+                    // 2. FUNCIÓN DE AUTOCOMPLETADO
+                    function setupAutocomplete(inputElement, suggestionsContainer, hiddenInput, endpoint, displayFormatter) {
+                        inputElement.addEventListener("input", debounce(async function () {
+                            const query = this.value.trim().toLowerCase();
+                    
+                            // Limpiar sugerencias si el campo está vacío
+                            if (query.length === 0) {
+                                suggestionsContainer.innerHTML = "";
+                                suggestionsContainer.style.display = "none";
+                                hiddenInput.value = "";
+                                return;
+                            }
+                    
+                            try {
+                                const response = await fetch(`${endpoint}?query=${encodeURIComponent(query)}`);
+                                if (!response.ok) throw new Error(`Error en la respuesta: ${response.status}`);
+                    
+                                const resultados = await response.json();
+                                suggestionsContainer.innerHTML = "";
+                    
+                                if (resultados.length === 0) {
+                                    suggestionsContainer.style.display = "none";
+                                    return;
+                                }
+                    
+                                // Mostrar sugerencias
+                                resultados.forEach(item => {
+                                    const elemento = document.createElement("div");
+                                    elemento.className = "list-group-item";
+                                    elemento.textContent = displayFormatter(item); // Formatear el texto de la sugerencia
+                                    elemento.dataset.id = item.idSalon;
+                    
+                                    elemento.addEventListener("click", function () {
+                                        inputElement.value = this.textContent;
+                                        hiddenInput.value = this.dataset.id;
+                                        suggestionsContainer.style.display = "none";
+                                    });
+                    
+                                    suggestionsContainer.appendChild(elemento);
+                                });
+                    
+                                suggestionsContainer.style.display = "block";
+                            } catch (error) {
+                                console.error("Error en fetch:", error);
+                                mostrarError("Error al cargar sugerencias");
+                            }
+                        }, 300));
+                    
+                        // Ocultar sugerencias al hacer clic fuera
+                        document.addEventListener("click", function (e) {
+                            if (!inputElement.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                                suggestionsContainer.style.display = "none";
+                            }
+                        });
+                    }
+                    // 3. FUNCIÓN PARA AGREGAR SECCIÓN DE MOBILIARIO
+                    function agregarMobiliarioSection() {
+                        const container = document.getElementById("mobiliarioContainer");
+                        if (!container) return;
+                
+                        const count = container.children.length + 1;
+                        
+                        if (count > 8) {
+                            mostrarError("Máximo 8 tipos de mobiliario por registro", "warning");
+                            return;
+                        }
+                
+                        const section = document.createElement("div");
+                        section.className = "mobiliario-section mb-3 p-3 border rounded";
+                        section.innerHTML = `
+                            <div class="form-group">
+                                <label>Tipo de Mobiliario ${count}</label>
+                                <div class="position-relative">
+                                    <input type="text" class="form-control mobiliario-input" placeholder="Escribe el tipo de mobiliario" autocomplete="off" required>
+                                    <div class="mobiliario-suggestions suggestions-list"></div>
+                                </div>
+                                <input type="hidden" class="idTipoDeMobiliario-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input type="number" class="form-control cantidad-input" placeholder="Cantidad" min="1" required>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm eliminar-mobiliario">Eliminar</button>
+                        `;
+                        
+                        container.appendChild(section);
+                        
+                        // Configurar autocompletado para el nuevo mobiliario
+                        const mobiliarioInput = section.querySelector(".mobiliario-input");
+                        const suggestionsContainer = section.querySelector(".mobiliario-suggestions");
+                        const idMobiliarioInput = section.querySelector(".idTipoDeMobiliario-input");
+                        
+                        if (mobiliarioInput && suggestionsContainer && idMobiliarioInput) {
+                            setupAutocomplete(
+                                mobiliarioInput, 
+                                suggestionsContainer, 
+                                idMobiliarioInput, 
+                                "/buscarMobiliario",  // Necesitarás crear esta ruta
+                                "nbMobiliario"
+                            );
+                        }
+                
+                        // Configurar botón eliminar
+                        section.querySelector(".eliminar-mobiliario").addEventListener("click", function() {
+                            if (container.children.length > 1) {
+                                container.removeChild(section);
+                            } else {
+                                mostrarError("Debe haber al menos un tipo de mobiliario", "warning");
+                            }
+                        });
+                    }
+                
+                    // 4. CONFIGURACIÓN INICIAL
+                    // Configurar autocompletado para salón
+                    const salonInput = document.getElementById("salonInput");
+                    const salonSuggestions = document.getElementById("salonSuggestions");
+                    const idSalonInput = document.getElementById("idSalon");
+                    
+                    if (salonInput && salonSuggestions && idSalonInput) {
+                        setupAutocomplete(
+                            salonInput,
+                            salonSuggestions,
+                            idSalonInput,
+                            "/movermobiliario/salones", // Ruta para obtener los salones
+                            (item) => `ID: ${item.idSalon} - Piso: ${item.piso}` // Formatear el texto de la sugerencia
+                        );
+                    }
+                
+                    // Configurar botón para agregar mobiliario
+                    const agregarBtn = document.getElementById("agregarMobiliarioBtn");
+                    if (agregarBtn) {
+                        agregarBtn.addEventListener("click", agregarMobiliarioSection);
+                    }
+                
+                    // Configurar envío del formulario
+                    const masivoForm = document.getElementById("masivoForm");
+                    if (masivoForm) {
+                        masivoForm.addEventListener("submit", async function(e) {
+                            e.preventDefault();
+                            
+                            const idSalon = document.getElementById("idSalon")?.value;
+                            if (!idSalon) {
+                                mostrarError("Debe seleccionar un salón", "danger");
+                                return;
+                            }
+                            
+                            const mobiliarios = [];
+                            document.querySelectorAll(".mobiliario-section").forEach(section => {
+                                const idTipoDeMobiliario = section.querySelector(".idTipoDeMobiliario-input")?.value;
+                                const cantidad = section.querySelector(".cantidad-input")?.value;
+                                
+                                if (idTipoDeMobiliario && cantidad) {
+                                    mobiliarios.push({
+                                        idSalon: parseInt(idSalon),
+                                        idTipoDeMobiliario: parseInt(idTipoDeMobiliario),
+                                        cantidad: parseInt(cantidad)
+                                    });
+                                }
+                            });
+                            
+                            if (mobiliarios.length === 0) {
+                                mostrarError("Complete al menos un tipo de mobiliario", "warning");
+                                return;
+                            }
+                            
+                            try {
+                                const response = await fetch('/guardarMobiliario', {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify(mobiliarios)
+                                });
+                                
+                                if (!response.ok) throw new Error("Error al guardar el mobiliario");
+                                
+                                mostrarError("Mobiliario registrado exitosamente", "success");
+                                masivoForm.reset();
+                                document.getElementById("mobiliarioContainer").innerHTML = "";
+                                agregarMobiliarioSection();
+                            } catch (error) {
+                                console.error("Error al guardar:", error);
+                                mostrarError(error.message, "danger");
+                            }
+                        });
+                    }
+                    
+                    // Agregar primera sección de mobiliario
+                    agregarMobiliarioSection();
+                });
+                </script>
+
            
             <script>
                 document.addEventListener('DOMContentLoaded', () => {

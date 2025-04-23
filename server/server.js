@@ -13,7 +13,7 @@ const buscarMateria = require('./buscarMateria'); // Importar la ruta para busca
 const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
-//const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
+const buscarMobiliario = require('./buscarMobiliario'); // Importar la ruta para buscar mobiliario
 
 const app = express();
 const PORT = 3000;
@@ -27,6 +27,8 @@ app.use(session(sessionConfig));
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../css')));
+
+// Registrar las rutas
 
 // Usar rutas
 app.use(routes);
@@ -62,10 +64,12 @@ app.use('/actualizarSeccion', actualizarSeccion);
 // Ruta para eliminar una sección
 app.use('/eliminarSeccion', eliminarSeccion);
 
-// Ruta para carga masiva de secciones
-//app.use('/cargaMasivaSeccion', cargaMasivaSeccion); 
+// Ruta para buscar mobiliario
+app.use('/buscarMobiliario', buscarMobiliario);
 
-// Registrar las rutas
+
+
+
 
 
 
