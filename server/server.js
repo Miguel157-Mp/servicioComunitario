@@ -14,6 +14,7 @@ const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para gua
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
 const buscarMobiliario = require('./buscarMobiliario'); // Importar la ruta para buscar mobiliario
+const guardarMobiliario = require('./guardarMobiliario'); // Importar la ruta para guardar mobiliario
 
 const app = express();
 const PORT = 3000;
@@ -67,6 +68,9 @@ app.use('/eliminarSeccion', eliminarSeccion);
 // Ruta para buscar mobiliario
 app.use('/buscarMobiliario', buscarMobiliario);
 
+// Ruta para guardar mobiliario
+app.use('/guardarMobiliario', guardarMobiliario); 
+
 
 
 
@@ -77,6 +81,12 @@ app.use('/buscarMobiliario', buscarMobiliario);
 app.use((err, req, res, next) => {
     console.error('Error detectado:', err.message, err.stack); // Log detallado del error
     res.status(500).send('Error interno del servidor');
+});
+// Middleware para registrar solicitudes
+app.use((req, res, next) => {
+    console.log(`Solicitud recibida: ${req.method} ${req.url}`);
+    console.log('Cuerpo de la solicitud:', req.body);
+    next();
 });
 
 app.listen(PORT, () => {

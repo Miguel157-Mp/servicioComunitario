@@ -596,72 +596,75 @@
                     }
                 
                     // 2. FUNCIÓN DE AUTOCOMPLETADO
-                    function setupAutocomplete(inputElement, suggestionsContainer, hiddenInput, endpoint, displayFormatter) {
-                        inputElement.addEventListener("input", debounce(async function () {
-                            const query = this.value.trim().toLowerCase();
-                    
-                            // Limpiar sugerencias si el campo está vacío
-                            if (query.length === 0) {
-                                suggestionsContainer.innerHTML = "";
-                                suggestionsContainer.style.display = "none";
-                                hiddenInput.value = "";
-                                return;
-                            }
-                    
-                            try {
-                                const response = await fetch(`${endpoint}?query=${encodeURIComponent(query)}`);
-                                if (!response.ok) throw new Error(`Error en la respuesta: ${response.status}`);
-                    
-                                const resultados = await response.json();
-                                suggestionsContainer.innerHTML = "";
-                    
-                                if (resultados.length === 0) {
+                        function setupAutocomplete(inputElement, suggestionsContainer, hiddenInput, endpoint, displayFormatter) {
+                            inputElement.addEventListener("input", debounce(async function () {
+                                const query = this.value.trim().toLowerCase();
+                        
+                                // Limpiar sugerencias si el campo está vacío
+                                if (query.length === 0) {
+                                    suggestionsContainer.innerHTML = "";
                                     suggestionsContainer.style.display = "none";
+                                    hiddenInput.value = "";
                                     return;
                                 }
-                    
-                                // Mostrar sugerencias
-                                resultados.forEach(item => {
-                                    const elemento = document.createElement("div");
-                                    elemento.className = "list-group-item";
-                                    elemento.textContent = displayFormatter(item); // Formatear el texto de la sugerencia
-                                    elemento.dataset.id = item.idSalon;
-                    
-                                    elemento.addEventListener("click", function () {
-                                        inputElement.value = this.textContent;
-                                        hiddenInput.value = this.dataset.id;
+                        
+                                try {
+                                    const response = await fetch(`${endpoint}?query=${encodeURIComponent(query)}`);
+                                    if (!response.ok) throw new Error(`Error en la respuesta: ${response.status}`);
+                        
+                                    const resultados = await response.json();
+                                    suggestionsContainer.innerHTML = "";
+                        
+                                    if (resultados.length === 0) {
                                         suggestionsContainer.style.display = "none";
+                                        return;
+                                    }
+                        
+                                    // Mostrar sugerencias
+                                    resultados.forEach(item => {
+                                        const elemento = document.createElement("div");
+                                        elemento.className = "list-group-item";
+                                        elemento.textContent = displayFormatter(item); // Formatear el texto de la sugerencia
+                                        elemento.dataset.id = item.idSalon || item.idTipoDeMobiliario; // Asegúrate de que el ID esté disponible
+                        
+                                        elemento.addEventListener("click", function () {
+                                            inputElement.value = this.textContent;
+                                            hiddenInput.value = this.dataset.id; // Asignar el ID al campo oculto
+                                            console.log("ID seleccionado:", this.dataset.id);
+                                            suggestionsContainer.style.display = "none";
+                                        });
+                        
+                                        suggestionsContainer.appendChild(elemento);
                                     });
-                    
-                                    suggestionsContainer.appendChild(elemento);
-                                });
-                    
-                                suggestionsContainer.style.display = "block";
-                            } catch (error) {
-                                console.error("Error en fetch:", error);
-                                mostrarError("Error al cargar sugerencias");
-                            }
-                        }, 300));
-                    
-                        // Ocultar sugerencias al hacer clic fuera
-                        document.addEventListener("click", function (e) {
-                            if (!inputElement.contains(e.target) && !suggestionsContainer.contains(e.target)) {
-                                suggestionsContainer.style.display = "none";
-                            }
-                        });
-                    }
+                        
+                                    suggestionsContainer.style.display = "block";
+                                } catch (error) {
+                                    console.error("Error en fetch:", error);
+                                    mostrarError("Error al cargar sugerencias");
+                                }
+                            }, 300));
+                        
+                            // Ocultar sugerencias al hacer clic fuera
+                            document.addEventListener("click", function (e) {
+                                if (!inputElement.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                                    suggestionsContainer.style.display = "none";
+                                }
+                            });
+                        } 
+
+
                     // 3. FUNCIÓN PARA AGREGAR SECCIÓN DE MOBILIARIO
-                    function agregarMobiliarioSection() {
+                        function agregarMobiliarioSection() {
                         const container = document.getElementById("mobiliarioContainer");
                         if (!container) return;
-                
+                    
                         const count = container.children.length + 1;
-                        
+                    
                         if (count > 8) {
                             mostrarError("Máximo 8 tipos de mobiliario por registro", "warning");
                             return;
                         }
-                
+                    
                         const section = document.createElement("div");
                         section.className = "mobiliario-section mb-3 p-3 border rounded";
                         section.innerHTML = `
@@ -679,26 +682,26 @@
                             </div>
                             <button type="button" class="btn btn-danger btn-sm eliminar-mobiliario">Eliminar</button>
                         `;
-                        
+                    
                         container.appendChild(section);
-                        
+                    
                         // Configurar autocompletado para el nuevo mobiliario
                         const mobiliarioInput = section.querySelector(".mobiliario-input");
                         const suggestionsContainer = section.querySelector(".mobiliario-suggestions");
                         const idMobiliarioInput = section.querySelector(".idTipoDeMobiliario-input");
-                        
+                    
                         if (mobiliarioInput && suggestionsContainer && idMobiliarioInput) {
                             setupAutocomplete(
-                                mobiliarioInput, 
-                                suggestionsContainer, 
-                                idMobiliarioInput, 
-                                "/buscarMobiliario",  // Necesitarás crear esta ruta
-                                "nbMobiliario"
+                                mobiliarioInput,
+                                suggestionsContainer,
+                                idMobiliarioInput,
+                                "/buscarMobiliario",
+                                (item) => item.nbMobiliario // Formatear el texto de la sugerencia
                             );
                         }
-                
+                    
                         // Configurar botón eliminar
-                        section.querySelector(".eliminar-mobiliario").addEventListener("click", function() {
+                        section.querySelector(".eliminar-mobiliario").addEventListener("click", function () {
                             if (container.children.length > 1) {
                                 container.removeChild(section);
                             } else {
@@ -706,7 +709,8 @@
                             }
                         });
                     }
-                
+
+
                     // 4. CONFIGURACIÓN INICIAL
                     // Configurar autocompletado para salón
                     const salonInput = document.getElementById("salonInput");
@@ -749,12 +753,12 @@
                                 if (idTipoDeMobiliario && cantidad) {
                                     mobiliarios.push({
                                         idSalon: parseInt(idSalon),
-                                        idTipoDeMobiliario: parseInt(idTipoDeMobiliario),
+                                        idTipoDeMobiliario: parseInt(idTipoDeMobiliario), // Cambiado de I a idTipoDeMobiliario
                                         cantidad: parseInt(cantidad)
                                     });
                                 }
                             });
-                            
+                            console.log("Datos enviados al servidor:", mobiliarios); // Depuración
                             if (mobiliarios.length === 0) {
                                 mostrarError("Complete al menos un tipo de mobiliario", "warning");
                                 return;
