@@ -4,7 +4,7 @@ const express = require('express');
 const pool = require('../database/db');
 const router = express.Router();
 
-router.post('/traspasar', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { origen, destino, cantidad } = req.body;
     const cantidadTraspasar = parseInt(cantidad, 10);
 
@@ -19,9 +19,9 @@ router.post('/traspasar', async (req, res, next) => {
     try {
         await pool.query('BEGIN');
 
-        // 1. Consultar la capacidad (current quantity and capacity limit) of the destination salon
+        // 1. Consultar la cantidad (current quantity and capacity limit) of the destination salon
         const destinoResult = await pool.query(
-            'SELECT capacidad FROM public.salon WHERE "idSalon" = $1',
+            'SELECT cantidad FROM public."lugarInventario" WHERE "idSalon" = $1 AND "idTipodeMobiliario" = 1',
             [destino]
         );
 
@@ -30,11 +30,11 @@ router.post('/traspasar', async (req, res, next) => {
             return res.status(404).json({ success: false, error: 'El salón de destino no existe' });
         }
 
-        const capacidadDestino = destinoResult.rows[0].capacidad || 0;
+        const cantidadDestino = destinoResult.rows[0].cantidad || 0;
 
-        // 2. Consultar la capacidad (current quantity) of the origin salon
+        // 2. Consultar la cantidad (current quantity) of the origin salon
         const origenResult = await pool.query(
-            'SELECT capacidad FROM public.salon WHERE "idSalon" = $1',
+            'SELECT cantidad FROM public."lugarInventario" WHERE "idSalon" = $1 AND "idTipodeMobiliario" = 1',
             [origen]
         );
 
@@ -44,7 +44,7 @@ router.post('/traspasar', async (req, res, next) => {
             return res.status(404).json({ success: false, error: 'El salón de origen no existe' });
         }
 
-        const cantidadOrigenActual = origenResult.rows[0].capacidad || 0;
+        const cantidadOrigenActual = origenResult.rows[0].cantidad || 0;
         const nuevaCantidadOrigen = cantidadOrigenActual - cantidadTraspasar;
 
         // 3. Verificar si la cantidad a traspasar no excede la cantidad in origin
@@ -54,19 +54,19 @@ router.post('/traspasar', async (req, res, next) => {
         }
 
         // 4. Calcular the new quantity in the destination salon
-        const nuevaCantidadDestino = capacidadDestino + cantidadTraspasar;
+        const nuevaCantidadDestino = cantidadDestino + cantidadTraspasar;
 
        
 
         // 6. Update the quantity in the destination salon (add)
         await pool.query(
-            'UPDATE public.salon SET capacidad = $1 WHERE "idSalon" = $2',
+            'UPDATE public."lugarInventario" SET cantidad = $1 WHERE "idSalon" = $2 AND "idTipodeMobiliario" = 1',
             [nuevaCantidadDestino, destino]
         );
 
         // 7. Update the quantity in the origin salon (subtract)
         await pool.query(
-            'UPDATE public.salon SET capacidad = $1 WHERE "idSalon" = $2',
+            'UPDATE public."lugarInventario" SET cantidad = $1 WHERE "idSalon" = $2 AND "idTipodeMobiliario" = 1',
             [nuevaCantidadOrigen, origen]
         );
 

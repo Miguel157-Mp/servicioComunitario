@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="./vendor/js/bootstrap.bundle.min.js"></script>
-    
+
     <title>Dashboard - Universidad Santa Maria</title>
     <style>
         /* Estilos generales */
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             padding: 0;
@@ -153,14 +157,14 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-           
+
         .header-logo img {
             display: flexbox;
             width: 150px;
             height: 150px;
             margin-right: 20px;
         }
-        
+
         .header-text {
             display: flex;
             flex-direction: column;
@@ -190,7 +194,7 @@
             justify-content: space-between;
             margin-bottom: 20px;
         }
-        
+
         .card {
             border: none;
             padding: 20px;
@@ -223,13 +227,13 @@
             z-index: 0;
         }
 
-        .card > * {
+        .card>* {
             position: relative;
             z-index: 1;
         }
 
-        
-        
+
+
         .building-container {
             background-color: white;
             padding: 10px;
@@ -256,7 +260,7 @@
             color: #2c3e50;
             margin-bottom: 10px;
         }
-        
+
         .floor-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -264,137 +268,138 @@
             min-height: 50px;
         }
 
-          /* Estilos para la sección de mobiliario */
-    .mobiliario-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
+        /* Estilos para la sección de mobiliario */
+        .mobiliario-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
 
-    .ubicacion-selector {
-        display: flex;
-        margin-bottom: 20px;
-    }
+        .ubicacion-selector {
+            display: flex;
+            margin-bottom: 20px;
+        }
 
-    .ubicacion-btn {
-        padding: 10px 20px;
-        border: none;
-        background-color: #f0f0f0;
-        color: #333;
-        cursor: pointer;
-        border-radius: 5px 0 0 5px;
-        font-weight: bold;
-    }
+        .ubicacion-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #f0f0f0;
+            color: #333;
+            cursor: pointer;
+            border-radius: 5px 0 0 5px;
+            font-weight: bold;
+        }
 
-    .ubicacion-btn:last-child {
-        border-radius: 0 5px 5px 0;
-    }
+        .ubicacion-btn:last-child {
+            border-radius: 0 5px 5px 0;
+        }
 
-    .ubicacion-btn.active {
-        background-color: #0823ac;
-        color: white;
-    }
+        .ubicacion-btn.active {
+            background-color: #0823ac;
+            color: white;
+        }
 
-    .mobiliario-seccion {
-        padding: 15px 0;
-        border-top: 1px solid #eee;
-    }
+        .mobiliario-seccion {
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
 
-    .mobiliario-seccion:first-child {
-        border-top: none;
-    }
+        .mobiliario-seccion:first-child {
+            border-top: none;
+        }
 
-    .mobiliario-seccion.oculto {
-        display: none;
-    }
+        .mobiliario-seccion.oculto {
+            display: none;
+        }
 
-    .mobiliario-item {
-        padding: 8px 15px;
-        border: 1px solid #ccc;
-        background-color: white;
-        color: #333;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
+        .mobiliario-item {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            background-color: white;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
 
-    .seleccion-salon {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 15px;
-        align-items: center;
-    }
+        .seleccion-salon {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
 
-    .campo-seleccion {
-        display: flex;
-        flex-direction: column;
-    }
+        .campo-seleccion {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .campo-seleccion label {
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
+        .campo-seleccion label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-    .campo-seleccion select {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+        .campo-seleccion select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    #listado-mobiliario-piso, #listado-mobiliario-salon {
-        margin-top: 15px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-    }
+        #listado-mobiliario-piso,
+        #listado-mobiliario-salon {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
 
-    .acciones-mobiliario {
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+        .acciones-mobiliario {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .acciones-mobiliario button {
-        padding: 10px 15px;
-        font-size: 1.2em;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+        .acciones-mobiliario button {
+            padding: 10px 15px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    .incorporar-btn {
-        background-color: #4CAF50;
-        color: white;
-    }
+        .incorporar-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
 
-    .desincorporar-btn {
-        background-color: #f44336;
-        color: white;
-    }
+        .desincorporar-btn {
+            background-color: #f44336;
+            color: white;
+        }
 
-    .nota-carrito {
-        margin-left: auto;
-        font-style: italic;
-        color: #777;
-    }
+        .nota-carrito {
+            margin-left: auto;
+            font-style: italic;
+            color: #777;
+        }
 
-    .nota-transaccion {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #ffe0b2;
-        border-radius: 5px;
-        color: #795548;
-        text-align: center;
-    }
-
+        .nota-transaccion {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffe0b2;
+            border-radius: 5px;
+            color: #795548;
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <!-- Menú lateral integrado directamente (antes era un iframe) -->
     <div id="sidebar" class="sidebar">
@@ -424,175 +429,454 @@
                 <div class="header-logo">
                     <img src="./img/logousm.png" alt="logo usm" style="width: 120px; height: auto;">
                 </div>
-                
+
                 <img src="./img/iconouser.png" alt="Usuario">
             </div>
             <h4 id="nombreusuario">¡Bienvenido!</h4>
-            
+
             <br>
-      
-       
-                <div class="main-content">
-                
-                    <div class="mobiliario-container">
-                        <div class="ubicacion-selector">
-                            <button class="ubicacion-btn active" data-ubicacion="piso">Piso</button>
-                            <button class="ubicacion-btn" data-ubicacion="salon">Salón</button>
-                        </div>
-            
-                        <div id="mobiliario-piso" class="mobiliario-seccion">
-                            <h3>Seleccionar Mobiliario por Piso</h3>
-                            <button class="mobiliario-item" data-tipo="pupitre">Pupitres</button>
-                            <button class="mobiliario-item" data-tipo="mesa">Mesas</button>
-                            <div id="listado-mobiliario-piso">
-                                </div>
-                        </div>
-            
-                        <div id="mobiliario-salon" class="mobiliario-seccion oculto">
-                            <h3>Seleccionar Mobiliario por Salón</h3>
-                            <div class="seleccion-salon">
-                                <div class="campo-seleccion">
-                                    <label for="origen">Origen:</label>
-                                    <select id="origen">
-                                        <option value="">Seleccionar Salón</option>
-                                        </select>
-                                </div>
-                                <div class="campo-seleccion">
-                                    <label for="destino">Destino:</label>
-                                    <select id="destino">
-                                        <option value="">Seleccionar Salón</option>
-                                        </select>
-                                </div>
-                            </div>
-                            <div id="listadoMobiliarioSalon">
-                            </div>
-                            <div class="acciones-mobiliario">
-                                <button class="incorporar-btn" id="btnsumar" value="+1" >+</button>
-                                <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
-                                <button class="btn btn-primary" id="enviarDatos" onclick="enviarDatos()">Traspasar Pupitres</button>
-                            </div>
-                        </div>
-            
-                        <div class="nota-transaccion">
-                            <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.</p>
-                        </div>
-                    </div>
+
+
+            <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Mobiliario</title>
+    <style>
+        .mobiliario-container {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .ubicacion-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ubicacion-btn {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        .ubicacion-btn.active {
+            background-color: #e0e0e0;
+        }
+
+        .mobiliario-seccion {
+            padding: 15px;
+            border: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+
+        .mobiliario-seccion.oculto {
+            display: none;
+        }
+
+        .seleccion-salon, .seleccion-mesas, .seleccion-sillas {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .campo-seleccion {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .acciones-mobiliario {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .incorporar-btn, .desincorporar-btn {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .nota-transaccion {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border: 1px solid #add8e6;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #000080;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="mobiliario-container">
+            <div class="ubicacion-selector">
+                <button class="ubicacion-btn " data-ubicacion="mesas">Mesas</button>
+                <button class="ubicacion-btn active" data-ubicacion="pupitres">Pupitres</button>
+                <button class="ubicacion-btn" data-ubicacion="sillas">Sillas</button>
+            </div>
+
+            <div id="mobiliario-piso" class="mobiliario-seccion oculto">
+                <h3>Seleccionar Mobiliario por Piso</h3>
+                <button class="mobiliario-item" data-tipo="pupitre">Pupitres</button>
+                <button class="mobiliario-item" data-tipo="mesa">Mesas</button>
+                <div id="listado-mobiliario-piso">
                 </div>
             </div>
-            
-           
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const ubicacionBtns = document.querySelectorAll('.ubicacion-btn');
-                    const mobiliarioPiso = document.getElementById('mobiliario-piso');
-                    const mobiliarioSalon = document.getElementById('mobiliario-salon');
-            
-                    ubicacionBtns.forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            ubicacionBtns.forEach(b => b.classList.remove('active'));
-                            this.classList.add('active');
-                            const ubicacion = this.dataset.ubicacion;
-                            mobiliarioPiso.classList.toggle('oculto', ubicacion === 'salon');
-                            mobiliarioSalon.classList.toggle('oculto', ubicacion === 'piso');
-                        });
-                    });
-            
-                    
+
+            <div id="mobiliario-salon" class="mobiliario-seccion">
+                <h3>Seleccionar Pupitres por Salón</h3>
+                <div class="seleccion-salon">
+                    <div class="campo-seleccion">
+                        <label for="origen">Origen:</label>
+                        <select id="origen">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                    <div class="campo-seleccion">
+                        <label for="destino">Destino:</label>
+                        <select id="destino">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="listadoMobiliarioSalon">0</div>
+                <div class="acciones-mobiliario">
+                    <button class="incorporar-btn" id="btnsumar" value="+1">+</button>
+                    <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
+                    <button class="btn btn-primary" id="enviarDatosPupitres" onclick="enviarDatosPupitres()">Traspasar
+                        Pupitres</button>
+                </div>
+            </div>
+
+            <div id="mobiliario-mesas" class="mobiliario-seccion oculto">
+                <h3>Seleccionar Mesas por Salón</h3>
+                <div class="seleccion-mesas">
+                    <div class="campo-seleccion">
+                        <label for="origen-mesas">Origen:</label>
+                        <select id="origen-mesas">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                    <div class="campo-seleccion">
+                        <label for="destino-mesas">Destino:</label>
+                        <select id="destino-mesas">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="listadoMobiliariomesas">0</div>
+                <div class="acciones-mobiliario">
+                    <button class="incorporar-btn" id="btnsumar-mesas" value="+1">+</button>
+                    <button class="desincorporar-btn" id="btnrestar-mesas" value="-1">-</button>
+                    <button class="btn btn-primary" id="enviarDatosMesas" onclick="enviarDatosMesas()">Traspasar
+                        Mesas</button>
+                </div>
+            </div>
+
+            <div id="mobiliario-sillas" class="mobiliario-seccion oculto">
+                <h3>Seleccionar sillas por Salón</h3>
+                <div class="seleccion-sillas">
+                    <div class="campo-seleccion">
+                        <label for="origen-sillas">Origen:</label>
+                        <select id="origen-sillas">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                    <div class="campo-seleccion">
+                        <label for="destino-sillas">Destino:</label>
+                        <select id="destino-sillas">
+                            <option value="">Seleccionar Salón</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="listadoMobiliariosillas">0</div>
+                <div class="acciones-mobiliario">
+                    <button class="incorporar-btn" id="btnsumar-sillas" value="+1">+</button>
+                    <button class="desincorporar-btn" id="btnrestar-sillas" value="-1">-</button>
+                    <button class="btn btn-primary" id="enviarDatosSillas" onclick="enviarDatosSillas()">Traspasar
+                        Sillas</button>
+                </div>
+            </div>
+
+            <div class="nota-transaccion">
+                <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de
+                    hacerlo.</p>
+            </div>
+        </div>
+    </div>
+
+
+        <script>
+             document.addEventListener('DOMContentLoaded', async () => {
+            const ubicacionBtns = document.querySelectorAll('.ubicacion-btn');
+            const mobiliarioPiso = document.getElementById('mobiliario-piso');
+            const mobiliarioPupitres = document.getElementById('mobiliario-salon');
+            const mobiliarioMesas = document.getElementById('mobiliario-mesas');
+            const mobiliarioSillas = document.getElementById('mobiliario-sillas');
+
+            // Inicialmente, muestra solo la sección de mesas (ya que el botón "Mesas" tiene la clase "active")
+            mobiliarioPiso.classList.add('oculto');
+            mobiliarioPupitres.classList.remove('oculto'); // Asegura que pupitres se muestre inicialmente si es necesario
+            mobiliarioMesas.classList.add('oculto');
+            mobiliarioSillas.classList.add('oculto');
+
+            // Cargar salones para los selects de pupitres
+            try {
+                const responsePupitres = await fetch('/movermobiliario/salones');
+                if (!responsePupitres.ok) {
+                    throw new Error('Error en la respuesta de la API: ' + responsePupitres.statusText);
+                }
+                const salonesPupitres = await responsePupitres.json();
+                const origenSelectPupitres = document.getElementById('origen');
+                const destinoSelectPupitres = document.getElementById('destino');
+
+                origenSelectPupitres.innerHTML = '<option value="">Seleccionar Salón</option>';
+                destinoSelectPupitres.innerHTML = '<option value="">Seleccionar Salón</option>';
+
+                salonesPupitres.forEach(salon => {
+                    const optionOrigen = document.createElement('option');
+                    optionOrigen.value = salon.idSalon;
+                    optionOrigen.textContent = ` ${salon.idSalon}`;
+                    origenSelectPupitres.appendChild(optionOrigen);
+
+                    const optionDestino = optionOrigen.cloneNode(true);
+                    destinoSelectPupitres.appendChild(optionDestino);
                 });
-
-
-                /*funcion para mostrar los salones*/
-                document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const response = await fetch('/movermobiliario/salones');
-    const salones = await response.json();
-
-    const origenSelect = document.getElementById('origen');
-    const destinoSelect = document.getElementById('destino');
-
-    // Limpia las opciones iniciales (excepto la primera)
-    origenSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
-    destinoSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
-
-    salones.forEach(salon => {
-      // Crea opción para Origen
-      const optionOrigen = document.createElement('option');
-      optionOrigen.value = salon.idSalon;
-      optionOrigen.textContent = `ID: ${salon.idSalon} - Piso ${salon.piso}`;
-      origenSelect.appendChild(optionOrigen);
-
-      // Crea opción para Destino (clona la opción)
-      const optionDestino = optionOrigen.cloneNode(true);
-      destinoSelect.appendChild(optionDestino);
-    });
-
-    console.log('Options creadas:', origenSelect.options.length);
-  } catch (err) {
-    console.error('Error:', err);
-  }
-});
-
-/*Sumar o Restar pupitres*/
-document.querySelectorAll("#btnsumar, #btnrestar").forEach(button => {
-    button.addEventListener("click", function() {
-        const action = this.id === "btnsumar" ? "sumar" : "restar";
-        let contador = parseInt(document.getElementById("listadoMobiliarioSalon").innerHTML) || 0; // Inicializa el contador con el valor actual del elemento o 0
-
-        function sumarUno() {
-            contador++;
-            document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
-        }
-
-        function restarUno() {
-            if (contador > 0) {
-                contador--;
-                document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
+                console.log('Opciones de pupitres creadas:', origenSelectPupitres.options.length);
+            } catch (err) {
+                console.error('Error al cargar salones para pupitres:', err);
             }
+
+            // Cargar salones para los selects de mesas
+            try {
+                const responseMesas = await fetch('/mover_mesas/salones');
+                if (!responseMesas.ok) {
+                    throw new Error('Error en la respuesta de la API: ' + responseMesas.statusText);
+                }
+                const salonesMesas = await responseMesas.json();
+                const origenSelectMesas = document.getElementById('origen-mesas');
+                const destinoSelectMesas = document.getElementById('destino-mesas');
+
+                origenSelectMesas.innerHTML = '<option value="">Seleccionar Salón</option>';
+                destinoSelectMesas.innerHTML = '<option value="">Seleccionar Salón</option>';
+
+                salonesMesas.forEach(salon => {
+                    const optionOrigen = document.createElement('option');
+                    optionOrigen.value = salon.idSalon;
+                    optionOrigen.textContent = ` ${salon.idSalon} `;
+                    origenSelectMesas.appendChild(optionOrigen);
+
+                    const optionDestino = optionOrigen.cloneNode(true);
+                    destinoSelectMesas.appendChild(optionDestino);
+                });
+                console.log('Opciones de mesas creadas:', origenSelectMesas.options.length);
+            } catch (err) {
+                console.error('Error al cargar salones para mesas:', err);
+            }
+
+            // Cargar salones para los selects de sillas
+            try {
+                const responseSillas = await fetch('/mover_sillas/salones');
+                const salonesSillas = await responseSillas.json();
+                const origenSelectSillas = document.getElementById('origen-sillas');
+                const destinoSelectSillas = document.getElementById('destino-sillas');
+
+                origenSelectSillas.innerHTML = '<option value="">Seleccionar Salón</option>';
+                destinoSelectSillas.innerHTML = '<option value="">Seleccionar Salón</option>';
+
+                salonesSillas.forEach(salon => {
+                    const optionOrigen = document.createElement('option');
+                    optionOrigen.value = salon.idSalon;
+                    optionOrigen.textContent = ` ${salon.idSalon} `;
+                    origenSelectSillas.appendChild(optionOrigen);
+
+                    const optionDestino = optionOrigen.cloneNode(true);
+                    destinoSelectSillas.appendChild(optionDestino);
+                });
+                console.log('Opciones de sillas creadas:', origenSelectSillas.options.length);
+            } catch (err) {
+                console.error('Error al cargar salones para sillas:', err);
+            }
+
+
+            ubicacionBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    ubicacionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const ubicacion = this.dataset.ubicacion;
+                    console.log('Ubicación seleccionada:', ubicacion);
+
+                    mobiliarioPiso.classList.add('oculto');
+                    mobiliarioPupitres.classList.add('oculto');
+                    mobiliarioMesas.classList.add('oculto');
+                    mobiliarioSillas.classList.add('oculto');
+
+                    if (ubicacion === 'mesas') {
+                        mobiliarioMesas.classList.remove('oculto');
+                    } else if (ubicacion === 'pupitres') {
+                        mobiliarioPupitres.classList.remove('oculto');
+                    } else if (ubicacion === 'sillas') {
+                        mobiliarioSillas.classList.remove('oculto');
+                    }
+                });
+            });
+
+            // Sumar y restar pupitres
+            document.querySelectorAll("#btnsumar, #btnrestar").forEach(button => {
+                button.addEventListener("click", function () {
+                    const action = this.id === "btnsumar" ? "sumar" : "restar";
+                    let contador = parseInt(document.getElementById("listadoMobiliarioSalon").innerHTML) || 0;
+
+                    if (action === "sumar") {
+                        contador++;
+                    } else if (action === "restar" && contador > 0) {
+                        contador--;
+                    }
+                    document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
+                });
+            });
+
+            // Sumar y restar mesas
+            document.querySelectorAll("#btnsumar-mesas, #btnrestar-mesas").forEach(button => {
+                button.addEventListener("click", function () {
+                    const action = this.id === "btnsumar-mesas" ? "sumar" : "restar";
+                    let contador = parseInt(document.getElementById("listadoMobiliariomesas").innerHTML) || 0;
+
+                    if (action === "sumar") {
+                        contador++;
+                    } else if (action === "restar" && contador > 0) {
+                        contador--;
+                    }
+                    document.getElementById("listadoMobiliariomesas").innerHTML = contador;
+                });
+            });
+
+            // Sumar y restar sillas
+            document.querySelectorAll("#btnsumar-sillas, #btnrestar-sillas").forEach(button => {
+                button.addEventListener("click", function () {
+                    const action = this.id === "btnsumar-sillas" ? "sumar" : "restar";
+                    let contador = parseInt(document.getElementById("listadoMobiliariosillas").innerHTML) || 0;
+
+                    if (action === "sumar") {
+                        contador++;
+                    } else if (action === "restar" && contador > 0) {
+                        contador--;
+                    }
+                    document.getElementById("listadoMobiliariosillas").innerHTML = contador;
+                });
+            });
+        });
+
+        // Función para enviar cantidad de pupitres
+        function enviarDatosPupitres() {
+            const origen = document.getElementById('origen').value;
+ 
+            const destino = document.getElementById('destino').value;
+      ;
+            const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
+            console.log('Enviar Pupitres - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            fetch('/traspasar/traspasar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'pupitre', origen, destino, cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transacción de pupitres realizada con éxito.');
+                } else {
+                    alert('Error al realizar la transacción de pupitres: ' + (data.error || ''));
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición de pupitres:', error);
+                alert('Ocurrió un error en la petición de pupitres.');
+            });
         }
 
-        if (action === "sumar") {
-            sumarUno();
-        } else if (action === "restar") {
-            restarUno();
+        // Función para enviar cantidad de mesas
+        function enviarDatosMesas() {
+            const origen = document.getElementById('origen-mesas').value;
+            const destino = document.getElementById('destino-mesas').value;
+            const cantidad = document.getElementById('listadoMobiliariomesas').innerHTML || 0;
+            console.log('Enviar Mesas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            fetch('/traspasarMesas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'mesa', origen, destino, cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transacción de mesas realizada con éxito.');
+                } else {
+                    alert('Error al realizar la transacción de mesas: ' + (data.error || ''));
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición de mesas:', error);
+                alert('Ocurrió un error en la petición de mesas.');
+            });
         }
-    });
-});
 
-/*Funcion para enviar cantidad de pupitres para mover de un salon a otro*/
-function enviarDatos() {
-    const origen = document.getElementById('origen').value;
-    const destino = document.getElementById('destino').value;
-    const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
-console.log('Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad); // Para depuración
-    fetch('/traspasar/traspasar', { // Asegúrate de que la ruta aquí coincida con la definida en app.use
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ origen, destino, cantidad })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Transacción realizada con éxito.');
-           // window.location.href = '/index.html'; // Redirigir después de recibir la confirmación
-        } else {
-            alert('Error al realizar la transacción: ' + (data.error || ''));
+        // Función para enviar cantidad de sillas
+        function enviarDatosSillas() {
+            const origen = document.getElementById('origen-sillas').value;
+            const destino = document.getElementById('destino-sillas').value;
+            const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
+            console.log('Enviar Sillas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            fetch('/traspasarSillas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'silla', origen, destino, cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transacción de sillas realizada con éxito.');
+                } else {
+                    alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición de sillas:', error);
+                alert('Ocurrió un error en la petición de sillas.');
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error en la petición:', error);
-        alert('Ocurrió un error en la petición.');
-    });
-}
-            </script>   
+    </script>
 
 
     </div>
 
-   
 
-        
-   
+
+
+
 </body>
+
 </html>
