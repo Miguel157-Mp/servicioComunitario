@@ -370,3 +370,147 @@ html {
 .form-group {
     margin-bottom: 8px;
 }
+
+@media (max-width: 600px) {
+  body,
+  html {
+    font-size: 12px; /* Reducir aún más el tamaño de la fuente base */
+  }
+
+  .dashboard-container {
+    flex-direction: column; /* Asegurar la disposición vertical */
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+    height: auto;
+    padding-top: 0; /* Eliminar padding superior */
+  }
+
+  .sidebar.closed {
+    width: 100%;
+  }
+
+  .sidebar-header {
+    text-align: center;
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  .sidebar-content {
+    display: flex;
+    overflow-x: auto; /* Permitir desplazamiento horizontal si los enlaces no caben */
+    padding-bottom: 10px; /* Añadir un poco de espacio inferior */
+  }
+
+  .sidebar-content a {
+    padding: 10px 12px;
+    font-size: 14px;
+    white-space: nowrap; /* Evitar que el texto se rompa */
+  }
+
+  .sidebar-content a i {
+    margin-right: 5px; /* Reducir el margen del icono */
+  }
+
+  #content {
+    margin-left: 0 !important;
+    padding: 10px;
+    height: auto;
+    grid-template-columns: 1fr; /* Una sola columna */
+    gap: 10px;
+  }
+
+  .header-section {
+    flex-direction: column; /* Apilar elementos del header */
+    align-items: flex-start; /* Alinear a la izquierda */
+    padding: 10px;
+  }
+
+  .header-logo {
+    margin-bottom: 10px; /* Espacio debajo del logo */
+  }
+
+  .header-logo img {
+    width: 100px;
+    height: auto;
+    margin-right: 0; /* Eliminar margen derecho */
+  }
+
+  .header-text {
+    text-align: left; /* Alinear el texto del header a la izquierda */
+    margin-bottom: 10px;
+  }
+
+  .header-text h1 {
+    font-size: 1.5em; /* Reducir el tamaño del título */
+    margin-bottom: 5px;
+  }
+
+  .header-text p {
+    font-size: 0.9em; /* Reducir el tamaño del párrafo */
+  }
+
+  .header-section img {
+    width: 30px;
+    height: 30px;
+  }
+
+  h4#nombreusuario {
+    font-size: 1.2em; /* Reducir el tamaño del nombre de usuario */
+    margin-bottom: 5px;
+  }
+
+  span {
+    font-size: 0.8em !important; /* Reducir el tamaño del span */
+  }
+
+  .search-container {
+    grid-template-columns: 1fr;
+    margin: 10px 0;
+  }
+
+  .vertical-buttons {
+    flex-direction: row; /* Mostrar botones horizontalmente */
+    justify-content: space-around; /* Espacio igual entre botones */
+    margin-top: 10px;
+  }
+
+  .action-button {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .table {
+    font-size: 0.8em; /* Reducir el tamaño de la fuente de la tabla */
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem; /* Reducir el padding de las celdas de la tabla */
+  }
+
+  .modal-dialog {
+    margin: 1rem; /* Reducir el margen del modal */
+  }
+
+  .modal-title {
+    font-size: 1em; /* Reducir el tamaño del título del modal */
+  }
+
+  .form-group label {
+    font-size: 0.9em; /* Reducir el tamaño de las etiquetas del formulario */
+  }
+
+  .form-group input.form-control {
+    font-size: 0.9em; /* Reducir el tamaño de los inputs del formulario */
+    padding: 0.7rem;
+  }
+
+  .btn {
+    font-size: 0.9em; /* Reducir el tamaño de los botones */
+    padding: 0.6rem 1rem;
+  }
+}

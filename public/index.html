@@ -20,14 +20,15 @@
 html, body {
     height: 100%; /* Asegura que el body ocupe toda la altura de la ventana */
     margin: 0; /* Elimina los márgenes predeterminados del body */
+    overflow: auto;
 }
 
-.imagenFondo{
-    background: linear-gradient(to bottom, #174b8a, #4191cf);
-  
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+body {
+  background: linear-gradient(to bottom, #174b8a, #4191cf);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* 100vh significa el 100% de la altura de la ventana */
 }
 .btn-primary:hover {
     background-color: #6495ED; /* Un azul más claro que el azul primario de Bootstrap */

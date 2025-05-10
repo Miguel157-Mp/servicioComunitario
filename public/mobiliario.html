@@ -397,6 +397,180 @@
             color: #795548;
             text-align: center;
         }
+        /* Media Queries para pantallas más pequeñas (hasta 768px de ancho) */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column; /* Apila el menú y el contenido */
+    }
+
+    .sidebar {
+        position: relative; /* El menú lateral ya no es fijo, ocupa espacio */
+        width: 100%; /* Ocupa todo el ancho */
+        height: auto; /* Altura automática */
+        padding-top: 10px; /* Reducido el padding superior */
+        left: 0; /* Asegura que esté a la izquierda */
+        z-index: 999; /* Asegura que esté encima del contenido si es necesario */
+        overflow-y: auto; /* Permite scroll si el menú es largo */
+    }
+
+    .sidebar.closed {
+        width: 60px; /* Ancho pequeño cuando está cerrado */
+    }
+
+    .sidebar.closed .sidebar-header {
+        display: none;
+    }
+
+    .sidebar.closed .sidebar-content a span {
+        display: none;
+    }
+
+    .sidebar.closed .sidebar-content a {
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #0823ac;
+    }
+
+    .centered-bars {
+        margin-left: 0; /* Alinea el botón de toggle a la izquierda */
+    }
+
+    #content {
+        margin-left: 0; /* El contenido ocupa todo el ancho */
+        padding: 15px; /* Reducido el padding del contenido */
+        height: auto; /* Altura automática para adaptarse al contenido */
+        grid-template-columns: 1fr; /* Una sola columna para el contenido */
+    }
+
+    .main-content {
+        padding: 10px; /* Ajusta el padding del contenido principal */
+    }
+
+    .header-section {
+        flex-direction: column; /* Apila los elementos del encabezado */
+        align-items: flex-start; /* Alinea a la izquierda */
+        padding: 15px; /* Reducido el padding del encabezado */
+    }
+
+    .header-logo {
+        margin-bottom: 10px; /* Añadido margen inferior al logo */
+    }
+
+    .header-logo img {
+        width: 100px; /* Reduce el tamaño del logo en pantallas pequeñas */
+        height: auto;
+    }
+
+    .header-text {
+        margin-bottom: 10px; /* Añadido margen inferior al texto del encabezado */
+    }
+
+    .header-text h1 {
+        font-size: 1.8em; /* Reduce el tamaño del título */
+    }
+
+    .header-text p {
+        font-size: 1em; /* Reduce el tamaño del subtítulo */
+    }
+
+    .mobiliario-container {
+        width: 95%; /* Ocupa más ancho en pantallas pequeñas */
+        margin: 15px auto; /* Reduce el margen superior e inferior */
+        padding: 15px; /* Reduce el padding */
+    }
+
+    .ubicacion-selector {
+        flex-direction: column; /* Apila los botones de ubicación */
+        gap: 5px; /* Reduce el espacio entre botones */
+        margin-bottom: 15px; /* Reduce el margen inferior */
+    }
+
+    .ubicacion-btn {
+        border-radius: 5px !important; /* Asegura bordes redondeados en todos los botones */
+        padding: 8px 12px; /* Reduce el padding de los botones */
+        font-size: 0.9em; /* Reduce el tamaño de la fuente */
+    }
+
+    .seleccion-salon,
+    .seleccion-mesas,
+    .seleccion-sillas {
+        flex-direction: column; /* Apila los campos de selección */
+        gap: 10px; /* Reduce el espacio entre los campos */
+        margin-bottom: 10px; /* Reduce el margen inferior */
+    }
+
+    .campo-seleccion label {
+        font-size: 0.9em; /* Reduce el tamaño de la etiqueta */
+    }
+
+    .campo-seleccion select {
+        padding: 6px; /* Reduce el padding del select */
+        font-size: 0.9em; /* Reduce el tamaño de la fuente del select */
+    }
+
+    .acciones-mobiliario {
+        flex-direction: row; /* Vuelve a la disposición horizontal */
+        justify-content: space-around; /* Distribuye los botones */
+        margin-top: 15px; /* Reduce el margen superior */
+    }
+
+    .acciones-mobiliario button {
+        padding: 8px 10px; /* Reduce el padding de los botones de acción */
+        font-size: 1em; /* Reduce el tamaño de la fuente */
+    }
+
+    .nota-transaccion {
+        font-size: 0.8em; /* Reduce el tamaño de la fuente de la nota */
+        padding: 10px; /* Reduce el padding de la nota */
+        margin-top: 15px; /* Reduce el margen superior */
+    }
+}
+
+/* Media Queries para pantallas aún más pequeñas (hasta 480px de ancho) */
+@media (max-width: 480px) {
+    .header-logo img {
+        width: 80px; /* Reduce aún más el logo */
+    }
+
+    .header-text h1 {
+        font-size: 1.5em; /* Reduce aún más el título */
+    }
+
+    .header-text p {
+        font-size: 0.9em; /* Reduce aún más el subtítulo */
+    }
+
+    .ubicacion-btn {
+        font-size: 0.8em; /* Reduce aún más el tamaño de la fuente de los botones de ubicación */
+        padding: 6px 10px;
+    }
+
+    .campo-seleccion label {
+        font-size: 0.8em; /* Reduce aún más el tamaño de la etiqueta */
+    }
+
+    .campo-seleccion select {
+        font-size: 0.8em; /* Reduce aún más el tamaño de la fuente del select */
+        padding: 5px;
+    }
+
+    .acciones-mobiliario button {
+        font-size: 0.9em; /* Reduce aún más el tamaño de la fuente de los botones de acción */
+        padding: 6px 8px;
+    }
+
+    .nota-transaccion {
+        font-size: 0.7em; /* Reduce aún más el tamaño de la fuente de la nota */
+        padding: 8px;
+    }
+}
     </style>
 </head>
 
