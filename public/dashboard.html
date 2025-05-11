@@ -417,6 +417,141 @@
     margin: 5px 0 0 0;
     text-align: center;
 }
+
+/* Media Queries para pantallas más pequeñas (hasta 768px de ancho) */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column; /* Apila el menú y el contenido */
+    }
+
+    .sidebar {
+        position: relative; /* El menú lateral ya no es fijo, ocupa espacio */
+        width: 100%; /* Ocupa todo el ancho */
+        height: auto; /* Altura automática */
+        padding-top: 10px; /* Reducido el padding superior */
+        left: 0; /* Asegura que esté a la izquierda */
+        z-index: 999; /* Asegura que esté encima del contenido si es necesario */
+        overflow-y: auto; /* Permite scroll si el menú es largo */
+    }
+
+    .sidebar.closed {
+        width: 60px; /* Ancho pequeño cuando está cerrado */
+    }
+
+    .sidebar.closed .sidebar-header {
+        display: none;
+    }
+
+    .sidebar.closed .sidebar-content a span {
+        display: none;
+    }
+
+    .sidebar.closed .sidebar-content a {
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #0a2ea5;
+    }
+
+    .centered-bars {
+        margin-left: 0; /* Alinea el botón de toggle a la izquierda */
+    }
+
+    #content {
+        margin-left: 0; /* El contenido ocupa todo el ancho */
+        padding: 15px; /* Reducido el padding del contenido */
+        height: auto; /* Altura automática para adaptarse al contenido */
+        grid-template-columns: 1fr; /* Una sola columna para el contenido */
+    }
+
+    .social-cards {
+        flex-direction: column; /* Apila las tarjetas */
+    }
+
+    .card {
+        width: 100%; /* Las tarjetas ocupan todo el ancho */
+        margin-bottom: 15px; /* Añadido margen inferior entre tarjetas */
+    }
+
+    .header-section {
+        flex-direction: column; /* Apila los elementos del encabezado */
+        align-items: flex-start; /* Alinea a la izquierda */
+        padding: 15px; /* Reducido el padding del encabezado */
+    }
+
+    .header-logo {
+        margin-bottom: 10px; /* Añadido margen inferior al logo */
+    }
+
+    .header-text {
+        margin-bottom: 10px; /* Añadido margen inferior al texto del encabezado */
+    }
+
+    .calendario {
+        margin-top: 15px; /* Reducido el margen superior del calendario */
+    }
+}
+
+/* Media Queries para pantallas aún más pequeñas (hasta 480px de ancho) */
+@media (max-width: 480px) {
+    .header-logo img {
+        width: 100px; /* Reduce aún más el logo */
+    }
+
+    .header-text h1 {
+        font-size: 1.5em; /* Reduce el tamaño del título principal */
+        margin-bottom: 5px;
+    }
+
+    .header-text p {
+        font-size: 0.9em; /* Reduce el tamaño del subtítulo */
+    }
+
+    .card h2 {
+        font-size: 1.2em; /* Reduce el tamaño del título de la tarjeta */
+    }
+
+    .card p {
+        font-size: 0.9em; /* Reduce el tamaño del texto de la tarjeta */
+    }
+
+    .building-title {
+        font-size: 1em; /* Reduce el tamaño del título del módulo */
+    }
+
+    .classroom {
+        font-size: 0.7em; /* Reduce el tamaño de la fuente de los salones */
+        padding: 3px;
+        min-height: 25px;
+    }
+
+    .classroom-id {
+        font-size: 0.7em; /* Reduce el tamaño del ID del salón */
+    }
+
+    .mes-año {
+        font-size: 14px; /* Reduce el tamaño del mes y año del calendario */
+    }
+
+    .boton-prev, .boton-next {
+        font-size: 18px; /* Reduce el tamaño de los botones del calendario */
+    }
+
+    .dias-semana span {
+        font-size: 0.8em; /* Reduce el tamaño de los días de la semana */
+    }
+
+    .dias-mes div {
+        font-size: 0.7em; /* Reduce el tamaño de los días del mes */
+        height: 20px;
+    }
+}
     </style>
 </head>
 <body>

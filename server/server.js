@@ -6,15 +6,17 @@ const routes = require('./routes'); // Importar rutas
 const salonesRoutes = require('./salonesRoutes'); // Importar las rutas de salones
 const registrarProfesor = require('./registrarprofesor');
 const editarprofesor = require('./editarprofesor');
-const mover_mobiliario = require('./mover_mobiliario'); // Importar las rutas de mover mobiliario
-const traspasarMobiliario = require('./mover_mobiliario_traspasar');// Importar las rutas de mover mobiliario para traspasar
+const mover_mobiliario = require('./mover_mobiliario'); // Importar los salones y pupitres
+const mover_mesas = require('./mover_mesas'); // Importar las rutas de mover mesas
+const mover_sillas = require('./mover_sillas'); // Importar las rutas de mover sillas
+const traspasarMobiliario = require('./mover_mobiliario_traspasar');// Importar las rutas de mover pupitres para traspasar
+
 const buscarSeccion = require('./buscarSeccion'); // Importar la ruta para buscar secciones
 const buscarMateria = require('./buscarMateria'); // Importar la ruta para buscar materias
 const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
-const buscarMobiliario = require('./buscarMobiliario'); // Importar la ruta para buscar mobiliario
-const guardarMobiliario = require('./guardarMobiliario'); // Importar la ruta para guardar mobiliario
+//const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
 
 const app = express();
 const PORT = 3000;
@@ -41,11 +43,23 @@ app.use('/registrarprofesor', registrarProfesor);
 //ruta para editar profesor
 app.use('/editarprofesor', editarprofesor);
 
-//ruta para mover mobiliario
+//ruta para mover pupitres
 app.use('/movermobiliario', mover_mobiliario);
+
+//ruta para mover mesas
+app.use('/traspasarMesas', traspasarMesas);
+
+//ruta para mover sillas
+app.use('/traspasarSillas', traspasarSillas);
 
 //ruta para traspasar mobiliario
 app.use('/traspasar', traspasarMobiliario);
+
+//ruta para mover mesas
+app.use('/mover_mesas', mover_mesas);
+
+//ruta para mover sillas
+app.use('/mover_sillas', mover_sillas);
 
 //ruta para visualizar seccion 
 app.use(routes); 
