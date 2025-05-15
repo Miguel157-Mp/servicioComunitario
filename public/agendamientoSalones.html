@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendamiento de Horarios de Profesores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f5f7fa; font-family: 'Poppins', sans-serif; }
+        .main-container { max-width: 1200px; margin: 30px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 30px; }
+        .schedule-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .schedule-table th, .schedule-table td { border: 1px solid #e0e0e0; text-align: center; padding: 8px; }
+        .schedule-table th { background: #2c3e50; color: #fff; }
+        .time-column { background: #ecf0f1; font-weight: 500; }
+        .selected { background: #d1f7c4 !important; }
+        .booked { background: #f8d7da !important; color: #721c24; }
+        .available { background: #eafaf1; cursor: pointer; }
+        .selection-list { margin-top: 15px; }
+        .selection-item { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; margin-bottom: 5px; border-radius: 4px; padding: 6px 10px; }
+        .btn-sm { padding: 2px 8px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <h2>Agendamiento de Horario de Profesores</h2>
+    <form id="agendarForm" class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Profesor</label>
+            <select id="profesorSelect" class="form-select" required>
+                <option value="">Seleccione un profesor...</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Sección</label>
+            <select id="seccionSelect" class="form-select" required>
+                <option value="">Seleccione una sección...</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Salón</label>
+            <select id="salonSelect" class="form-select" required>
+                <option value="">Seleccione un salón...</option>
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Bloques horarios</label>
+            <div id="bloquesSeleccionados" class="selection-list"></div>
+            <table class="schedule-table" id="tablaHorarios">
+                <thead>
+                    <tr>
+                        <th>Bloque</th>
+                        <th>Lun</th>
+                        <th>Mar</th>
+                        <th>Mié</th>
+                        <th>Jue</th>
+                        <th>Vie</th>
+                        <th>Sáb</th>
+                        <th>Dom</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button type="button" id="limpiarBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Limpiar</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+const timeBlocks = [
+    "07:00-07:45", "07:45-08:30", "08:30-09:15", "09:15-10:00", "10:00-10:45",
+    "10:45-11:30", "11:30-12:15", "12:15-13:00", "13:00-13:45", "13:45-14:30",
+    "14:30-15:15", "16:00-16:45", "16:45-17:30", "17:30-18:15", "18:15-19:00"
+];
+let selectedBloques = [];
+let horariosOcupadosProfesor = [];
+let horariosOcupadosSalon = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await cargarProfesores();
+    await cargarSalones();
+    generarTablaHorarios();
+    setupListeners();
+});
+
+async function cargarProfesores() {
+    const res = await fetch('/api/profesores');
+    const profesores = await res.json();
+    const select = document.getElementById('profesorSelect');
+    profesores.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.idProfesor;
+        opt.textContent = p.nbProfesor;
+        select.appendChild(opt);
+    });
+}
+
+async function cargarSecciones(idProfesor) {
+    const res = await fetch(`/api/secciones?profesor=${idProfesor}`);
+    const secciones = await res.json();
+    const select = document.getElementById('seccionSelect');
+    select.innerHTML = '<option value="">Seleccione una sección...</option>';
+    secciones.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.idSeccion;
+        opt.textContent = `${s.codigoMateria} - ${s.nbSeccion}`;
+        select.appendChild(opt);
+    });
+}
+
+async function cargarSalones() {
+    const res = await fetch('/api/salones');
+    const salones = await res.json();
+    const select = document.getElementById('salonSelect');
+    salones.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.idSalon;
+        opt.textContent = s.nbSalon;
+        select.appendChild(opt);
+    });
+}
+
+async function consultarHorariosOcupados() {
+    const idProfesor = document.getElementById('profesorSelect').value;
+    const idSalon = document.getElementById('salonSelect').value;
+    horariosOcupadosProfesor = [];
+    horariosOcupadosSalon = [];
+    if (idProfesor) {
+        const res = await fetch(`/api/horario-profesor/${idProfesor}`);
+        horariosOcupadosProfesor = await res.json();
+    }
+    if (idSalon) {
+        const res = await fetch(`/api/horario-salon/${idSalon}`);
+        horariosOcupadosSalon = await res.json();
+    }
+    actualizarTablaHorarios();
+}
+
+function generarTablaHorarios() {
+    const tbody = document.querySelector('#tablaHorarios tbody');
+    tbody.innerHTML = '';
+    for (let i = 0; i < timeBlocks.length; i++) {
+        const tr = document.createElement('tr');
+        const tdHora = document.createElement('td');
+        tdHora.className = 'time-column';
+        tdHora.textContent = timeBlocks[i];
+        tr.appendChild(tdHora);
+        for (let dia = 1; dia <= 7; dia++) {
+            const td = document.createElement('td');
+            td.dataset.day = dia;
+            td.dataset.block = i + 1;
+            td.className = 'available';
+            td.innerHTML = '&nbsp;';
+            td.addEventListener('click', () => seleccionarBloque(td));
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    }
+}
+
+function actualizarTablaHorarios() {
+    document.querySelectorAll('#tablaHorarios td[data-day]').forEach(td => {
+        td.className = 'available';
+        td.innerHTML = '&nbsp;';
+        const day = parseInt(td.dataset.day);
+        const block = parseInt(td.dataset.block);
+
+        // Ocupado por profesor
+        if (horariosOcupadosProfesor.some(h => h.idDiaSemana == day && h.idBloqueHorario == block)) {
+            td.className = 'booked';
+            td.innerHTML = 'Ocupado (prof)';
+        }
+        // Ocupado por salón
+        else if (horariosOcupadosSalon.some(h => h.idDiaSemana == day && h.idBloqueHorario == block)) {
+            td.className = 'booked';
+            td.innerHTML = 'Ocupado (salón)';
+        }
+        // Seleccionado
+        else if (selectedBloques.some(b => b.day == day && b.block == block)) {
+            td.className = 'selected';
+            td.innerHTML = '<i class="fas fa-check"></i>';
+        }
+    });
+}
+
+function seleccionarBloque(td) {
+    if (td.classList.contains('booked')) return;
+    const day = parseInt(td.dataset.day);
+    const block = parseInt(td.dataset.block);
+    const idx = selectedBloques.findIndex(b => b.day == day && b.block == block);
+    if (idx >= 0) {
+        selectedBloques.splice(idx, 1);
+    } else {
+        selectedBloques.push({ day, block });
+    }
+    actualizarTablaHorarios();
+    actualizarBloquesSeleccionados();
+}
+
+function actualizarBloquesSeleccionados() {
+    const cont = document.getElementById('bloquesSeleccionados');
+    cont.innerHTML = '';
+    if (selectedBloques.length === 0) {
+        cont.innerHTML = '<span class="text-muted">No hay bloques seleccionados</span>';
+        return;
+    }
+    selectedBloques.forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'selection-item';
+        div.innerHTML = `Día ${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'][b.day-1]} - ${timeBlocks[b.block-1]}
+            <button class="btn btn-sm btn-danger ms-2" onclick="eliminarBloque(${b.day},${b.block})"><i class="fas fa-times"></i></button>`;
+        cont.appendChild(div);
+    });
+}
+
+window.eliminarBloque = function(day, block) {
+    selectedBloques = selectedBloques.filter(b => !(b.day == day && b.block == block));
+    actualizarTablaHorarios();
+    actualizarBloquesSeleccionados();
+};
+
+function setupListeners() {
+    document.getElementById('profesorSelect').addEventListener('change', async function() {
+        await cargarSecciones(this.value);
+        await consultarHorariosOcupados();
+    });
+    document.getElementById('seccionSelect').addEventListener('change', async function() {
+        // Si quieres que al seleccionar sección se seleccione el profesor automáticamente:
+        // const idProfesor = this.selectedOptions[0].dataset.profesor;
+        // document.getElementById('profesorSelect').value = idProfesor;
+        // await consultarHorariosOcupados();
+    });
+    document.getElementById('salonSelect').addEventListener('change', consultarHorariosOcupados);
+    document.getElementById('limpiarBtn').addEventListener('click', function() {
+        selectedBloques = [];
+        actualizarTablaHorarios();
+        actualizarBloquesSeleccionados();
+    });
+    document.getElementById('agendarForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const idProfesor = document.getElementById('profesorSelect').value;
+        const idSeccion = document.getElementById('seccionSelect').value;
+        const idSalon = document.getElementById('salonSelect').value;
+        if (!idProfesor || !idSeccion || !idSalon || selectedBloques.length === 0) {
+            alert('Complete todos los campos y seleccione al menos un bloque');
+            return;
+        }
+        // Validar que los bloques no estén ocupados
+        for (const b of selectedBloques) {
+            if (horariosOcupadosProfesor.some(h => h.idDiaSemana == b.day && h.idBloqueHorario == b.block) ||
+                horariosOcupadosSalon.some(h => h.idDiaSemana == b.day && h.idBloqueHorario == b.block)) {
+                alert('Uno o más bloques seleccionados ya están ocupados');
+                return;
+            }
+        }
+        // Enviar al backend
+        const res = await fetch('/api/agendamiento', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                idProfesor, idSeccion, idSalon,
+                bloques: selectedBloques
+            })
+        });
+        if (res.ok) {
+            alert('Agendamiento guardado');
+            selectedBloques = [];
+            await consultarHorariosOcupados();
+            actualizarBloquesSeleccionados();
+        } else {
+            const err = await res.json();
+            alert(err.message || 'Error al guardar');
+        }
+    });
+}
+</script>
+</body>
+</html>
