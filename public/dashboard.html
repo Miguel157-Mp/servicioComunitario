@@ -1,3 +1,4 @@
+<!-- Pagina principal -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -554,23 +555,13 @@
 }
     </style>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 <body>
     <!-- Menú lateral integrado directamente (antes era un iframe) -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
+    <div id="sidebar-container">
     </div>
+
 
     <!-- Contenido principal del dashboard -->
     <div id="content">
@@ -800,6 +791,14 @@
         buildingContainer.innerHTML = '<p>Error al cargar los salones. Intenta nuevamente más tarde.</p>';
     }
 });
+fetch('sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error al cargar el sidebar:', error);
+            });
     </script>
 </body>
 </html>
