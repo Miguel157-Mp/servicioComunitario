@@ -16,6 +16,10 @@ const buscarMateria = require('./buscarMateria'); // Importar la ruta para busca
 const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
+const traspasarMesas = require('./traspasarMesas'); // Importar la ruta para mover mesas
+const traspasarSillas = require('./traspasarSillas'); // Importar la ruta para mover sillas
+const buscarMobiliario = require('./buscarMobiliario'); // Importar la ruta para buscar mobiliario
+const guardarMobiliario = require('./guardarMobiliario'); // Importar la ruta para guardar mobiliario
 //const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
 
 const app = express();
