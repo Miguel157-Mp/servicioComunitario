@@ -269,6 +269,13 @@
         .btn-danger:hover {
             background-color: #c0392b;
         }
+        .btn.btn-sm.btn-danger.ms-2 {
+            padding: 2px 8px !important;
+            font-size: 1 rem !important;
+            line-height: 2 !important;
+        }
+
+
         
         /* Lista de selecciones */
         .selection-list {
@@ -372,6 +379,7 @@
                     </table>
                 </div>
             </div>
+            
             
             <!-- Formulario para registrar horarios -->
             <div class="form-container">
@@ -608,17 +616,17 @@ async function loadProfessorSchedule(professorId) {
         selectedSlots = [];
         updateSelectedSlotsDisplay();
         scheduleData.forEach(item => {
+            
             const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
             if (cell) {
                 cell.classList.add('booked');
                 cell.innerHTML = `
-                    Ocupado
+                    Disponible
+                    <br>
                     <button class="btn btn-sm btn-danger ms-2" onclick="deleteHorario(${item.idHorarioProfesorPorDia}, ${professorId})">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button class="btn btn-sm btn-warning ms-2" onclick="editHorario(${item.idHorarioProfesorPorDia}, ${item.idDiaSemana}, ${item.idBloqueHorario}, ${professorId})">
-                        <i class="fas fa-edit"></i>
-                    </button>
+                    
                 `;
             }
         });
