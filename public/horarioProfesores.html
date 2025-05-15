@@ -5,27 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="./vendor/js/bootstrap.bundle.min.js"></script>
     
-    <title>Dashboard - Universidad Santa Maria</title>
+    <title>Horario de Profesores - Universidad Santa Maria</title>
     <style>
-        /* Estilos generales */
-        body, html {
-            height: 100%;
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
         }
-
-        .dashboard-container {
-            display: flex;
-            height: 100vh;
-        }
-
-        /* Estilos del menú lateral (copiados de menulateral.html) */
+        
+        /* Estilos del menú lateral */
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -41,7 +43,6 @@
 
         .sidebar.closed {
             width: 60px;
-            left: 0;
         }
 
         .sidebar.closed .sidebar-header {
@@ -72,38 +73,6 @@
 
         .sidebar a i {
             margin-right: 10px;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: #3498db;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-
-        .toggle-btn:hover {
-            background-color: #0823ac;
-        }
-
-        #content {
-            margin-left: 250px;
-            transition: margin-left 0.3s ease;
-            padding: 20px;
-            height: 100vh;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        #content.closed {
-            margin-left: 60px;
         }
 
         .sidebar-header {
@@ -137,10 +106,17 @@
             filter: invert(100%);
         }
 
-        /* Estilos del dashboard */
-        .main-content {
-            display: flex;
-            flex-direction: column;
+        /* Contenido principal */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        #content.closed {
+            margin-left: 60px;
         }
 
         .header-section {
@@ -155,211 +131,175 @@
         }
            
         .header-logo img {
-            display: flexbox;
-            width: 150px;
-            height: 150px;
-            margin-right: 20px;
+            width: 120px;
+            height: auto;
         }
         
-        .header-text {
+        /* Estilos del tablero de horarios */
+        .main-container {
             display: flex;
-            flex-direction: column;
+            gap: 20px;
         }
-
-        .header-section img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .header-logo {
-            order: 1;
-        }
-
-        .header-text {
-            order: 2;
-        }
-
-        .header-section img {
-            order: 3;
-        }
-
-
         
-        .building-container {
-            background-color: white;
-            padding: 10px;
-            border-radius: 7px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .schedule-container {
+            flex: 3;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            overflow-x: auto;
+        }
+        
+        .form-container {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+        
+        /* Tabla de horarios */
+        .schedule-table {
             width: 100%;
-            max-width: 1010px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            position: sticky;
             top: 0;
         }
-
-        .building-title {
-            font-size: 1.5em;
-            color: #2c3e50;
-            margin-bottom: 15px;
+        
+        .schedule-table td {
+            padding: 10px;
             text-align: center;
-        }
-
-        .floor-container {
-            margin-bottom: 20px;
-        }
-
-        .floor-title {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            height: 50px;
         }
         
-        .floor-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            min-height: 50px;
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-
-
-/* Media Queries para pantallas más pequeñas (hasta 768px de ancho) */
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column; /* Apila el menú y el contenido */
-    }
-
-    .sidebar {
-        position: relative; /* El menú lateral ya no es fijo, ocupa espacio */
-        width: 100%; /* Ocupa todo el ancho */
-        height: auto; /* Altura automática */
-        padding-top: 10px; /* Reducido el padding superior */
-        left: 0; /* Asegura que esté a la izquierda */
-        z-index: 999; /* Asegura que esté encima del contenido si es necesario */
-        overflow-y: auto; /* Permite scroll si el menú es largo */
-    }
-
-    .sidebar.closed {
-        width: 60px; /* Ancho pequeño cuando está cerrado */
-    }
-
-    .sidebar.closed .sidebar-header {
-        display: none;
-    }
-
-    .sidebar.closed .sidebar-content a span {
-        display: none;
-    }
-
-    .sidebar.closed .sidebar-content a {
-        padding: 10px 15px;
-        text-align: center;
-    }
-
-    .sidebar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px solid #0a2ea5;
-    }
-
-    .centered-bars {
-        margin-left: 0; /* Alinea el botón de toggle a la izquierda */
-    }
-
-    #content {
-        margin-left: 0; /* El contenido ocupa todo el ancho */
-        padding: 15px; /* Reducido el padding del contenido */
-        height: auto; /* Altura automática para adaptarse al contenido */
-        grid-template-columns: 1fr; /* Una sola columna para el contenido */
-    }
-
-    .social-cards {
-        flex-direction: column; /* Apila las tarjetas */
-    }
-
-    .card {
-        width: 100%; /* Las tarjetas ocupan todo el ancho */
-        margin-bottom: 15px; /* Añadido margen inferior entre tarjetas */
-    }
-
-    .header-section {
-        flex-direction: column; /* Apila los elementos del encabezado */
-        align-items: flex-start; /* Alinea a la izquierda */
-        padding: 15px; /* Reducido el padding del encabezado */
-    }
-
-    .header-logo {
-        margin-bottom: 10px; /* Añadido margen inferior al logo */
-    }
-
-    .header-text {
-        margin-bottom: 10px; /* Añadido margen inferior al texto del encabezado */
-    }
-
-    .form {
-        margin-top: 15px; /* Reducido el margen superior del calendario */
-    }
-}
-
-/* Media Queries para pantallas aún más pequeñas (hasta 480px de ancho) */
-@media (max-width: 480px) {
-    .header-logo img {
-        width: 100px; /* Reduce aún más el logo */
-    }
-
-    .header-text h1 {
-        font-size: 1.5em; /* Reduce el tamaño del título principal */
-        margin-bottom: 5px;
-    }
-
-    .header-text p {
-        font-size: 0.9em; /* Reduce el tamaño del subtítulo */
-    }
-
-    .card h2 {
-        font-size: 1.2em; /* Reduce el tamaño del título de la tarjeta */
-    }
-
-    .card p {
-        font-size: 0.9em; /* Reduce el tamaño del texto de la tarjeta */
-    }
-
-    .building-title {
-        font-size: 1em; /* Reduce el tamaño del título del módulo */
-    }
-
-    .classroom {
-        font-size: 0.7em; /* Reduce el tamaño de la fuente de los salones */
-        padding: 3px;
-        min-height: 25px;
-    }
-
-    .classroom-id {
-        font-size: 0.7em; /* Reduce el tamaño del ID del salón */
-    }
-
-    .mes-año {
-        font-size: 14px; /* Reduce el tamaño del mes y año del calendario */
-    }
-
-    .boton-prev, .boton-next {
-        font-size: 18px; /* Reduce el tamaño de los botones del calendario */
-    }
-
-    .dias-semana span {
-        font-size: 0.8em; /* Reduce el tamaño de los días de la semana */
-    }
-
-    .dias-mes div {
-        font-size: 0.7em; /* Reduce el tamaño de los días del mes */
-        height: 20px;
-    }
-}
+        
+        .time-column {
+            background-color: var(--light-color);
+            font-weight: 500;
+            white-space: nowrap;
+            width: 120px;
+        }
+        
+        .selected {
+            background-color: rgba(46, 204, 113, 0.3);
+            border: 2px solid var(--success-color);
+        }
+        
+        .booked {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        /* Formulario */
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Lista de selecciones */
+        .selection-list {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .selection-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: #f8f9fa;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .form-container {
+                position: static;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Menú lateral integrado directamente (antes era un iframe) -->
+    <!-- Menú lateral -->
     <div id="sidebar" class="sidebar">
         <div class="centered-bars" id="toggleBtn">
             <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
@@ -369,71 +309,412 @@
         </div>
         <div class="sidebar-content">
             <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
+            <a href="./profesores.html"><i class="fas fa-chalkboard-teacher"></i> <span>Profesores</span></a>
+            <a href="#"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
+            <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
             <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
             <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
         </div>
     </div>
 
-    <!-- Contenido principal del dashboard -->
+    <!-- Contenido principal -->
     <div id="content">
-        <div class="main-content">
-            <div class="header-section">
-                <div class="header-text">
-                    <h1>Universidad Santa Maria</h1>
-                    <p>Sistema de Mobiliario y Agendamientos de Salones</p>
-                </div>
-                <div class="header-logo">
-                        <img src="./img/logousm.png" alt="logo usm" style="width: 120px; height: auto;">
+        <div class="header-section">
+            <div class="header-text">
+                <h1>Universidad Santa Maria</h1>
+                <p>Sistema de Mobiliario y Agendamientos de Salones</p>
+            </div>
+            <div class="header-logo">
+                <img src="./img/logousm.png" alt="logo usm">
+            </div>
+            <img src="./img/iconouser.png" alt="Usuario">
+        </div>
+        
+        <h4 id="nombreusuario">¡Bienvenido!</h4>
+        <span style="font-size: 0.8rem;">Estás en el Área de Horarios de Profesores</span>
+        
+        <div class="main-container">
+            <!-- Contenedor del tablero de horarios -->
+            <div class="schedule-container">
+                <h1 class="page-title">Horario del Profesor</h1>
+                
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="form-group" style="width: 300px;">
+                        <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
+                        <select id="professorSelect" class="form-control">
+                            <option value="">Buscar profesor...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="refreshBtn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
                 </div>
                 
-                <img src="./img/iconouser.png" alt="Usuario">
+                <div class="table-responsive">
+                    <table class="schedule-table" id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th>Bloque Horario</th>
+                                <th>Lun</th>
+                                <th>Mar</th>
+                                <th>Mié</th>
+                                <th>Jue</th>
+                                <th>Vie</th>
+                                <th>Sáb</th>
+                                <th>Dom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se generarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h4 id="nombreusuario">¡Bienvenido!</h4>
             
-       
-            
-               
-            
-
-        <div class="form">
-            
+            <!-- Formulario para registrar horarios -->
+            <div class="form-container">
+                <h2 class="form-title">Registrar Horario</h2>
+                <form id="scheduleForm">
+                    <input type="hidden" id="professorId">
+                    
+                    <div class="form-group">
+                        <label for="selectedProfessor" class="form-label">Profesor</label>
+                        <input type="text" id="selectedProfessor" class="form-control" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Horarios Seleccionados</label>
+                        <div id="selectedSlots" class="selection-list">
+                            <p class="text-muted">No hay horarios seleccionados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scheduleType" class="form-label">Tipo de Horario</label>
+                        <select id="scheduleType" class="form-control">
+                            <option value="regular">Horario Regular</option>
+                            <option value="special">Horario Especial</option>
+                        </select>
+                    </div>
+                    
+                    
+                    <div class="d-flex gap-2">
+                        <button type="button" id="clearSelection" class="btn btn-danger flex-grow-1">
+                            <i class="fas fa-trash"></i> Limpiar
+                        </button>
+                        <button type="submit" id="saveSchedule" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Script para el menú lateral (antes en menulateral.html)
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const content = document.getElementById('content');
+   <script>
+const timeBlocks = [
+    "07:00AM - 07:45AM",
+    "07:45AM - 08:30AM",
+    "08:30AM - 09:15AM",
+    "09:15AM - 10:00AM",
+    "10:00AM - 10:45AM",
+    "10:45AM - 11:30AM",
+    "11:30AM - 12:15PM",
+    "12:15PM - 01:00PM",
+    "01:00PM - 01:45PM",
+    "01:45PM - 02:30PM",
+    "02:30PM - 03:15PM",
+    "04:00PM - 04:45PM",
+    "04:45PM - 05:30PM",
+    "05:30PM - 06:15PM",
+    "06:15PM - 07:00PM"
+];
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-            content.classList.toggle('closed');
-            toggleBtn.querySelector('img').classList.toggle('rotated');
+let selectedProfessor = null;
+let selectedSlots = [];
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Menú lateral
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const content = document.getElementById('content');
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('closed');
+        content.classList.toggle('closed');
+    });
+
+    loadProfessors();
+    generateScheduleTable();
+    setupEventListeners();
+});
+
+// Cargar lista de profesores desde la API
+async function loadProfessors() {
+    try {
+        const response = await fetch('/registrarprofesor');
+        if (!response.ok) throw new Error('Error al cargar profesores');
+        const professors = await response.json();
+        const select = document.getElementById('professorSelect');
+        while (select.options.length > 1) select.remove(1);
+        professors.forEach(professor => {
+            const option = document.createElement('option');
+            option.value = professor.idProfesor;
+            option.textContent = `${professor.nbProfesor} (${professor.cedula})`;
+            select.appendChild(option);
         });
+        setupProfessorAutocomplete();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar la lista de profesores');
+    }
+}
 
-        
-    </script>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            try {
-                const response = await fetch('/usuario');
-                if (!response.ok) throw new Error('No autorizado');
-               
-                const usuario = await response.json();
-                document.getElementById("nombreusuario").textContent = `¡Bienvenido, Prof. ${usuario.nombre}!`;
-            } catch (error) {
-                console.error('Error obteniendo el usuario:', error);
-                document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
+// Autocompletado para selección de profesor
+function setupProfessorAutocomplete() {
+    const professorSelect = document.getElementById('professorSelect');
+    professorSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (this.value) {
+            selectedProfessor = {
+                id: this.value,
+                name: selectedOption.textContent.split(' (')[0]
+            };
+            document.getElementById('professorId').value = selectedProfessor.id;
+            document.getElementById('selectedProfessor').value = selectedProfessor.name;
+            loadProfessorSchedule(selectedProfessor.id);
+        } else {
+            selectedProfessor = null;
+            document.getElementById('professorId').value = '';
+            document.getElementById('selectedProfessor').value = '';
+            clearScheduleTable();
+        }
+    });
+}
+
+// Generar la tabla de horarios
+function generateScheduleTable() {
+    const tbody = document.querySelector('#scheduleTable tbody');
+    tbody.innerHTML = '';
+    timeBlocks.forEach((block, index) => {
+        const row = document.createElement('tr');
+        const timeCell = document.createElement('td');
+        timeCell.className = 'time-column';
+        timeCell.textContent = block;
+        row.appendChild(timeCell);
+        for (let day = 1; day <= 7; day++) {
+            const dayCell = document.createElement('td');
+            dayCell.dataset.day = day;
+            dayCell.dataset.block = index + 1;
+            dayCell.innerHTML = '&nbsp;';
+            dayCell.addEventListener('click', function() {
+                if (selectedProfessor) {
+                    toggleTimeSlot(this);
+                } else {
+                    alert('Por favor seleccione un profesor primero');
+                }
+            });
+            row.appendChild(dayCell);
+        }
+        tbody.appendChild(row);
+    });
+}
+
+// Limpiar la tabla de horarios
+function clearScheduleTable() {
+    const cells = document.querySelectorAll('#scheduleTable td[data-day]');
+    cells.forEach(cell => {
+        cell.className = '';
+        cell.innerHTML = '&nbsp;';
+    });
+}
+
+// Alternar selección de un bloque horario
+function toggleTimeSlot(cell) {
+    const day = cell.dataset.day;
+    const block = cell.dataset.block;
+    const slotKey = `${day}-${block}`;
+    const slotIndex = selectedSlots.findIndex(s => s.key === slotKey);
+    if (slotIndex >= 0) {
+        cell.classList.remove('selected');
+        selectedSlots.splice(slotIndex, 1);
+    } else {
+        cell.classList.add('selected');
+        selectedSlots.push({
+            key: slotKey,
+            day: day,
+            block: block,
+            time: timeBlocks[block - 1]
+        });
+    }
+    updateSelectedSlotsDisplay();
+}
+
+// Actualizar la visualización de slots seleccionados
+function updateSelectedSlotsDisplay() {
+    const container = document.getElementById('selectedSlots');
+    if (selectedSlots.length === 0) {
+        container.innerHTML = '<p class="text-muted">No hay horarios seleccionados</p>';
+        return;
+    }
+    container.innerHTML = '';
+    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    const groupedByDay = {};
+    selectedSlots.forEach(slot => {
+        if (!groupedByDay[slot.day]) groupedByDay[slot.day] = [];
+        groupedByDay[slot.day].push(slot);
+    });
+    for (const day in groupedByDay) {
+        const daySlots = groupedByDay[day];
+        const dayName = days[day - 1];
+        const dayHeader = document.createElement('h6');
+        dayHeader.textContent = dayName;
+        dayHeader.style.marginTop = '10px';
+        dayHeader.style.marginBottom = '5px';
+        container.appendChild(dayHeader);
+        daySlots.forEach(slot => {
+            const slotItem = document.createElement('div');
+            slotItem.className = 'selection-item';
+            const slotInfo = document.createElement('span');
+            slotInfo.textContent = slot.time;
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'btn btn-sm btn-danger';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = () => removeSlot(slot.key);
+            slotItem.appendChild(slotInfo);
+            slotItem.appendChild(removeBtn);
+            container.appendChild(slotItem);
+        });
+    }
+}
+
+// Remover un slot seleccionado
+function removeSlot(slotKey) {
+    selectedSlots = selectedSlots.filter(s => s.key !== slotKey);
+    const [day, block] = slotKey.split('-');
+    const cell = document.querySelector(`td[data-day="${day}"][data-block="${block}"]`);
+    if (cell) cell.classList.remove('selected');
+    updateSelectedSlotsDisplay();
+}
+
+// Cargar horario de un profesor desde el backend
+async function loadProfessorSchedule(professorId) {
+    try {
+        const response = await fetch(`/api/horario-profesor/${professorId}`);
+        if (!response.ok) throw new Error('Error al cargar horario');
+        const scheduleData = await response.json();
+        clearScheduleTable();
+        selectedSlots = [];
+        updateSelectedSlotsDisplay();
+        scheduleData.forEach(item => {
+            const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
+            if (cell) {
+                cell.classList.add('booked');
+                cell.innerHTML = `
+                    Ocupado
+                    <button class="btn btn-sm btn-danger ms-2" onclick="deleteHorario(${item.idHorarioProfesorPorDia}, ${professorId})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning ms-2" onclick="editHorario(${item.idHorarioProfesorPorDia}, ${item.idDiaSemana}, ${item.idBloqueHorario}, ${professorId})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                `;
             }
         });
+    } catch (error) {
+        console.error('Error al cargar horario:', error);
+        alert('Error al cargar el horario del profesor');
+    }
+}
 
+// Eliminar un bloque de horario
+async function deleteHorario(idHorario, idProfesor) {
+    if (!confirm('¿Seguro que deseas eliminar este bloque de horario?')) return;
+    try {
+        const response = await fetch(`/api/horario-profesor/${idHorario}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Error al eliminar el horario');
+        alert('Horario eliminado');
+        loadProfessorSchedule(idProfesor);
+    } catch (error) {
+        alert('Error al eliminar el horario');
+    }
+}
 
-        
-    </script>
+// Modificar un bloque de horario
+async function editHorario(idHorario, currentDay, currentBlock, idProfesor) {
+    const newDay = prompt('Nuevo día (1=Lun, 2=Mar, ..., 7=Dom):', currentDay);
+    const newBlock = prompt('Nuevo bloque horario (1-15):', currentBlock);
+    if (!newDay || !newBlock) return;
+    try {
+        const response = await fetch(`/api/horario-profesor/${idHorario}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                idDiaSemana: parseInt(newDay),
+                idBloqueHorario: parseInt(newBlock)
+            })
+        });
+        if (!response.ok) throw new Error('Error al modificar el horario');
+        alert('Horario modificado');
+        loadProfessorSchedule(idProfesor);
+    } catch (error) {
+        alert('Error al modificar el horario');
+    }
+}
+
+// Configurar event listeners
+function setupEventListeners() {
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        if (selectedProfessor) {
+            loadProfessorSchedule(selectedProfessor.id);
+        } else {
+            clearScheduleTable();
+        }
+    });
+    document.getElementById('clearSelection').addEventListener('click', function() {
+        document.querySelectorAll('.selected').forEach(cell => {
+            cell.classList.remove('selected');
+        });
+        selectedSlots = [];
+        updateSelectedSlotsDisplay();
+    });
+    document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        if (!selectedProfessor) {
+            alert('Por favor seleccione un profesor');
+            return;
+        }
+        if (selectedSlots.length === 0) {
+            alert('Por favor seleccione al menos un bloque horario');
+            return;
+        }
+        const scheduleType = document.getElementById('scheduleType').value;
+        try {
+            // Prepara los datos para el backend
+            const scheduleData = {
+                idProfesor: parseInt(selectedProfessor.id),
+                bloques: selectedSlots.map(slot => ({
+                    idDiaSemana: parseInt(slot.day),
+                    idBloqueHorario: parseInt(slot.block)
+                })),
+                type: scheduleType
+            };
+            const response = await fetch('/api/horario-profesor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(scheduleData)
+            });
+            if (!response.ok) throw new Error('Error al guardar horario');
+            alert('Horario guardado exitosamente!');
+            loadProfessorSchedule(selectedProfessor.id);
+            document.getElementById('clearSelection').click();
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al guardar el horario');
+        }
+    });
+}
+</script>
 </body>
-</html>
+</html> 

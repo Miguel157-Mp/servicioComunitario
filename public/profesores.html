@@ -11,6 +11,80 @@
 
     <title>Dashboard - Universidad Santa Maria</title>
     <link rel="stylesheet" href="./css/profesores.css">
+    <style>
+        /* Estilos adicionales para mejorar la tabla */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .table th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .table td, .table th {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        
+        .badge-success {
+            background-color: #2ecc71;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin: 0 3px;
+        }
+        
+        .btn-edit {
+            background-color: #3498db;
+            border-color: #3498db;
+            
+        }
+
+        
+        .btn-delete {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            
+        }
+       
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            padding-left: 40px;
+            border-radius: 20px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,40 +118,38 @@
                     <img src="./img/iconouser.png" alt="Usuario">
                 </div>
                 <h4 id="nombreusuario">¡Bienvenido!</h4>
-                <span style="font: size 30%; ;"> Estás en el Área de Profesores</span>
+                <span style="font-size: 0.8rem;"> Estás en el Área de Profesores</span>
                 <br>
-                <!-- NUEVO CONTENIDO -->
+                
                 <div class="search-container">
                     <div class="search-box">
                         <!-- barra de busqueda -->
-                        <div class="bg-light">
-                            <div class="container py-5">
-                                <div class="search-wrapper">
-                                    <div class="search-box">
-                                        <input type="text" class="search-input form-control"
-                                            placeholder="Search anything...">
-                                        <i class="fas fa-search search-icon"></i>
-
-                                    </div>
-                                </div>
+                        <div class="search-wrapper">
+                            <div class="position-relative">
+                                <input type="text" class="search-input form-control" placeholder="Buscar profesores...">
+                                <i class="fas fa-search search-icon"></i>
                             </div>
                         </div>
-                        <!-- Tabla de muestra de los profesores -->
-                        <table class="table align-middle mb-0 bg-white">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Titulo</th>
-                                    <th>Status</th>
-                                    <th>Cargo</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        
+                        <!-- Tabla mejorada de profesores -->
+                        <div class="table-container">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Título</th>
+                                        <th>Estado</th>
+                                        <th>Cargo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos se llenarán dinámicamente con JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <!--Aqui va es la llamada a BD-->
+                    
                     <div class="vertical-buttons">
                         <div class="action-button">
                             <a href="profesores.html" style="color: white; text-decoration: none;">
@@ -93,18 +165,16 @@
                             <a href="./horarioProfesores.html" style="color: white; text-decoration: none;">
                                 <i class="fas fa-calendar-alt"></i>
                                 <span>Horarios Profesores</span>
-                                
                             </a>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <!-- Modal para registrar profesor -->
-    <div class="modal fade" id="nuevoRegistroModal" tabindex="-1" aria-labelledby="nuevoRegistroModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="nuevoRegistroModal" tabindex="-1" aria-labelledby="nuevoRegistroModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,8 +185,7 @@
                     <form id="profesorForm">
                         <div class="form-group">
                             <label for="nombreApellido">Nombre y Apellido</label>
-                            <input type="text" id="nombreApellido" class="form-control" placeholder="Nombre y Apellido"
-                                required>
+                            <input type="text" id="nombreApellido" class="form-control" placeholder="Nombre y Apellido" required>
                         </div>
                         <div class="form-group">
                             <label for="telefono">Teléfono</label>
@@ -128,8 +197,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">Correo Electrónico</label>
-                            <input type="email" id="email" class="form-control" placeholder="Correo Electrónico"
-                                required>
+                            <input type="email" id="email" class="form-control" placeholder="Correo Electrónico" required>
                         </div>
 
                         <br>
@@ -142,84 +210,106 @@
             </div>
         </div>
     </div>
+    
     <!-- Modal para editar profesor -->
     <div class="modal fade" id="editarProfesorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Profesor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editarProfesorForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="profesorId">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre y Apellido</label>
+                            <input type="text" class="form-control" id="editarNombreApellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="editarTelefono" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cédula</label>
+                            <input type="text" class="form-control" id="editarCedula" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editarEmail" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="confirmarEliminarModal" tabindex="-1" aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Editar Profesor</h5>
+                <h5 class="modal-title" id="confirmarEliminarModalLabel">Confirmar Eliminación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editarProfesorForm">
-                <div class="modal-body">
-                    <input type="hidden" id="profesorId">
-                    <div class="mb-3">
-                        <label class="form-label">Nombre y Apellido</label>
-                        <input type="text" class="form-control" id="editarNombreApellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="editarTelefono" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="editarCedula" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editarEmail" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar este profesor?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="confirmarEliminarBtn" class="btn btn-danger">Eliminar</button>
+            </div>
         </div>
     </div>
 </div>
 
-  <script>
+    <script>
     document.addEventListener("DOMContentLoaded", async function () {
-    // Variables globales
-    let profesores = [];
-    const editarModal = new bootstrap.Modal(document.getElementById("editarProfesorModal"));
-    
-    // 1. Cargar datos del usuario
-    try {
-        const responseUsuario = await fetch('/usuario');
-        if (!responseUsuario.ok) throw new Error('No autorizado');
-        const usuario = await responseUsuario.json();
-        document.getElementById("nombreusuario").textContent = `¡Bienvenido, Prof. ${usuario.nombre}!`;
-    } catch (error) {
-        console.error('Error obteniendo el usuario:', error);
-        document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
-    }
-
-    // 2. Función para cargar profesores
-    async function cargarProfesores() {
+        // Variables globales
+        let profesores = [];
+        const editarModal = new bootstrap.Modal(document.getElementById("editarProfesorModal"));
+        const confirmarEliminarModal = new bootstrap.Modal(document.getElementById("confirmarEliminarModal"));
+        let profesorAEliminar = null;
+        
+        // 1. Cargar datos del usuario
         try {
-            const response = await fetch('/registrarprofesor');
-            if (!response.ok) throw new Error('Error al obtener profesores');
-            profesores = await response.json();
-            renderizarTabla(profesores);
+            const responseUsuario = await fetch('/usuario');
+            if (!responseUsuario.ok) throw new Error('No autorizado');
+            const usuario = await responseUsuario.json();
+            document.getElementById("nombreusuario").textContent = `¡Bienvenido, Prof. ${usuario.nombre}!`;
         } catch (error) {
-            console.error('Error al cargar profesores:', error);
+            console.error('Error obteniendo el usuario:', error);
+            document.getElementById("nombreusuario").textContent = "¡Bienvenido!";
         }
-    }
 
-    // 3. Función para renderizar la tabla
-    function renderizarTabla(profesores) {
-        const tbody = document.querySelector("tbody");
-        tbody.innerHTML = '';
+        // 2. Función para cargar profesores
+        async function cargarProfesores() {
+            try {
+                const response = await fetch('/registrarprofesor');
+                if (!response.ok) throw new Error('Error al obtener profesores');
+                profesores = await response.json();
+                renderizarTabla(profesores);
+            } catch (error) {
+                console.error('Error al cargar profesores:', error);
+                mostrarAlerta('Error al cargar profesores', 'danger');
+            }
+        }
 
-        profesores.forEach(profesor => {
-            const row = `
-                <tr>
+        // 3. Función para renderizar la tabla mejorada
+        function renderizarTabla(profesores) {
+            const tbody = document.querySelector("tbody");
+            tbody.innerHTML = '';
+
+            profesores.forEach(profesor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt=""
-                                 style="width: 45px; height: 45px" class="rounded-circle" />
+                            <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="Avatar" class="user-avatar">
                             <div class="ms-3">
                                 <p class="fw-bold mb-1">${profesor.nbProfesor}</p>
                                 <p class="text-muted mb-0">${profesor.email}</p>
@@ -231,121 +321,158 @@
                         <p class="text-muted mb-0">Profesor</p>
                     </td>
                     <td>
-                        <span class="badge badge-success rounded-pill d-inline">Active</span>
+                        <span class="badge badge-success">Activo</span>
                     </td>
                     <td>Profesor</td>
                     <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-rounded editar-btn" 
-                                data-id="${profesor.idProfesor}">
-                            Editar
+                        <button type="button" class="btn btn-edit btn-action editar-btn" data-id="${profesor.idProfesor}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-delete btn-action eliminar-btn" data-id="${profesor.idProfesor}">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
-
-        // Configurar búsqueda
-        const searchInput = document.querySelector(".search-input");
-        searchInput.addEventListener("input", function () {
-            const searchText = searchInput.value.toLowerCase();
-            const tableRows = document.querySelectorAll("table tbody tr");
-
-            tableRows.forEach(row => {
-                const rowText = row.textContent.toLowerCase();
-                row.style.display = rowText.includes(searchText) ? "" : "none";
-            });
-        });
-    }
-
-    // 4. Manejar envío del formulario de nuevo profesor
-    document.getElementById("profesorForm").addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const alertContainer = document.getElementById("alertContainer");
-
-        try {
-            const response = await fetch('/registrarprofesor', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    nombreApellido: document.getElementById("nombreApellido").value,
-                    telefono: document.getElementById("telefono").value,
-                    cedula: document.getElementById("cedula").value,
-                    email: document.getElementById("email").value
-                })
+                `;
+                tbody.appendChild(row);
             });
 
-            if (response.ok) {
-                alertContainer.style.display = "block";
-                alertContainer.className = "alert alert-success";
-                alertContainer.textContent = "Profesor registrado exitosamente";
-                document.getElementById("profesorForm").reset();
-                await cargarProfesores(); // Recargar la tabla
-            } else {
-                throw new Error('Error en la respuesta');
-            }
-        } catch (error) {
-            console.error("Error:", error);
+            // Configurar búsqueda
+            const searchInput = document.querySelector(".search-input");
+            searchInput.addEventListener("input", function () {
+                const searchText = searchInput.value.toLowerCase();
+                const tableRows = document.querySelectorAll("table tbody tr");
+
+                tableRows.forEach(row => {
+                    const rowText = row.textContent.toLowerCase();
+                    row.style.display = rowText.includes(searchText) ? "" : "none";
+                });
+            });
+        }
+
+        // 4. Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo) {
+            const alertContainer = document.getElementById("alertContainer");
             alertContainer.style.display = "block";
-            alertContainer.className = "alert alert-danger";
-            alertContainer.textContent = "Error al registrar el profesor";
+            alertContainer.className = `alert alert-${tipo}`;
+            alertContainer.textContent = mensaje;
+            setTimeout(() => {
+                alertContainer.style.display = "none";
+            }, 5000);
         }
-    });
 
-    // 5. Manejar clic en botones Editar (usando delegación de eventos)
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('editar-btn')) {
-            const profesorId = event.target.getAttribute('data-id');
-            const profesor = profesores.find(p => p.idProfesor == profesorId);
+        // 5. Manejar envío del formulario de nuevo profesor
+        document.getElementById("profesorForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
             
-            if (profesor) {
-                // Llenar el modal con los datos
-                document.getElementById("profesorId").value = profesor.idProfesor;
-                document.getElementById("editarNombreApellido").value = profesor.nbProfesor;
-                document.getElementById("editarTelefono").value = profesor.Telf || '';
-                document.getElementById("editarCedula").value = profesor.cedula || '';
-                document.getElementById("editarEmail").value = profesor.email || '';
+            try {
+                const response = await fetch('/registrarprofesor', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        nombreApellido: document.getElementById("nombreApellido").value,
+                        telefono: document.getElementById("telefono").value,
+                        cedula: document.getElementById("cedula").value,
+                        email: document.getElementById("email").value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarAlerta(data.message || "Profesor registrado exitosamente", "success");
+                    document.getElementById("profesorForm").reset();
+                    await cargarProfesores();
+                    
+                    // Cerrar el modal después de 1.5 segundos
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('nuevoRegistroModal')).hide();
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || "Error al registrar el profesor");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                mostrarAlerta(error.message || "Error al registrar el profesor", "danger");
+            }
+        });
+
+        // 6. Manejar clic en botones Editar (usando delegación de eventos)
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.editar-btn')) {
+                const btn = event.target.closest('.editar-btn');
+                const profesorId = btn.getAttribute('data-id');
+                const profesor = profesores.find(p => p.idProfesor == profesorId);
                 
-                // Mostrar el modal
-                editarModal.show();
+                if (profesor) {
+                    document.getElementById("profesorId").value = profesor.idProfesor;
+                    document.getElementById("editarNombreApellido").value = profesor.nbProfesor;
+                    document.getElementById("editarTelefono").value = profesor.Telf || '';
+                    document.getElementById("editarCedula").value = profesor.cedula || '';
+                    document.getElementById("editarEmail").value = profesor.email || '';
+                    editarModal.show();
+                }
             }
-        }
-    });
-
-    // 6. Manejar envío del formulario de edición
-    document.getElementById("editarProfesorForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-        try {
-            const response = await fetch(`/editarprofesor/${document.getElementById("profesorId").value}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    nombreApellido: document.getElementById("editarNombreApellido").value,
-                    telefono: document.getElementById("editarTelefono").value,
-                    cedula: document.getElementById("editarCedula").value,
-                    email: document.getElementById("editarEmail").value
-                })
-            });
-
-            if (response.ok) {
-                alert("Profesor actualizado exitosamente");
-                editarModal.hide();
-                await cargarProfesores(); // Recargar la tabla
-            } else {
-                throw new Error('Error en la respuesta');
+            
+            // Manejar clic en botones Eliminar
+            if (event.target.closest('.eliminar-btn')) {
+                const btn = event.target.closest('.eliminar-btn');
+                profesorAEliminar = btn.getAttribute('data-id');
+                confirmarEliminarModal.show();
             }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Error al actualizar el profesor");
-        }
+        });
+
+        // 7. Manejar envío del formulario de edición
+        document.getElementById("editarProfesorForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            try {
+                const response = await fetch(`/editarprofesor/${document.getElementById("profesorId").value}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        nombreApellido: document.getElementById("editarNombreApellido").value,
+                        telefono: document.getElementById("editarTelefono").value,
+                        cedula: document.getElementById("editarCedula").value,
+                        email: document.getElementById("editarEmail").value
+                    })
+                });
+
+                if (response.ok) {
+                    mostrarAlerta("Profesor actualizado exitosamente", "success");
+                    editarModal.hide();
+                    await cargarProfesores();
+                } else {
+                    throw new Error('Error al actualizar el profesor');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                mostrarAlerta(error.message || "Error al actualizar el profesor", "danger");
+            }
+        });
+
+        // 8. Manejar confirmación de eliminación
+        document.getElementById("confirmarEliminarBtn").addEventListener("click", async function() {
+            try {
+                const response = await fetch(`/registrarprofesor/${profesorAEliminar}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    mostrarAlerta("Profesor eliminado exitosamente", "success");
+                    confirmarEliminarModal.hide();
+                    await cargarProfesores();
+                } else {
+                    throw new Error('Error al eliminar el profesor');
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                mostrarAlerta(error.message || "Error al eliminar el profesor", "danger");
+            }
+        });
+
+        // Cargar datos iniciales
+        await cargarProfesores();
     });
-
-    // Cargar datos iniciales
-    await cargarProfesores();
-});
-  </script>
-
+    </script>
 </body>
-
 </html>

@@ -487,162 +487,138 @@
             </div>
             
            
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const ubicacionBtns = document.querySelectorAll('.ubicacion-btn');
-                    const mobiliarioPiso = document.getElementById('mobiliario-piso');
-                    const mobiliarioSalon = document.getElementById('mobiliario-salon');
-            
-                    ubicacionBtns.forEach(btn => {
-                        btn.addEventListener('click', function() {
-                            ubicacionBtns.forEach(b => b.classList.remove('active'));
-                            this.classList.add('active');
-                            const ubicacion = this.dataset.ubicacion;
-                            mobiliarioPiso.classList.toggle('oculto', ubicacion === 'salon');
-                            mobiliarioSalon.classList.toggle('oculto', ubicacion === 'piso');
-                        });
-                    });
-            
-                    
-                });
+   <script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Mostrar salones en selects
+    try {
+        const response = await fetch('/movermobiliario/salones');
+        const salones = await response.json();
 
+        const origenSelect = document.getElementById('origen');
+        const destinoSelect = document.getElementById('destino');
 
-                /*funcion para mostrar los salones*/
-                document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const response = await fetch('/movermobiliario/salones');
-    const salones = await response.json();
+        origenSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
+        destinoSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
 
-    const origenSelect = document.getElementById('origen');
-    const destinoSelect = document.getElementById('destino');
+        salones.forEach(salon => {
+            const optionOrigen = document.createElement('option');
+            optionOrigen.value = salon.idSalon;
+            optionOrigen.textContent = `ID: ${salon.idSalon} - Piso ${salon.piso}`;
+            origenSelect.appendChild(optionOrigen);
 
-    // Limpia las opciones iniciales (excepto la primera)
-    origenSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
-    destinoSelect.innerHTML = '<option value="">Seleccionar Salón</option>';
-
-    salones.forEach(salon => {
-      // Crea opción para Origen
-      const optionOrigen = document.createElement('option');
-      optionOrigen.value = salon.idSalon;
-      optionOrigen.textContent = `ID: ${salon.idSalon} - Piso ${salon.piso}`;
-      origenSelect.appendChild(optionOrigen);
-
-      // Crea opción para Destino (clona la opción)
-      const optionDestino = optionOrigen.cloneNode(true);
-      destinoSelect.appendChild(optionDestino);
-    });
-
-    console.log('Options creadas:', origenSelect.options.length);
-  } catch (err) {
-    console.error('Error:', err);
-  }
-});
-
-/*Sumar o Restar pupitres*/
-document.querySelectorAll("#btnsumar, #btnrestar").forEach(button => {
-    button.addEventListener("click", function() {
-        const action = this.id === "btnsumar" ? "sumar" : "restar";
-        let contador = parseInt(document.getElementById("listadoMobiliarioSalon").innerHTML) || 0; // Inicializa el contador con el valor actual del elemento o 0
-
-        function sumarUno() {
-            contador++;
-            document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
-        }
-
-            // Sumar y restar sillas
-            document.querySelectorAll("#btnsumar-sillas, #btnrestar-sillas").forEach(button => {
-                button.addEventListener("click", function () {
-                    const action = this.id === "btnsumar-sillas" ? "sumar" : "restar";
-                    let contador = parseInt(document.getElementById("listadoMobiliariosillas").innerHTML) || 0;
-
-                    if (action === "sumar") {
-                        contador++;
-                    } else if (action === "restar" && contador > 0) {
-                        contador--;
-                    }
-                    document.getElementById("listadoMobiliariosillas").innerHTML = contador;
-                });
-            });
+            const optionDestino = optionOrigen.cloneNode(true);
+            destinoSelect.appendChild(optionDestino);
         });
 
-        // Función para enviar cantidad de pupitres
-        function enviarDatosPupitres() {
-            const origen = document.getElementById('origen').value;
- 
-            const destino = document.getElementById('destino').value;
-      ;
-            const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
-            console.log('Enviar Pupitres - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
-            fetch('/traspasar/traspasar', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tipo: 'pupitre', origen, destino, cantidad })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de pupitres realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de pupitres: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de pupitres:', error);
-                alert('Ocurrió un error en la petición de pupitres.');
-            });
-        }
+        console.log('Options creadas:', origenSelect.options.length);
+    } catch (err) {
+        console.error('Error:', err);
+    }
 
-        // Función para enviar cantidad de mesas
-        function enviarDatosMesas() {
-            const origen = document.getElementById('origen-mesas').value;
-            const destino = document.getElementById('destino-mesas').value;
-            const cantidad = document.getElementById('listadoMobiliariomesas').innerHTML || 0;
-            console.log('Enviar Mesas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
-            fetch('/traspasarMesas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tipo: 'mesa', origen, destino, cantidad })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de mesas realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de mesas: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de mesas:', error);
-                alert('Ocurrió un error en la petición de mesas.');
-            });
-        }
+    // Sumar/restar pupitres
+    document.querySelectorAll("#btnsumar, #btnrestar").forEach(button => {
+        button.addEventListener("click", function() {
+            const action = this.id === "btnsumar" ? "sumar" : "restar";
+            let contador = parseInt(document.getElementById("listadoMobiliarioSalon").innerHTML) || 0;
+            if (action === "sumar") {
+                contador++;
+            } else if (action === "restar" && contador > 0) {
+                contador--;
+            }
+            document.getElementById("listadoMobiliarioSalon").innerHTML = contador;
+        });
+    });
 
-        // Función para enviar cantidad de sillas
-        function enviarDatosSillas() {
-            const origen = document.getElementById('origen-sillas').value;
-            const destino = document.getElementById('destino-sillas').value;
-            const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
-            console.log('Enviar Sillas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
-            fetch('/traspasarSillas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tipo: 'silla', origen, destino, cantidad })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de sillas realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de sillas:', error);
-                alert('Ocurrió un error en la petición de sillas.');
-            });
-        }
-    </script>
+    // Sumar/restar sillas
+    document.querySelectorAll("#btnsumar-sillas, #btnrestar-sillas").forEach(button => {
+        button.addEventListener("click", function () {
+            const action = this.id === "btnsumar-sillas" ? "sumar" : "restar";
+            let contador = parseInt(document.getElementById("listadoMobiliariosillas").innerHTML) || 0;
+            if (action === "sumar") {
+                contador++;
+            } else if (action === "restar" && contador > 0) {
+                contador--;
+            }
+            document.getElementById("listadoMobiliariosillas").innerHTML = contador;
+        });
+    });
+});
 
+// Función para enviar cantidad de pupitres
+function enviarDatos() {
+    const origen = document.getElementById('origen').value;
+    const destino = document.getElementById('destino').value;
+    const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
+    console.log('Enviar Pupitres - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+    fetch('/traspasar/traspasar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'pupitre', origen, destino, cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Transacción de pupitres realizada con éxito.');
+        } else {
+            alert('Error al realizar la transacción de pupitres: ' + (data.error || ''));
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición de pupitres:', error);
+        alert('Ocurrió un error en la petición de pupitres.');
+    });
+}
+
+// Función para enviar cantidad de mesas
+function enviarDatosMesas() {
+    const origen = document.getElementById('origen-mesas').value;
+    const destino = document.getElementById('destino-mesas').value;
+    const cantidad = document.getElementById('listadoMobiliariomesas').innerHTML || 0;
+    console.log('Enviar Mesas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+    fetch('/traspasarMesas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'mesa', origen, destino, cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Transacción de mesas realizada con éxito.');
+        } else {
+            alert('Error al realizar la transacción de mesas: ' + (data.error || ''));
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición de mesas:', error);
+        alert('Ocurrió un error en la petición de mesas.');
+    });
+}
+
+// Función para enviar cantidad de sillas
+function enviarDatosSillas() {
+    const origen = document.getElementById('origen-sillas').value;
+    const destino = document.getElementById('destino-sillas').value;
+    const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
+    console.log('Enviar Sillas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+    fetch('/traspasarSillas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tipo: 'silla', origen, destino, cantidad })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Transacción de sillas realizada con éxito.');
+        } else {
+            alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición de sillas:', error);
+        alert('Ocurrió un error en la petición de sillas.');
+    });
+}
+</script>
 
     </div>
 
