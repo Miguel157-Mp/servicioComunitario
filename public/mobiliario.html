@@ -403,20 +403,7 @@
 
 <body>
     <!-- Menú lateral integrado directamente (antes era un iframe) -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
+    <div id="sidebar-container">
     </div>
 
     <!-- Contenido principal del dashboard -->
@@ -529,6 +516,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+<<<<<<< HEAD
     // Sumar/restar sillas
     document.querySelectorAll("#btnsumar-sillas, #btnrestar-sillas").forEach(button => {
         button.addEventListener("click", function () {
@@ -543,6 +531,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 });
+=======
+        // Función para enviar cantidad de sillas
+        function enviarDatosSillas() {
+            const origen = document.getElementById('origen-sillas').value;
+            const destino = document.getElementById('destino-sillas').value;
+            const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
+            console.log('Enviar Sillas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            fetch('/traspasarSillas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'silla', origen, destino, cantidad })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transacción de sillas realizada con éxito.');
+                } else {
+                    alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición de sillas:', error);
+                alert('Ocurrió un error en la petición de sillas.');
+            });
+        }
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error al cargar el sidebar:', error);
+            });
+    </script>
+>>>>>>> 500f50c1fd9860b691bcb8509f37b9db0637053f
 
 // Función para enviar cantidad de pupitres
 function enviarDatos() {

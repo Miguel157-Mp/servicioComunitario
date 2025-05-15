@@ -90,21 +90,9 @@
 <body>
     <div class="dashboard-container">
         <!-- Menú lateral integrado directamente (antes era un iframe) -->
-        <div id="sidebar" class="sidebar">
-            <div class="centered-bars" id="toggleBtn">
-                <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-            </div>
-            <div class="sidebar-header">
-                Menú
-            </div>
-            <div class="sidebar-content">
-                <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-                <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-                <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-                <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-            </div>
+        <div id="sidebar-container">
         </div>
+    
         <div id="content">
             <div class="main-content">
                 <div class="header-section">
@@ -473,6 +461,23 @@
         // Cargar datos iniciales
         await cargarProfesores();
     });
+<<<<<<< HEAD
     </script>
+=======
+
+    // Cargar datos iniciales
+    await cargarProfesores();
+});
+fetch('sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error al cargar el sidebar:', error);
+            });
+  </script>
+
+>>>>>>> 500f50c1fd9860b691bcb8509f37b9db0637053f
 </body>
 </html>
