@@ -6,8 +6,8 @@ const path = require('path');
 const poolConfig = {
     user: 'postgres',
     host: 'localhost',
-    database: 'serviciocomunitario',
-    password: '1004',
+    database: 'servicioComunitario',
+    password: '1234',
     port: 5432,
 };
 
