@@ -317,7 +317,7 @@
         <div class="sidebar-content">
             <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
             <a href="./profesores.html"><i class="fas fa-chalkboard-teacher"></i> <span>Profesores</span></a>
-            <a href="#"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
+            <a href="./agendamientoSalones.html"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
             <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
             <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
             <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
@@ -694,32 +694,27 @@ async function cargarSeccionesPorProfesor(idProfesor) {
         select.appendChild(opt);
     });
 }
-
-async function cargarSalonesDisponibles(idProfesor, idDiaSemana, idBloqueHorario) {
-    if (!idProfesor || !idDiaSemana || !idBloqueHorario) return;
-    const res = await fetch(`/api/seccion-horario/salones-disponibles?idProfesor=${idProfesor}&idDiaSemana=${idDiaSemana}&idBloqueHorario=${idBloqueHorario}`);
-    const salones = await res.json();
+async function cargarTodosLosSalones() {
     const select = document.getElementById('classroomSelect');
     select.innerHTML = '<option value="">Buscar salón...</option>';
-    salones.forEach(salon => {
-        const opt = document.createElement('option');
-        console.log(salon);
-        opt.value = salon.idSalon;
-        opt.textContent = salon.idSalon;
-        select.appendChild(opt);
-    });
-}
-
-function toggleTimeSlot(cell) {
-    const day = cell.dataset.day;
-    const block = cell.dataset.block;
-    // ...tu lógica de selección...
-    // Si solo permites seleccionar un bloque a la vez:
-    if (selectedProfessor) {
-        cargarSalonesDisponibles(selectedProfessor.id, day, block);
+    try {
+        const response = await fetch('/salones/list');
+        if (!response.ok) throw new Error('No se pudieron cargar los salones');
+        const salones = await response.json();
+        salones.forEach(salon => {
+            const opt = document.createElement('option');
+            opt.value = salon.idSalon;
+            opt.textContent = `Salón ${salon.idSalon} (Cap: ${salon.capacidad})`;
+            select.appendChild(opt);
+        });
+    } catch (error) {
+        console.error('Error al cargar salones:', error);
+        select.innerHTML = '<option value="">Error al cargar salones</option>';
     }
 }
 
+// Llama a la función cuando cargue la página o cuando lo necesites
+document.addEventListener('DOMContentLoaded', cargarTodosLosSalones);
 // Configurar event listeners
 function setupEventListeners() {
     document.getElementById('refreshBtn').addEventListener('click', function() {
