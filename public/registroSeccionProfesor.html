@@ -513,6 +513,8 @@
                             <i class="fas fa-plus"></i>
                         </div>
 
+                
+
                     </div>
                    
                     
@@ -585,7 +587,16 @@
             
                     <div class="form-group">
                         <label for="materiaInput">Materia</label>
-                        <input type="text" id="materiaInput" class="form-control" placeholder="Escribe el nombre de la materia" autocomplete="off" required>
+                        <div style="display:inline-flex; width: 100%;">
+                            <input type="text" id="materiaInput" class="form-control" placeholder="Escribe el nombre de la materia" autocomplete="off" required>
+                            <button type="button" 
+                            class="btn btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#nuevaMateriaModal" 
+                            title="Registrar nueva materia">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                         <ul id="materiaSuggestions" class="list-group"></ul>
                         <input type="hidden" id="idMateria">
                     </div>
@@ -666,7 +677,34 @@
     </div>
 </div>
 
-    
+<!-- Modal para registrar nueva materia -->
+<div class="modal fade" id="nuevaMateriaModal" tabindex="-1" aria-labelledby="nuevaMateriaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="nuevaMateriaForm" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nuevaMateriaModalLabel">Registrar Nueva Materia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nombreMateriaNueva" class="form-label">Nombre de la Materia</label>
+          <input type="text" class="form-control" id="nombreMateriaNueva" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="codigoMateriaNueva" class="form-label">Código de la Materia</label>
+          <input type="text" class="form-control" id="codigoMateriaNueva" required>
+        </div>
+
+        <div id="alertMateriaNueva" class="alert" style="display:none;" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Registrar Materia</button>
+      </div>
+    </form>
+  </div>
+</div>
 
     
     <!-- Extrae el nombre de usuario -->

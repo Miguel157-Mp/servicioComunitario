@@ -59,32 +59,11 @@ console.error('Error al cerrar sesión:', err.message, err.stack); // Log detall
 });
 
 // Ruta para el registro de usuarios
-router.post('/register', async (req, res, next) => {
-    const { usuario, clave, nombre, cedula } = req.body;
-
-    if (!usuario || !clave || !nombre || !cedula) {
-        console.error('Datos incompletos en /register:', req.body);
-        return res.status(400).send('Datos incompletos');
-    }
-
-    try {
-console.log('Ejecutando consulta SQL para /register:', { usuario, clave, nombre, cedula });
-        await pool.query('INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave) VALUES ($1, $2, $3, $4)', [nombre, cedula, usuario, clave]);
-        res.redirect('/index.html');
-    } catch (error) {
-console.error('Error al registrar usuario en /register:', error.message, error.stack);
-        next(error);
-    }
-});
-
-/*busqueda de profesores */ 
 router.get('/buscarProfesor', async (req, res) => {
     const { query } = req.query;
-
     if (!query) {
         return res.status(400).json({ error: "Falta el parámetro de búsqueda" });
     }
-
     try {
         const result = await pool.query(
             `SELECT "idProfesor", "nbProfesor", cedula, email, "Telf" 
@@ -98,17 +77,8 @@ router.get('/buscarProfesor', async (req, res) => {
         );
         res.json(result.rows);
     } catch (error) {
-        console.error("Error al buscar profesores:", error);
         res.status(500).json({ error: "Error al buscar profesores" });
     }
-
-   
-    
-
-
-
-
-
 });
 
 module.exports = router;

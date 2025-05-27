@@ -2,17 +2,22 @@ const express = require('express');
 const pool = require('../database/db');
 const router = express.Router();
 
-// Obtener todos los registros de seccionHorario
+
+// Obtener todos los registros de seccionHorario o filtrar por idSalon
 router.get('/', async (req, res) => {
-    try {
-        const result = await pool.query(
-            'SELECT "IdSeccionHorario", "idBloqueHorario", "idDiaSemana", "idSalon", "idSeccion" FROM public."seccionHorario"'
-        );
+    const { salon } = req.query;
+    
+        let query = 'SELECT "IdSeccionHorario", "idBloqueHorario", "idDiaSemana", "idSalon", "idSeccion" FROM public."seccionHorario"';
+        let params = [];
+        if (salon) {
+            query += ' WHERE "idSalon" = $1';
+            params.push(salon);
+        }
+        const result = await pool.query(query, params);
         res.json(result.rows);
-    } catch (error) {
-        console.error('Error al obtener seccionHorario:', error);
-        res.status(500).json({ message: 'Error al obtener seccionHorario' });
-    }
+     
+      
+    
 });
 
 // Obtener un registro por IdSeccionHorario
