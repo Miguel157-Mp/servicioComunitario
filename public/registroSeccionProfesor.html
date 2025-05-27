@@ -1299,7 +1299,7 @@ document.getElementById("materiaInput").addEventListener("input", debounce(async
         const materias = await response.json();
         suggestionsContainer.innerHTML = ""; // Limpiar sugerencias previas
 
-        materias.forEach(materia => {
+        materias.forEach(materia => { 
             const li = document.createElement("li");
             li.className = "list-group-item";
             li.textContent = materia.nbMateria;
@@ -1347,11 +1347,70 @@ document.getElementById("confirmarEliminarButton").addEventListener("click", asy
         console.error("Error al eliminar la sección:", error);
         mostrarError(error.message);
     }
+
 });
 
     // Cargar datos iniciales
     await cargarSecciones();
 });
+document.getElementById("nuevaMateriaForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const nombreMateria = document.getElementById("nombreMateriaNueva").value.trim();
+    const codigoMateria = document.getElementById("codigoMateriaNueva").value.trim();
+    const alertDiv = document.getElementById("alertMateriaNueva");
+    alertDiv.style.display = "none";
+    alertDiv.className = "alert";
+
+    // Validaciones
+    if (!nombreMateria || nombreMateria.length < 3) {
+        alertDiv.textContent = "El nombre de la materia debe tener al menos 3 caracteres.";
+        alertDiv.classList.add("alert-danger");
+        alertDiv.style.display = "block";
+        return;
+    }
+    if (!codigoMateria || codigoMateria.length < 2) {
+        alertDiv.textContent = "El código de la materia debe tener al menos 2 caracteres.";
+        alertDiv.classList.add("alert-danger");
+        alertDiv.style.display = "block";
+        return;
+    }
+
+    try {
+        const response = await fetch('/registrarMateria', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nbMateria: nombreMateria, codigoMateria })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            alertDiv.textContent = data.error || "Error al registrar la materia.";
+            alertDiv.classList.add("alert-danger");
+            alertDiv.style.display = "block";
+            return;
+        }
+
+        alertDiv.textContent = "Materia registrada exitosamente.";
+        alertDiv.classList.add("alert-success");
+        alertDiv.style.display = "block";
+
+        setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById("nuevaMateriaModal"));
+            modal.hide();
+            document.getElementById("nombreMateriaNueva").value = "";
+            document.getElementById("codigoMateriaNueva").value = "";
+            alertDiv.style.display = "none";
+        }, 1200);
+
+    } catch (error) {
+        alertDiv.textContent = "Error de conexión al registrar la materia.";
+        alertDiv.classList.add("alert-danger");
+        alertDiv.style.display = "block";
+    }
+});
+
+
+
 </script>
 
 </body>

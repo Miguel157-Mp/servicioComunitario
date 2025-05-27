@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="./vendor/js/bootstrap.bundle.min.js"></script>
+    <title>Infraestructura - Universidad Santa María</title>
+    <style>
+        /* Estilos del sidebar (originales) */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #0823ac;
+            padding-top: 70px;
+            color: white;
+            z-index: 1000;
+            transition: width 0.2s ease;
+        }
+
+        .sidebar.closed { width: 60px; }
+        .sidebar.closed .sidebar-header { display: none; }
+        .sidebar.closed .sidebar-content a span { display: none; }
+        .sidebar.closed .sidebar-content a { padding: 15px; text-align: center; }
+        
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 16px;
+            color: white;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover { background-color: #061a7a; }
+        .sidebar a i { margin-right: 10px; }
+        .toggle-btn { /* Mantener estilos originales del botón */ }
+
+        /* Estilos nuevos para la vista de infraestructura */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 30px;
+            background-color: #f5f6fa;
+            min-height: 100vh;
+        }
+
+        .infra-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(8,35,172,0.05);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            min-width: 200px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .salon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .salon-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e8e9f1;
+        }
+
+        .salon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(8,35,172,0.08);
+        }
+
+        .salon-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #0823ac;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .salon-capacity {
+            color: #4a4a4a;
+            font-size: 0.95em;
+            margin: 15px 0;
+        }
+
+        .mobiliario-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobiliario-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobiliario-count {
+            background: #f8f9ff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #content {
+                margin-left: 60px;
+                padding: 20px;
+            }
+
+            .infra-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            .salon-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .salon-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Original -->
+    <div class="sidebar" id="sidebar">
+        <div class="centered-bars" id="toggleBtn">
+            <img src="./img/bars-solid.svg" width="20px" alt="Menu" class="white-icon">
+        </div>
+        <div class="sidebar-header">Menú Principal</div>
+        <div class="sidebar-content">
+            <a href="./dashboard.html"><i class="fas fa-home"></i><span>Dashboard</span></a>
+            <a href="#" class="active"><i class="fas fa-building"></i><span>Infraestructura</span></a>
+            <a href="#"><i class="fas fa-calendar-alt"></i><span>Reservas</span></a>
+            <a href="#"><i class="fas fa-chart-bar"></i><span>Reportes</span></a>
+            <a href="#"><i class="fas fa-cog"></i><span>Configuración</span></a>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div id="content">
+        <div class="infra-header">
+            <div>
+                <h2 style="color: #0823ac; margin-bottom: 5px;">Infraestructura Académica</h2>
+                <p style="color: #666; font-size: 0.95em;">Visualización detallada de salones y recursos</p>
+            </div>
+            <div class="filter-container">
+                <select class="filter-select" id="filter-building">
+                    <option value="">Todos los Edificios</option>
+                    <option>Edificio A</option>
+                    <option>Edificio B</option>
+                    <option>Edificio C</option>
+                </select>
+                <select class="filter-select" id="filter-floor">
+                    <option value="">Todos los Pisos</option>
+                    <option>Piso 1</option>
+                    <option>Piso 2</option>
+                    <option>Piso 3</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid de Salones -->
+        <div class="salon-grid" id="salonContainer">
+            <!-- Ejemplo de tarjeta - Se genera dinámicamente -->
+            <div class="salon-card">
+                <span class="salon-badge">A-201</span>
+                <h3 style="color: #0823ac; margin-bottom: 10px;">Laboratorio de Computación</h3>
+                <p class="salon-capacity"><i class="fas fa-users"></i> Capacidad: 40 personas</p>
+                <ul class="mobiliario-list">
+                    <li class="mobiliario-item">
+                        <span>Pupitres Dobles</span>
+                        <span class="mobiliario-count" style="color: #0823ac;">25</span>
+                    </li>
+                    <li class="mobiliario-item">
+                        <span>Sillas Ergonómicas</span>
+                        <span class="mobiliario-count" style="color: #00c853;">30</span>
+                    </li>
+                    <li class="mobiliario-item">
+                        <span>Mesas de Trabajo</span>
+                        <span class="mobiliario-count" style="color: #ff9100;">5</span>
+                    </li>
+                    <li class="mobiliario-item">
+                        <span>Proyectores</span>
+                        <span class="mobiliario-count" style="color: #0091ea;">2</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle del Sidebar
+        document.getElementById('toggleBtn').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            sidebar.classList.toggle('closed');
+            content.classList.toggle('closed');
+        });
+
+        // Carga dinámica de datos
+        async function cargarSalones() {
+            try {
+                const response = await fetch('/api/salones');
+                const data = await response.json();
+                const container = document.getElementById('salonContainer');
+                
+                container.innerHTML = data.map(salon => `
+                    <div class="salon-card">
+                        <span class="salon-badge">${salon.codigo}</span>
+                        <h3>${salon.nombre}</h3>
+                        <p class="salon-capacity"><i class="fas fa-users"></i> Capacidad: ${salon.capacidad} personas</p>
+                        <ul class="mobiliario-list">
+                            ${salon.mobiliario.map(item => `
+                                <li class="mobiliario-item">
+                                    <span>${item.tipo}</span>
+                                    <span class="mobiliario-count">${item.cantidad}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error al cargar salones:', error);
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarSalones();
+            
+            // Filtros
+            document.querySelectorAll('.filter-select').forEach(select => {
+                select.addEventListener('change', () => {
+                    // Implementar lógica de filtrado
+                });
+            });
+        });
+    </script>
+</body>
+</html>

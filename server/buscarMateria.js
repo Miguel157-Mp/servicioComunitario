@@ -1,24 +1,24 @@
 const express = require('express');
-const pool = require('../database/db'); // Importar la conexión a la base de datos
+const pool = require('../database/db');
 
 const router = express.Router();
 
-// Ruta para buscar materias
+// Ruta para buscar materias por nombre o código
 router.get('/', async (req, res) => {
     const { query } = req.query;
-
-    if (!query) {
-        return res.status(400).json({ error: "Falta el parámetro de búsqueda" });
-    }
-
     try {
-        const result = await pool.query(`
+        let sql = `
             SELECT "idMateria", "nbMateria", "codigoMateria"
             FROM "public"."materia"
-            WHERE "nbMateria" ILIKE $1
-            LIMIT 10;
-        `, [`%${query}%`]);
+        `;
+        let params = [];
+        if (query && query.trim() !== "") {
+            sql += ` WHERE "nbMateria" ILIKE $1 OR CAST("codigoMateria" AS TEXT) ILIKE $1`;
+            params.push(`%${query}%`);
+        }
+        sql += ` ORDER BY "nbMateria" ASC LIMIT 10;`;
 
+        const result = await pool.query(sql, params);
         res.json(result.rows);
     } catch (error) {
         console.error("Error al buscar materias:", error);
