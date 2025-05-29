@@ -575,22 +575,8 @@
 </head>
 
 <body>
-    <!-- Menú lateral integrado directamente (antes era un iframe) -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
-    </div>
+      <!-- Menú lateral integrado directamente (antes era un iframe) -->
+     <div id="menu-lateral"></div>
 
     <!-- Contenido principal del dashboard -->
     <div id="content">
@@ -1042,6 +1028,13 @@
                 alert('Ocurrió un error en la petición de sillas.');
             });
         }
+            /*incluir menulateral*/
+            fetch('menulateral.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('menu-lateral').innerHTML = html;
+  })
+  .catch(err => console.log('Error cargando menú lateral:', err));
     </script>
 
 

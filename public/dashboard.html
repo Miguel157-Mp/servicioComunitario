@@ -633,21 +633,7 @@
 
 <body>
     <!-- Menú lateral integrado directamente (antes era un iframe) -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
-    </div>
+     <div id="menu-lateral"></div>
 
     <!-- Contenido principal del dashboard -->
     <div id="content">
@@ -709,17 +695,7 @@
         <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            // Script para el menú lateral (antes en menulateral.html)
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('toggleBtn');
-            const content = document.getElementById('content');
-
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('closed');
-                content.classList.toggle('closed');
-                toggleBtn.querySelector('img').classList.toggle('rotated');
-            });
-
+          
             // Script para el calendario
             let fechaActual = new Date();
             let mesActual = fechaActual.getMonth();
@@ -847,6 +823,13 @@
                     buildingContainer.innerHTML = '<p>Error al cargar los salones. Intenta nuevamente más tarde.</p>';
                 }
             });
+            /*incluir menulateral*/
+            fetch('menulateral.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('menu-lateral').innerHTML = html;
+  })
+  .catch(err => console.log('Error cargando menú lateral:', err));
         </script>
 </body>
 
