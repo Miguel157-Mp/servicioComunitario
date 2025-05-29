@@ -27,65 +27,6 @@
             padding: 0;
         }
         
-        /* Estilos del menú lateral */
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #0823ac;
-            transition: width 0.2s ease;
-            padding-top: 70px;
-            color: white;
-            z-index: 1000;
-        }
-
-        .sidebar.closed {
-            width: 60px;
-        }
-
-        .sidebar.closed .sidebar-header {
-            display: none;
-        }
-
-        .sidebar.closed .sidebar-content a span {
-            display: none;
-        }
-
-        .sidebar.closed .sidebar-content a {
-            padding: 15px 15px;
-            text-align: center;
-        }
-
-        .sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 16px;
-            color: white;
-            display: block;
-            transition: background-color 0.2s;
-        }
-
-        .sidebar a:hover {
-            background-color: #0823ac;
-        }
-
-        .sidebar a i {
-            margin-right: 10px;
-        }
-
-        .sidebar-header {
-            padding: 20px 25px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            border-bottom: 1px solid #0823ac;
-        }
-
-        .sidebar-content {
-            padding: 10px 0;
-        }
 
         .centered-bars {
             text-align: center;
@@ -307,22 +248,8 @@
 </head>
 <body>
     <!-- Menú lateral -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="./profesores.html"><i class="fas fa-chalkboard-teacher"></i> <span>Profesores</span></a>
-            <a href="./agendamientoSalones.html"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
-            <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
-    </div>
+      <!-- Menú lateral integrado directamente (antes era un iframe) -->
+     <div id="menu-lateral"></div>
 
     <!-- Contenido principal -->
     <div id="content">
@@ -334,7 +261,7 @@
             <div class="header-logo">
                 <img src="./img/logousm.png" alt="logo usm">
             </div>
-            <img src="./img/iconouser.png" alt="Usuario">
+            <img src="./img/iconouser.png" alt="Usuario"  class="rounded-circle" style="height: 100px; width: 100px;">
         </div>
         
         <h4 id="nombreusuario">¡Bienvenido!</h4>
@@ -723,6 +650,13 @@ function setupEventListeners() {
         }
     });
 }
+         /*incluir menulateral*/
+            fetch('menulateral.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('menu-lateral').innerHTML = html;
+  })
+  .catch(err => console.log('Error cargando menú lateral:', err));
 </script>
 </body>
 </html> 

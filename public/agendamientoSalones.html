@@ -28,65 +28,7 @@
         }
         
         /* Estilos del menú lateral */
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #0823ac;
-            transition: width 0.2s ease;
-            padding-top: 70px;
-            color: white;
-            z-index: 1000;
-        }
-
-        .sidebar.closed {
-            width: 60px;
-        }
-
-        .sidebar.closed .sidebar-header {
-            display: none;
-        }
-
-        .sidebar.closed .sidebar-content a span {
-            display: none;
-        }
-
-        .sidebar.closed .sidebar-content a {
-            padding: 15px 15px;
-            text-align: center;
-        }
-
-        .sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            font-size: 16px;
-            color: white;
-            display: block;
-            transition: background-color 0.2s;
-        }
-
-        .sidebar a:hover {
-            background-color: #0823ac;
-        }
-
-        .sidebar a i {
-            margin-right: 10px;
-        }
-
-        .sidebar-header {
-            padding: 20px 25px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            border-bottom: 1px solid #0823ac;
-        }
-
-        .sidebar-content {
-            padding: 10px 0;
-        }
-
+      
         .centered-bars {
             text-align: center;
             margin: 0 auto;
@@ -322,26 +264,30 @@
                 position: static;
             }
         }
+        .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+  gap: 20px 40px; /* fila 20px, columnas 40px */
+  justify-content: center; /* centrado horizontal */
+  max-width: 600px; /* para no hacerla muy ancha */
+  margin: 0 auto 1.5rem auto;
+}
+
+.form-group {
+  min-width: 280px;
+}
+
+.btn-container {
+  min-width: 270px;
+  justify-self: start; /* alineamos el botón a la izquierda en su celda */
+}
+
     </style>
 </head>
 <body>
     <!-- Menú lateral -->
-    <div id="sidebar" class="sidebar">
-        <div class="centered-bars" id="toggleBtn">
-            <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-        </div>
-        <div class="sidebar-header">
-            Menú
-        </div>
-        <div class="sidebar-content">
-            <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-            <a href="./profesores.html"><i class="fas fa-chalkboard-teacher"></i> <span>Profesores</span></a>
-            <a href="./agendamientoSalones.html"><i class="fas fa-calendar-alt"></i> <span>Agendamiento</span></a>
-            <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
-            <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-        </div>
-    </div>
+    <!-- Menú lateral integrado directamente (antes era un iframe) -->
+     <div id="menu-lateral"></div>
 
     <!-- Contenido principal -->
     <div id="content">
@@ -355,31 +301,32 @@
             <div class="schedule-container">
                 <h1 class="page-title">Agendamiento de Salones</h1>
                 
-                <div class="d-flex justify-content-between mb-3">
-                    <div class="form-group" style="width: 300px;">
-                        <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
-                        <select id="professorSelect" class="form-control">
-                            <option value="">Buscar profesor...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sectionSelect" class="form-label">Seleccionar Sección</label>
-                        <select id="sectionSelect" class="form-control">
-                            <option value="">Buscar sección...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="classroomSelect" class="form-label">Seleccionar Salón</label>
-                        <select id="classroomSelect" class="form-control">
-                            <option value="">Buscar salón...</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button id="refreshBtn" class="btn btn-primary">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                </div>
+               <div class="form-grid">
+  <div class="form-group" style="width: 300px;">
+    <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
+    <select id="professorSelect" class="form-control">
+      <option value="">Buscar profesor...</option>
+    </select>
+  </div>
+  <div class="form-group" style="width: 300px;">
+    <label for="sectionSelect" class="form-label">Seleccionar Sección</label>
+    <select id="sectionSelect" class="form-control">
+      <option value="">Buscar sección...</option>
+    </select>
+  </div>
+  <div class="form-group" style="width: 300px;">
+    <label for="classroomSelect" class="form-label">Seleccionar Salón</label>
+    <select id="classroomSelect" class="form-control">
+      <option value="">Buscar salón...</option>
+    </select>
+  </div>
+  <div class="btn-container" style="display: flex; align-items: center;">
+    <button id="refreshBtn" class="btn btn-primary">
+      <i class="fas fa-sync-alt"></i> Actualizar
+    </button>
+  </div>
+</div>
+
                 
                 <div class="table-responsive">
                     <table class="schedule-table" id="scheduleTable">
@@ -995,6 +942,14 @@ function cargarYRenderizarAgendados() {
            
             
     }
+
+             /*incluir menulateral*/
+            fetch('menulateral.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('menu-lateral').innerHTML = html;
+  })
+  .catch(err => console.log('Error cargando menú lateral:', err));
  </script>
 
 
