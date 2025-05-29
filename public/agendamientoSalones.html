@@ -264,6 +264,24 @@
                 position: static;
             }
         }
+        .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+  gap: 20px 40px; /* fila 20px, columnas 40px */
+  justify-content: center; /* centrado horizontal */
+  max-width: 600px; /* para no hacerla muy ancha */
+  margin: 0 auto 1.5rem auto;
+}
+
+.form-group {
+  min-width: 280px;
+}
+
+.btn-container {
+  min-width: 270px;
+  justify-self: start; /* alineamos el botón a la izquierda en su celda */
+}
+
     </style>
 </head>
 <body>
@@ -283,31 +301,32 @@
             <div class="schedule-container">
                 <h1 class="page-title">Agendamiento de Salones</h1>
                 
-                <div class="d-flex justify-content-between mb-3">
-                    <div class="form-group" style="width: 300px;">
-                        <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
-                        <select id="professorSelect" class="form-control">
-                            <option value="">Buscar profesor...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sectionSelect" class="form-label">Seleccionar Sección</label>
-                        <select id="sectionSelect" class="form-control">
-                            <option value="">Buscar sección...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="classroomSelect" class="form-label">Seleccionar Salón</label>
-                        <select id="classroomSelect" class="form-control">
-                            <option value="">Buscar salón...</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button id="refreshBtn" class="btn btn-primary">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                </div>
+               <div class="form-grid">
+  <div class="form-group" style="width: 300px;">
+    <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
+    <select id="professorSelect" class="form-control">
+      <option value="">Buscar profesor...</option>
+    </select>
+  </div>
+  <div class="form-group" style="width: 300px;">
+    <label for="sectionSelect" class="form-label">Seleccionar Sección</label>
+    <select id="sectionSelect" class="form-control">
+      <option value="">Buscar sección...</option>
+    </select>
+  </div>
+  <div class="form-group" style="width: 300px;">
+    <label for="classroomSelect" class="form-label">Seleccionar Salón</label>
+    <select id="classroomSelect" class="form-control">
+      <option value="">Buscar salón...</option>
+    </select>
+  </div>
+  <div class="btn-container" style="display: flex; align-items: center;">
+    <button id="refreshBtn" class="btn btn-primary">
+      <i class="fas fa-sync-alt"></i> Actualizar
+    </button>
+  </div>
+</div>
+
                 
                 <div class="table-responsive">
                     <table class="schedule-table" id="scheduleTable">
