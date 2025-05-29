@@ -23,8 +23,6 @@ const guardarMobiliario = require('./guardarMobiliario'); // Importar la ruta pa
 const horarioProfesor = require('./horarioProfesor'); // Importar la ruta para horario de profesor
 const seccionHorario = require('./seccionHorario'); // Importar la ruta para seccionHorario
 
-const registrarMateria = require('./registrarMateria'); // Importar la ruta para registrar materia
-
 //const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
 
 const app = express();
@@ -99,9 +97,6 @@ app.use('/api/horario-profesor', horarioProfesor);
 
 // Ruta para SeccionHorario
 app.use('/api/seccion-horario', seccionHorario);
-
-// Ruta para registrar materia
-app.use('/registrarMateria', registrarMateria);
 
 
 // Rutas API

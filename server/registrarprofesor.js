@@ -61,7 +61,7 @@ router.delete('/:id', async (req, res) => {
 // Ruta para obtener todos los profesores
 router.get('/', async (req, res) => {
     try {
-        const query = `SELECT * FROM "public"."profesor" ORDER BY "nbProfesor" ASC LIMIT 5;`;
+        const query = `SELECT * FROM "public"."profesor" ORDER BY "nbProfesor" ASC;`;
         const result = await pool.query(query);
 
         console.log('Profesores obtenidos:', result.rows); // Verifica si hay resultados
