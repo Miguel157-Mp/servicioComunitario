@@ -315,8 +315,8 @@
                     <input type="hidden" id="professorId">
                     
                     <div class="form-group">
-                        <label for="selectedProfessor" class="form-label">Profesor</label>
-                        <input type="text" id="selectedProfessor" class="form-control" readonly>
+                        <input type="text" id="professorSearch" class="form-control" placeholder="Buscar profesor...">
+                        <ul id="professorSuggestions" class="list-group"></ul>
                     </div>
                     
                     <div class="form-group">
@@ -369,64 +369,87 @@ const timeBlocks = [
 
 let selectedProfessor = null;
 let selectedSlots = [];
+let profesores = [];
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Menú lateral
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggleBtn');
-    const content = document.getElementById('content');
-    toggleBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('closed');
-        content.classList.toggle('closed');
+// Función para cargar profesores y llenar el select
+async function cargarProfesores() {
+    try {
+        const response = await fetch('/registrarprofesor');
+        if (!response.ok) throw new Error('Error al obtener profesores');
+        profesores = await response.json();
+
+        // Llenar el select
+        const select = document.getElementById('professorSelect');
+        while (select.options.length > 1) select.remove(1);
+        profesores.forEach(profesor => {
+            const option = document.createElement('option');
+            option.value = profesor.idProfesor;
+            option.textContent = `${profesor.nbProfesor} (${profesor.cedula})`;
+            select.appendChild(option);
+        });
+
+        setupProfessorAutocomplete(); // Llama aquí siempre
+    } catch (error) {
+        console.error('Error al cargar profesores:', error);
+        alert('Error al cargar profesores');
+    }
+}
+
+// Autocompletado para el input de búsqueda de profesor
+function setupProfessorAutocomplete() {
+    const input = document.getElementById('professorSearch');
+    const suggestions = document.getElementById('professorSuggestions');
+    const select = document.getElementById('professorSelect');
+
+    input.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+        suggestions.innerHTML = '';
+        if (!query) return;
+        const filtered = profesores.filter(p => p.nbProfesor.toLowerCase().includes(query));
+        filtered.forEach(profesor => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.textContent = `${profesor.nbProfesor} (${profesor.cedula})`;
+            li.addEventListener('click', function() {
+                input.value = profesor.nbProfesor;
+                document.getElementById('professorId').value = profesor.idProfesor;
+                suggestions.innerHTML = '';
+                // Sincroniza el select
+                select.value = profesor.idProfesor;
+                // Actualiza el horario
+                selectedProfessor = { id: profesor.idProfesor, name: profesor.nbProfesor };
+                loadProfessorSchedule(profesor.idProfesor);
+            });
+            suggestions.appendChild(li);
+        });
     });
 
-    loadProfessors();
+    // Sincroniza el input cuando cambias el select
+    select.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (this.value) {
+            const profesor = profesores.find(p => p.idProfesor == this.value);
+            input.value = profesor ? profesor.nbProfesor : '';
+            document.getElementById('professorId').value = this.value;
+            selectedProfessor = { id: this.value, name: input.value };
+            loadProfessorSchedule(this.value);
+        } else {
+            input.value = '';
+            document.getElementById('professorId').value = '';
+            selectedProfessor = null;
+            clearScheduleTable();
+        }
+        suggestions.innerHTML = '';
+    });
+}
+
+// En tu DOMContentLoaded, solo llama a cargarProfesores()
+document.addEventListener("DOMContentLoaded", function() {
+    cargarProfesores();
     generateScheduleTable();
     setupEventListeners();
 });
 
-// Cargar lista de profesores desde la API
-async function loadProfessors() {
-    try {
-        const response = await fetch('/registrarprofesor');
-        if (!response.ok) throw new Error('Error al cargar profesores');
-        const professors = await response.json();
-        const select = document.getElementById('professorSelect');
-        while (select.options.length > 1) select.remove(1);
-        professors.forEach(professor => {
-            const option = document.createElement('option');
-            option.value = professor.idProfesor;
-            option.textContent = `${professor.nbProfesor} (${professor.cedula})`;
-            select.appendChild(option);
-        });
-        setupProfessorAutocomplete();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al cargar la lista de profesores');
-    }
-}
-
-// Autocompletado para selección de profesor
-function setupProfessorAutocomplete() {
-    const professorSelect = document.getElementById('professorSelect');
-    professorSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (this.value) {
-            selectedProfessor = {
-                id: this.value,
-                name: selectedOption.textContent.split(' (')[0]
-            };
-            document.getElementById('professorId').value = selectedProfessor.id;
-            document.getElementById('selectedProfessor').value = selectedProfessor.name;
-            loadProfessorSchedule(selectedProfessor.id);
-        } else {
-            selectedProfessor = null;
-            document.getElementById('professorId').value = '';
-            document.getElementById('selectedProfessor').value = '';
-            clearScheduleTable();
-        }
-    });
-}
 
 // Generar la tabla de horarios
 function generateScheduleTable() {

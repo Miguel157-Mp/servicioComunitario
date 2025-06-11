@@ -72,6 +72,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #6c757d;
+            pointer-events: none;
         }
         
         .user-avatar {
@@ -259,6 +260,14 @@
 </div>
 
     <script>
+    // Configuración de Bootstrap tooltips
+    document.querySelectorAll('.search-box').forEach(box => {
+        box.addEventListener('click', function(e) {
+            const input = this.querySelector('.search-input');
+            if (input) input.focus();
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", async function () {
         // Variables globales
         let profesores = [];
