@@ -2,6 +2,35 @@ const express = require('express');
 const pool = require('../database/db');
 const router = express.Router();
 
+// Obtener los horarios agendados por salón, incluyendo profesor y materia
+router.get('/agendados-por-salon/:idSalon', async (req, res) => {
+    const { idSalon } = req.params;
+    try {
+        const result = await pool.query(
+            `SELECT
+                sh."IdSeccionHorario",
+                sh."idBloqueHorario",
+                sh."idDiaSemana",
+                sh."idSalon",
+                s."idSeccion",
+                p."idProfesor",
+                p."nbProfesor" AS nombre_profesor,
+                m."nbMateria" AS nombre_materia
+            FROM public."seccionHorario" sh
+            INNER JOIN public."seccion" s ON s."idSeccion" = sh."idSeccion"
+            INNER JOIN public."profesor" p ON s."idProfesor" = p."idProfesor"
+            INNER JOIN public."materia" m ON s."idMateria" = m."idMateria"
+            WHERE sh."idSalon" = $1`,
+            [idSalon]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al consultar horarios agendados por salón:', error);
+        res.status(500).json({ message: 'Error al consultar horarios agendados por salón' });
+    }
+});
+
+
 
 // Obtener todos los registros de seccionHorario o filtrar por idSalon
 router.get('/', async (req, res) => {
@@ -140,5 +169,8 @@ router.get('/salones-disponibles', async (req, res) => {
         res.status(500).json({ message: 'Error al consultar salones disponibles' });
     }
 });
+
+
+
 
 module.exports = router;
