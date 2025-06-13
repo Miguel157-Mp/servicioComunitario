@@ -3,8 +3,16 @@ const pool = require('../database/db'); // Importar el objeto pool
 const path = require('path');
 const router = express.Router();
 
-// Ruta principal
-router.get('/', (req, res) => {
+// Middleware para proteger rutas privadas
+function requireLogin(req, res, next) {
+    if (!req.session.usuario) {
+        return res.redirect('/index.html');
+    }
+    next();
+}
+
+// Ruta principal protegida
+router.get('/', requireLogin, (req, res) => {
     res.sendFile(path.join(__dirname, '../dashboard.html'));
 });
 
@@ -14,11 +22,16 @@ router.post('/submit', async (req, res, next) => {
 
     if (!usuario || !clave) {
         console.error('Datos incompletos en /submit:', req.body);
-        return res.status(400).send('Datos incompletos');
+              // Enviar JSON con error y campos faltantes 
+        return res.status(400).json({
+            success: false,
+            message: 'Por favor, completa todos los campos.',
+            fields: ['usuario', 'clave'] 
+        });
+
     }
 
     try {
-console.log('Ejecutando consulta SQL para /submit:', { usuario, clave });
         const result = await pool.query('SELECT * FROM "public"."loginUsuario" WHERE usuario = $1 AND clave = $2', [usuario, clave]);
 
         if (result.rows.length > 0) {
@@ -30,16 +43,23 @@ console.log('Ejecutando consulta SQL para /submit:', { usuario, clave });
             res.redirect('/dashboard.html');
         } else {
 console.warn('Credenciales incorrectas para usuario:', usuario);
-            res.status(401).send('Credenciales incorrectas');
+            res.status(401).json({
+                success: false,
+                message: 'Credenciales incorrectas. Por favor, inténtalo de nuevo.'
+            });
         }
     } catch (error) {
-console.error('Error al verificar credenciales en /submit:', error.message, error.stack);
+        console.error('Error al ejecutar la consulta en /submit:', error.message, error.stack); // Log detallado del error
+        res.status(500).json({
+            success: false,
+            message: 'Error al procesar la solicitud. Por favor, inténtalo más tarde.'
+        });
         next(error);
     }
 });
 
 // Ruta para obtener datos del usuario
-router.get('/usuario', (req, res) => {
+router.get('/usuario', requireLogin, (req, res) => {
     if (req.session.usuario) {
         res.json(req.session.usuario);
     } else {
@@ -54,6 +74,7 @@ router.get('/logout', (req, res) => {
 console.error('Error al cerrar sesión:', err.message, err.stack); // Log detallado
             return res.status(500).send('Error al cerrar sesión');
         }
+
         res.redirect('/index.html');
     });
 });

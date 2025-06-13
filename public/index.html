@@ -96,7 +96,7 @@ body {
                             class="btn btn-primary active">
                             <h6>Ingresar</h6>
                         </button>
-
+<div id="login-message" style="margin-top:10px;"></div>
                     </form>
                     <br>
                     <p>¿No tienes una cuenta? <a href="register.html">Regístrate aquí</a>.</p>
@@ -121,6 +121,34 @@ body {
             icon.classList.add('fa-eye');
         }
     });
+
+document.querySelector('form[action="/submit"]').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const usuario = document.getElementById('usuario').value;
+    const clave = document.getElementById('clave').value;
+    const messageDiv = document.getElementById('login-message');
+    messageDiv.innerHTML = ''; // Limpia mensajes previos
+
+    try {
+        const response = await fetch('/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario, clave })
+        });
+
+        if (response.redirected) {
+            window.location.href = response.url; // Redirige si es éxito
+            return;
+        }
+
+        const data = await response.json();
+        if (!data.success) {
+            messageDiv.innerHTML = `<div class="alert alert-danger" style="color:red;">${data.message}</div>`;
+        }
+    } catch (err) {
+        messageDiv.innerHTML = `<div class="alert alert-danger" style="color:red;">Error de conexión. Intenta más tarde.</div>`;
+    }
+});
 </script>
 
 
