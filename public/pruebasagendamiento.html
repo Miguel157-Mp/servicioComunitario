@@ -419,13 +419,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="scheduleType" class="form-label">Tipo de Horario</label>
-                        <select id="scheduleType" class="form-control">
-                            <option value="regular">Horario Regular</option>
-                            <option value="special">Horario examen</option>
-                        </select>
-                    </div>
+                   
                     
                     
                     <div class="d-flex gap-2">
@@ -531,13 +525,7 @@
         </select>
         
         </div>
-        <div class="mb-3">
-          <label for="searchType" class="form-label">Tipo de Horario</label>
-          <select id="searchType" class="form-control">
-            <option value="regular">Horario Normal</option>
-            <option value="special">Horario Examen</option>
-          </select>
-        </div>
+      
         <div id="availableClassroomsResult" class="mt-3"></div>
       </div>
       <div class="modal-footer">
@@ -549,13 +537,48 @@
 </div>
 
 
- <script>
+<script>
     // Variables globales
     let selectedProfessor = null;
     let selectedSlots = [];
     let profesores = [];
+    let isExamenMode = false; // Control del modo horario
 
-        const timeBlocks = [
+    // Bloques de examen (los que diste)
+    const bloquesExamen = [
+    { id: 16, rango: '07:00AM - 08:00AM' },
+    { id: 17, rango: '08:00AM - 09:00AM' },
+    { id: 18, rango: '09:00AM - 10:00AM' },
+    { id: 19, rango: '10:00AM - 11:00AM' },
+    { id: 20, rango: '11:00AM - 12:00PM' },
+    { id: 21, rango: '12:00PM - 01:00PM' },
+    { id: 23, rango: '01:00PM - 02:00PM' },
+    { id: 24, rango: '02:00PM - 03:00PM' },
+    { id: 25, rango: '03:00PM - 04:00PM' },
+    { id: 26, rango: '04:00PM - 05:00PM' },
+    { id: 27, rango: '05:00PM - 06:00PM' },
+    { id: 28, rango: '06:00PM - 07:00PM' }
+    ];
+
+// Bloques normales (ejemplo)
+const bloquesNormales = [
+    { id: 1, rango: '07:00AM - 07:45AM' },
+    { id: 2, rango: '07:45AM - 08:30AM' },
+    { id: 3, rango: '08:30AM - 09:15AM' },
+    { id: 4, rango: '09:15AM - 10:00AM' },
+    { id: 5, rango: '10:00AM - 10:45AM' },
+    { id: 6, rango: '10:45AM - 11:30AM' },
+    { id: 7, rango: '11:30AM - 12:15PM' },
+    { id: 8, rango: '12:15PM - 01:00PM' },
+    { id: 9, rango: '01:00PM - 01:45PM' },
+    { id: 10, rango: '01:45PM - 02:30PM' },
+    { id: 11, rango: '02:30PM - 03:15PM' },
+    { id: 12, rango: '03:15PM - 04:00PM' },
+    { id: 13, rango: '04:00PM - 04:45PM' },
+    { id: 14, rango: '04:45PM - 05:30PM' },
+    { id: 15, rango: '05:30PM - 06:15PM' }
+];
+    const timeBlocks = [
         "07:00AM - 07:45AM",
         "07:45AM - 08:30AM",
         "08:30AM - 09:15AM",
@@ -572,54 +595,123 @@
         "05:30PM - 06:15PM",
         "06:15PM - 07:00PM"
     ];
-    
+    // Ejemplo: bloque normal 1 equivale a bloque examen 16, etc.
+const equivalenciaBloques = {
+    1: 16,
+    2: 17,
+    3: 18,
+    4: 19,
+    5: 20,
+    6: 21,
+    7: 23,
+    8: 24,
+    9: 25,
+    10: 26,
+    11: 27,
+    12: 28
+    // ...agrega más si tienes más bloques
+};
     const diasSemana = ["", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
     
+// Variable global para los bloques actuales
+let bloquesActuales = bloquesNormales;
+
+// Función para renderizar los bloques en la tabla o modal
+function renderizarBloques() {
+    // Ejemplo para un select:
+    const select = document.getElementById('searchBlock');
+    select.innerHTML = '';
+    bloquesActuales.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = b.rango;
+        select.appendChild(opt);
+    });
+    // Si usas checkboxes, renderízalos aquí usando bloquesActuales
+}
+document.getElementById('switchHorario').addEventListener('change', function() {
+    if (this.checked) {
+        // Modo examen
+        bloquesActuales = bloquesExamen;
+    } else {
+        // Modo normal
+        bloquesActuales = bloquesNormales;
+    }
+    //bloquesActuales = this.checked ? bloquesExamen : bloquesNormales;
+    generateScheduleTable();      // Vuelve a construir la tabla con los nuevos bloques
+    renderSalonSchedule();        // Vuelve a pintar los agendados en la nueva tabla
     
-    document.addEventListener("DOMContentLoaded", function() {
-        // Menú lateral
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const content = document.getElementById('content');
-         if (toggleBtn && sidebar && content) {
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('closed');
-            content.classList.toggle('closed');
-        });
+});
+
+    // Obtener rutas según el modo
+    function getBasePath() {
+        return isExamenMode 
+            ? '/api/seccion-horario-examen' 
+            : '/api/seccion-horario';
     }
     
+    function getAgendadosPath() {
+        return isExamenMode
+            ? '/api/seccion-horario-examen/agendados-por-salon/'
+            : '/api/seccion-horario/agendados-por-salon/';
+    }
+    
+    function getOcupacionPath() {
+        return isExamenMode
+            ? '/api/seccion-horario-examen/ocupacion-salones'
+            : '/api/seccion-horario/ocupacion-salones';
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Configuración inicial
         cargarProfesores();
         generateScheduleTable();
         setupEventListeners();
         cargarTodosLosSalones();
 
-        // Aquí coloca los listeners de los botones de vista
-    document.getElementById('showSalonBtn').addEventListener('click', renderSalonSchedule);
-    document.getElementById('showProfesorBtn').addEventListener('click', renderProfesorSchedule);
-    document.getElementById('showAmbosBtn').addEventListener('click', renderCombinedSchedule);
+        // Configuración del switch
+        const switchHorario = document.getElementById('switchHorario');
+        switchHorario.addEventListener('change', function() {
+            isExamenMode = this.checked;
+            document.getElementById('switchLabel').textContent = isExamenMode 
+                ? 'Horario Examen' 
+                : 'Horario Normal';
+            
+            // Recargar datos si hay selecciones previas
+            if (selectedProfessor) {
+                loadProfessorSchedule(selectedProfessor.id);
+                cargarSeccionesPorProfesor(selectedProfessor.id);
+            }
+            
+            const classroomId = document.getElementById('classroomSelect').value;
+            if (classroomId) {
+                renderCombinedSchedule();
+            }
+        });
+
+        // Botones de vista
+        document.getElementById('showSalonBtn').addEventListener('click', renderSalonSchedule);
+        document.getElementById('showProfesorBtn').addEventListener('click', renderProfesorSchedule);
+        document.getElementById('showAmbosBtn').addEventListener('click', renderCombinedSchedule);
     });
     
     // Cargar lista de profesores desde la API
-        async function cargarProfesores() {
+    async function cargarProfesores() {
         try {
             const response = await fetch('/registrarprofesor');
-            console.log('Respuesta fetch:', response);
             if (!response.ok) throw new Error('Error al obtener profesores');
             profesores = await response.json();
-           
-    
+            
             // Llenar el select
             const select = document.getElementById('professorSelect');
-            // Limpia todas las opciones excepto la primera
             while (select.options.length > 1) select.remove(1);
             profesores.forEach(profesor => {
-                
                 const option = document.createElement('option');
                 option.value = profesor.idProfesor;
                 option.textContent = `${profesor.nbProfesor} (${profesor.cedula})`;
                 select.appendChild(option);
             });
-              setupProfessorAutocomplete();
+            setupProfessorAutocomplete();
         } catch (error) {
             console.error('Error al cargar profesores:', error);
             alert('Error al cargar profesores');
@@ -647,42 +739,34 @@
                 clearScheduleTable();
                 document.getElementById('sectionSelect').innerHTML = '<option value="">Buscar sección...</option>';
             }
-
             renderCombinedSchedule();
         });
     }
-    
-
-    
-
-    // Generar la tabla de horarios
-    function generateScheduleTable() {
-        const tbody = document.querySelector('#scheduleTable tbody');
-        tbody.innerHTML = '';
-        timeBlocks.forEach((block, index) => {
-            const row = document.createElement('tr');
-            const timeCell = document.createElement('td');
-            timeCell.className = 'time-column';
-            timeCell.textContent = block;
-            row.appendChild(timeCell);
-            for (let day = 1; day <= 7; day++) {
-                const dayCell = document.createElement('td');
-                dayCell.dataset.day = day;
-                dayCell.dataset.block = index + 1;
-                dayCell.innerHTML = '&nbsp;';
-                dayCell.addEventListener('click', function() {
-                 // Solo permite marcar si NO está ocupada
+// Generar la tabla de horarios adaptada
+function generateScheduleTable() {
+    const tbody = document.querySelector('#scheduleTable tbody');
+    tbody.innerHTML = '';
+    bloquesActuales.forEach((block) => {
+        const row = document.createElement('tr');
+        const timeCell = document.createElement('td');
+        timeCell.className = 'time-column';
+        timeCell.textContent = block.rango; // Muestra el rango de hora
+        row.appendChild(timeCell);
+        for (let day = 1; day <= 7; day++) {
+            const dayCell = document.createElement('td');
+            dayCell.dataset.day = day;
+            dayCell.dataset.block = block.id; // Usa el ID real del bloque
+            dayCell.innerHTML = '&nbsp;';
+            dayCell.addEventListener('click', function() {
                 if (!this.classList.contains('classroom-booked')) {
-                        toggleTimeSlot(this);
-                    }
-                });
-                
-                
-                row.appendChild(dayCell);
-            }
-            tbody.appendChild(row);
-        });
-    }
+                    toggleTimeSlot(this);
+                }
+            });
+            row.appendChild(dayCell);
+        }
+        tbody.appendChild(row);
+    });
+}
     
     // Limpiar la tabla de horarios
     function clearScheduleTable() {
@@ -694,27 +778,25 @@
     }
     
     // Alternar selección de un bloque horario
-function toggleTimeSlot(cell) {
-    const day = cell.dataset.day;
-    const block = cell.dataset.block;
-    const slotKey = `${day}-${block}`;
-    const slotIndex = selectedSlots.findIndex(s => s.key === slotKey);
-    if (slotIndex >= 0) {
-        // Quitar selección
-        selectedSlots.splice(slotIndex, 1);
-        cell.innerHTML = '&nbsp;';
-    } else {
-        // Agregar selección
-        selectedSlots.push({
-            key: slotKey,
-            day: day,
-            block: block,
-            time: timeBlocks[block - 1]
-        });
-        cell.innerHTML = '<span class="selected-dot"></span>';
+    function toggleTimeSlot(cell) {
+        const day = cell.dataset.day;
+        const block = cell.dataset.block;
+        const slotKey = `${day}-${block}`;
+        const slotIndex = selectedSlots.findIndex(s => s.key === slotKey);
+        if (slotIndex >= 0) {
+            selectedSlots.splice(slotIndex, 1);
+            cell.innerHTML = '&nbsp;';
+        } else {
+            selectedSlots.push({
+                key: slotKey,
+                day: day,
+                block: block,
+                time: timeBlocks[block - 1]
+            });
+            cell.innerHTML = '<span class="selected-dot"></span>';
+        }
+        updateSelectedSlotsDisplay();
     }
-    updateSelectedSlotsDisplay();
-}
 
     // Actualizar la visualización de slots seleccionados
     function updateSelectedSlotsDisplay() {
@@ -764,7 +846,7 @@ function toggleTimeSlot(cell) {
     }
     
     // Cargar horario de un profesor desde el backend
-      async function loadProfessorSchedule(professorId) {
+    async function loadProfessorSchedule(professorId) {
         try {
             const response = await fetch(`/api/horario-profesor/${professorId}`);
             if (!response.ok) throw new Error('Error al cargar horario');
@@ -775,49 +857,13 @@ function toggleTimeSlot(cell) {
             scheduleData.forEach(item => {
                 const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
                 if (cell) {
-                    cell.classList.add('selected'); // Usa la clase verde
-                    cell.innerHTML = 'Disponible';  // Solo texto, sin botones
+                    cell.classList.add('selected');
+                    cell.innerHTML = 'Disponible';
                 }
             });
         } catch (error) {
             console.error('Error al cargar horario:', error);
             alert('Error al cargar el horario del profesor');
-        }
-    }
-    
-    
-    // Eliminar un bloque de horario
-    async function deleteHorario(idHorario, idProfesor) {
-        if (!confirm('¿Seguro que deseas eliminar este bloque de horario?')) return;
-        try {
-            const response = await fetch(`/api/horario-profesor/${idHorario}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Error al eliminar el horario');
-            alert('Horario eliminado');
-            loadProfessorSchedule(idProfesor);
-        } catch (error) {
-            alert('Error al eliminar el horario');
-        }
-    }
-    
-    // Modificar un bloque de horario
-    async function editHorario(idHorario, currentDay, currentBlock, idProfesor) {
-        const newDay = prompt('Nuevo día (1=Lun, 2=Mar, ..., 7=Dom):', currentDay);
-        const newBlock = prompt('Nuevo bloque horario (1-15):', currentBlock);
-        if (!newDay || !newBlock) return;
-        try {
-            const response = await fetch(`/api/horario-profesor/${idHorario}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    idDiaSemana: parseInt(newDay),
-                    idBloqueHorario: parseInt(newBlock)
-                })
-            });
-            if (!response.ok) throw new Error('Error al modificar el horario');
-            alert('Horario modificado');
-            loadProfessorSchedule(idProfesor);
-        } catch (error) {
-            alert('Error al modificar el horario');
         }
     }
     
@@ -855,136 +901,103 @@ function toggleTimeSlot(cell) {
         }
     }
 
-    // check classroom booked
-        document.getElementById('classroomSelect').addEventListener('change', async function() {
-        const classroomId = this.value;
-        if (!classroomId) {
-            clearScheduleTable();
-            return;
-        }
-        // Consulta los bloques ocupados para ese salón
-        const response = await fetch(`/api/seccion-horario/agendados-por-salon/${classroomId}`);
-        const agendados = await response.json(); // [{ idBloqueHorario, idDiaSemana, idSeccion, IdSeccionHorario, ... }]
-        console.log('Bloques ocupados:', agendados);
-        renderCombinedSchedule();
-    });
-
-
-async function renderSalonSchedule() {
-    clearScheduleTable();
-    const classroomId = document.getElementById('classroomSelect').value;
-    if (!classroomId) return;
-    const response = await fetch(`/api/seccion-horario/agendados-por-salon/${classroomId}`);
-    if (!response.ok) return;
-    const agendados = await response.json();
-    agendados.forEach(item => {
-        const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
-        if (cell) {
-            cell.className = 'classroom-booked';
-            cell.innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
-                    <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
-                    <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
-                </div>
-            `;
-        }
-    });
-}
-
-async function renderProfesorSchedule() {
-    clearScheduleTable();
-    if (!selectedProfessor) return;
-    const response = await fetch(`/api/horario-profesor/${selectedProfessor.id}`);
-    if (!response.ok) return;
-    const horarios = await response.json();
-    horarios.forEach(item => {
-        const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
-        if (cell) {
-            cell.className = 'profesor-available';
-            cell.innerHTML = `<span style="color:#198754;font-weight:bold;">Disponible</span>`;
-        }
-    });
-}
-
-async function renderCombinedSchedule() {
-    clearScheduleTable();
-    let profesorDisponibles = [];
-    let agendadosSalon = [];
-    if (selectedProfessor) {
-        const response = await fetch(`/api/horario-profesor/${selectedProfessor.id}`);
-        if (response.ok) profesorDisponibles = await response.json();
-    }
-    const classroomId = document.getElementById('classroomSelect').value;
-    if (classroomId) {
-        const response = await fetch(`/api/seccion-horario/agendados-por-salon/${classroomId}`);
-        if (response.ok) agendadosSalon = await response.json();
-    }
-
-    // Marca primero los disponibles del profesor
-    profesorDisponibles.forEach(item => {
-        const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
-        if (cell) {
-            cell.className = 'profesor-available';
-            cell.innerHTML = `<span style="color:#198754;font-weight:bold;">Disponible</span>`;
-        }
-    });
-
-    // Luego los agendados del salón, y si coincide con disponible, muestra ambos
-    agendadosSalon.forEach(item => {
-        const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
-        if (cell) {
-            if (cell.classList.contains('profesor-available')) {
-                // Celda coincide: mostrar ambos
-                cell.className = 'both-booked';
-                cell.innerHTML = `
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
-                <input type="checkbox" class="delete-checkbox" value="${item.IdSeccionHorario}">
-                <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
-                <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
-            </div>
-                `;
-            } else {
-                // Solo agendado
+    // Renderizar horario de salón
+    async function renderSalonSchedule() {
+        clearScheduleTable();
+        const classroomId = document.getElementById('classroomSelect').value;
+        if (!classroomId) return;
+        const response = await fetch(`${getAgendadosPath()}${classroomId}`);
+        if (!response.ok) return;
+        const agendados = await response.json();
+        agendados.forEach(item => {
+            const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
+            if (cell) {
                 cell.className = 'classroom-booked';
                 cell.innerHTML = `
-                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
-                <input type="checkbox" class="delete-checkbox" value="${item.IdSeccionHorario}">
-                <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
-                <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
-            </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
+                      <input type="checkbox" class="delete-checkbox" value="${item.idHorarioExamen || item.IdSeccionHorario || item.idSeccion || ''}">
+                    <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor || ''}</span>
+                    <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia || ''}</span>  
+                    </div>
                 `;
             }
-        }
-    });
-}
-
-
-    // Renderizar bloquees 
-   function renderBookedBlocks(agendados) {
-    clearScheduleTable();
-    if (!Array.isArray(agendados) || agendados.length === 0) {
-        return;
+        });
     }
-    agendados.forEach(item => {
-        const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
-        if (cell) {
-            cell.classList.add('classroom-booked');
-            cell.innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
-                    <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
-                    <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
-                </div>
-            `;
-            cell.onclick = null;
+
+    // Renderizar disponibilidad de profesor
+    async function renderProfesorSchedule() {
+        clearScheduleTable();
+        if (!selectedProfessor) return;
+        const response = await fetch(`/api/horario-profesor/${selectedProfessor.id}`);
+        if (!response.ok) return;
+        const horarios = await response.json();
+        horarios.forEach(item => {
+            const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
+            if (cell) {
+                cell.className = 'profesor-available';
+                cell.innerHTML = `<span style="color:#198754;font-weight:bold;">Disponible</span>`;
+            }
+        });
+    }
+
+    // Renderizar vista combinada
+    async function renderCombinedSchedule() {
+        clearScheduleTable();
+        let profesorDisponibles = [];
+        let agendadosSalon = [];
+        if (selectedProfessor) {
+            const response = await fetch(`/api/horario-profesor/${selectedProfessor.id}`);
+            if (response.ok) profesorDisponibles = await response.json();
         }
-    });
-}
-    
+        const classroomId = document.getElementById('classroomSelect').value;
+        if (classroomId) {
+            const response = await fetch(`${getAgendadosPath()}${classroomId}`);
+            if (response.ok) agendadosSalon = await response.json();
+        }
+
+        // Marcar disponibles del profesor
+        profesorDisponibles.forEach(item => {
+            let bloqueId = item.idBloqueHorario;
+            if (isExamenMode) {
+                bloqueId = equivalenciaBloques[bloqueId];
+                if (!bloqueId) return; // Si no hay equivalencia, no pintes nada
+            }
+            const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${bloqueId}"]`);
+            if (cell) {
+                cell.className = 'profesor-available';
+                cell.innerHTML = `<span style="color:#198754;font-weight:bold;">Disponible</span>`;
+            }
+        });
+        // Marcar agendados del salón
+        agendadosSalon.forEach(item => {
+            const cell = document.querySelector(`td[data-day="${item.idDiaSemana}"][data-block="${item.idBloqueHorario}"]`);
+            if (cell) {
+                if (cell.classList.contains('profesor-available')) {
+                    cell.className = 'both-booked';
+                    cell.innerHTML = `
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
+                            <input type="checkbox" class="delete-checkbox" value="${item.IdSeccionHorario || item.idHorarioExamen}">
+                            <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
+                            <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
+                        </div>
+                    `;
+                } else {
+                    cell.className = 'classroom-booked';
+                    cell.innerHTML = `
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;">
+                            <input type="checkbox" class="delete-checkbox" value="${item.IdSeccionHorario || item.idHorarioExamen}">
+                            <span style="font-weight:600; font-size:0.95em; word-break:break-word;">${item.nombre_profesor}</span>
+                            <span style="font-size:0.85em; color:#333; word-break:break-word;">${item.nombre_materia}</span>
+                        </div>
+                    `;
+                }
+            }
+        });
+    }
+
     // Configurar event listeners
     function setupEventListeners() {
-
-        
-
+        // Botón de actualización
         document.getElementById('refreshBtn').addEventListener('click', function() {
             if (selectedProfessor) {
                 loadProfessorSchedule(selectedProfessor.id);
@@ -992,6 +1005,8 @@ async function renderCombinedSchedule() {
                 clearScheduleTable();
             }
         });
+        
+        // Limpiar selección
         document.getElementById('clearSelection').addEventListener('click', function() {
             document.querySelectorAll('.selected').forEach(cell => {
                 cell.classList.remove('selected');
@@ -1000,7 +1015,7 @@ async function renderCombinedSchedule() {
             updateSelectedSlotsDisplay();
         });
     
-        // Guardar horario y sección
+        // Guardar horario
         document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             if (!selectedProfessor) {
@@ -1018,258 +1033,139 @@ async function renderCombinedSchedule() {
                 return;
             }
             
-                // Guardar cada bloque en seccionHorario
-                for (const slot of selectedSlots) {
-                        const data = {
-                            idBloqueHorario: parseInt(slot.block),
-                            idDiaSemana: parseInt(slot.day),
-                            idSalon: parseInt(classroomId),
-                            idSeccion: parseInt(sectionId),
-                            idProfesor: parseInt(selectedProfessor.id)
-                        };
-                        const response = await fetch('/api/seccion-horario', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(data)
-                        });
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            document.getElementById('errorModalBody').textContent = errorData.message || 'Error al guardar horario de sección';
-                            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-                            errorModal.show();
-                            return;
-                        }
-                    }
-                alert('Horario guardado exitosamente!');
-                document.getElementById('classroomSelect').addEventListener('change', cargarYRenderizarAgendados);
-                loadProfessorSchedule(selectedProfessor.id);
-                document.getElementById('clearSelection').click();
+            // Determinar tipo de horario
+            const scheduleType = document.getElementById('scheduleType').value;
+            
+            for (const slot of selectedSlots) {
+                let data;
+                if (isExamenMode || scheduleType === 'special') {
+                    // Para examen
+                    data = {
+                        idBloqueHorario: parseInt(slot.block),
+                        idDiaSemana: parseInt(slot.day),
+                        idSalon: parseInt(classroomId),
+                        idSeccion: parseInt(sectionId),
+                        idProfesor: parseInt(selectedProfessor.id)
+                    };
+                } else {
+                    // Para horario normal
+                    data = {
+                        idBloqueHorario: parseInt(slot.block),
+                        idDiaSemana: parseInt(slot.day),
+                        idSalon: parseInt(classroomId),
+                        idSeccion: parseInt(sectionId),
+                        idProfesor: parseInt(selectedProfessor.id)
+                    };
+                }
+                const response = await fetch(getBasePath(), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    document.getElementById('errorModalBody').textContent = errorData.message || 'Error al guardar horario';
+                    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+                    return;
+                }
+            }
+            alert('Horario guardado exitosamente!');
+            document.getElementById('classroomSelect').dispatchEvent(new Event('change'));
+            loadProfessorSchedule(selectedProfessor.id);
+            document.getElementById('clearSelection').click();
+        });
+        // Eliminar múltiples agendamientos
+        document.getElementById('deleteSelectedBtn').addEventListener('click', async function() {
+            const checked = Array.from(document.querySelectorAll('.delete-checkbox:checked'));
+            if (checked.length === 0) {
+                alert('Seleccione al menos un bloque para eliminar.');
+                return;
+            }
+            if (!confirm('¿Seguro que desea eliminar los bloques seleccionados?')) return;
 
+            for (const checkbox of checked) {
+                const id = checkbox.value;
+                await fetch(`${getBasePath()}/${id}`, { method: 'DELETE' });
+            }
+            renderCombinedSchedule();
+        });
+
+        // Modal de búsqueda de salones
+        document.getElementById('openSearchModalBtn').addEventListener('click', function() {
+            document.getElementById('availableClassroomsResult').innerHTML = '';
+            document.getElementById('searchClassroomForm').reset();
+            const blockContainer = document.getElementById('blockCheckboxes');
+            blockContainer.innerHTML = '';
+            timeBlocks.forEach((block, idx) => {
+                blockContainer.innerHTML += `
+                    <div class="col-6 col-md-4">
+                        <label class="w-100 p-2 border rounded d-flex align-items-center" style="min-height:48px;">
+                            <input type="checkbox" class="form-check-input me-2" name="blockCheck" value="${idx+1}">
+                            <span>${idx+1} - ${block}</span>
+                        </label>
+                    </div>
+                `;
             });
-        // Mostrar información del agendado          
-window.showAgendadoInfo = async function(id) {
-    try {
-        // 1. Obtener el registro de agendamiento
-        const res = await fetch(`/api/seccion-horario/${id}`);
-        if (!res.ok) throw new Error('No se pudo obtener la información');
-        const data = await res.json();
-
-        // 2. Obtener la información de la sección usando la nueva ruta
-        const secRes = await fetch('/api/secciones/por-secciones', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [data.idSeccion] })
+            const modal = new bootstrap.Modal(document.getElementById('searchClassroomModal'));
+            modal.show();
         });
-        let seccionInfo = '';
-        if (secRes.ok) {
-            const secciones = await secRes.json();
-            const seccion = secciones[0];
-            if (seccion) {
-                seccionInfo = `
-                    <b>Profesor:</b> ${seccion.nombreprofesor || '-'}<br>
-                    <b>Materia:</b> ${seccion.nombremateria || '-'}<br>
-                    <b>Sección:</b> ${seccion.seccion || '-'}<br>
-                `;
+
+        // Buscar salones disponibles
+        document.getElementById('searchClassroomForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const day = document.getElementById('searchDay').value;
+            const blocks = Array.from(document.querySelectorAll('input[name="blockCheck"]:checked')).map(cb => cb.value);
+            const vista = document.getElementById('consultaVista').value;
+            const resultDiv = document.getElementById('availableClassroomsResult');
+            resultDiv.innerHTML = '<span class="text-info">Buscando salones disponibles...</span>';
+
+            try {
+                let url = `${getOcupacionPath()}?idDiaSemana=${day}`;
+                blocks.forEach(b => url += `&idBloqueHorario=${b}`);
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('No se pudo consultar los salones disponibles');
+                const data = await response.json();
+
+                let html = '';
+                if (vista === 'conjunta') {
+                    let sets = Object.values(data).map(d => new Set(d.disponibles.map(s => s.idSalon)));
+                    let interseccion = sets.reduce((a, b) => new Set([...a].filter(x => b.has(x))));
+                    let salonesCompletos = Object.values(data)
+                        .flatMap(d => d.disponibles)
+                        .filter(s => interseccion.has(s.idSalon));
+                    html = `<b>Salones disponibles en TODOS los bloques seleccionados:</b>
+                        <ul>${[...interseccion].map(id => {
+                            const salon = salonesCompletos.find(s => s.idSalon == id);
+                            return `<li>Salón ${salon.idSalon} (Capacidad: ${salon.capacidad || '-'})</li>`;
+                        }).join('')}</ul>`;
+                } else {
+                    for (const key in data) {
+                        const [_, dia, bloque] = key.match(/dia(\d+)_bloque(\d+)/);
+                        html += `<div class="mb-2"><b>${diasSemana[parseInt(dia)]}, ${timeBlocks[parseInt(bloque)-1]}:</b><br>`;
+                        html += `<span class="text-success">Disponibles:</span>
+                            <ul>${data[key].disponibles.map(s => `<li>Salón ${s.idSalon} (Capacidad: ${s.capacidad || '-'})</li>`).join('')}</ul>`;
+                        html += `<span class="text-danger">Ocupados:</span>
+                            <ul>${data[key].ocupados.map(s => `<li>Salón ${s.idSalon} (Capacidad: ${s.capacidad || '-'})</li>`).join('')}</ul>`;
+                        html += `</div>`;
+                    }
+                }
+                resultDiv.innerHTML = html || '<span class="text-danger">No hay resultados.</span>';
+            } catch (error) {
+                resultDiv.innerHTML = '<span class="text-danger">Error al consultar salones disponibles.</span>';
             }
-            console.log('Sección obtenida:', seccion);
-        }
-
-        document.getElementById('infoModalBody').innerHTML = `
-            ${seccionInfo}
-            <b>Día:</b> ${data.idDiaSemana}<br>
-            <b>Bloque:</b> ${data.idBloqueHorario}<br>
-            <b>Salón:</b> ${data.idSalon}
-        `;
-        console.log('Datos del agendamiento:', data);
-        const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
-        infoModal.show();
-    } catch (error) {
-        document.getElementById('infoModalBody').textContent = 'No se pudo obtener la información.';
-        const infoModal = new bootstrap.Modal(document.getElementById('infoModal'));
-        infoModal.show();
-    }
-};
-    // Eliminar un agendado
-window.deleteAgendado = async function(id) {
-    try {
-        const res = await fetch(`/api/seccion-horario/${id}`);
-        if (!res.ok) throw new Error('No se pudo obtener la información');
-        const data = await res.json();
-
-        // Obtener la información de la sección
-        const secRes = await fetch('/api/secciones/por-secciones', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ids: [data.idSeccion] })
         });
-        let seccionInfo = '';
-        if (secRes.ok) {
-            const secciones = await secRes.json();
-            const seccion = secciones[0];
-            if (seccion) {
-                seccionInfo = `
-                    <b>Profesor:</b> ${seccion.nombreProfesor || '-'}<br>
-                    <b>Materia:</b> ${seccion.nombreMateria || '-'}<br>
-                    <b>Sección:</b> ${seccion.seccion || '-'}<br>
-                `;
-            }
-        }
-
-        document.getElementById('deleteModalBody').innerHTML = `
-            <b>¿Seguro que deseas eliminar este agendamiento?</b><br>
-            ${seccionInfo}
-            <b>Día:</b> ${data.idDiaSemana}<br>
-            <b>Bloque:</b> ${data.idBloqueHorario}<br>
-            <b>Salón:</b> ${data.idSalon}
-        `;
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-
-        // Configura el botón de confirmación
-        document.getElementById('confirmDeleteBtn').onclick = async function() {
-            const delRes = await fetch(`/api/seccion-horario/${id}`, { method: 'DELETE' });
-            if (delRes.ok) {
-                deleteModal.hide();
-                document.getElementById('classroomSelect').addEventListener('change', cargarYRenderizarAgendados);
-                document.getElementById('classroomSelect').dispatchEvent(new Event('change'));
-            } else {
-                alert('Error al eliminar el agendamiento');
-            }
-        };
-    } catch (error) {
-        document.getElementById('deleteModalBody').textContent = 'No se pudo obtener la información.';
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-    }
-};
-
-function cargarYRenderizarAgendados() {
-    const classroomId = document.getElementById('classroomSelect').value;
-    if (!classroomId) {
-        clearScheduleTable();
-        return;
-    }
-    fetch(`/api/seccion-horario?salon=${classroomId}`)
-        .then(res => res.json())
-        .then(agendados => renderBookedBlocks(agendados));
-}
-             
     }
 
-             /*incluir menulateral*/
-            fetch('menulateral.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('menu-lateral').innerHTML = html;
-  })
-  .catch(err => console.log('Error cargando menú lateral:', err));
-
-    // Eliminar bloques seleccionados
-  document.getElementById('deleteSelectedBtn').addEventListener('click', async function() {
-    // Obtén todos los checkboxes seleccionados
-    const checked = Array.from(document.querySelectorAll('.delete-checkbox:checked'));
-    if (checked.length === 0) {
-        alert('Selecciona al menos un bloque para eliminar.');
-        return;
-    }
-    if (!confirm('¿Seguro que deseas eliminar los bloques seleccionados?')) return;
-
-    // Elimina cada bloque seleccionado
-    for (const checkbox of checked) {
-        const id = checkbox.value;
-        await fetch(`/api/seccion-horario/${id}`, { method: 'DELETE' });
-    }
-    // Refresca la tabla
-    renderCombinedSchedule();
-});
-
-// Llenar bloques horarios en el modal de consulta salones disponibles
-const searchBlockSelect = document.getElementById('searchBlock');
-console.log(timeBlocks);
-if (searchBlockSelect) {
-    searchBlockSelect.innerHTML = '<option value="">Seleccione un bloque...</option>';
-    timeBlocks.forEach((block, idx) => {
-        blockContainer.innerHTML += `
-      <div class="col-6 col-md-4">
-        <label class="w-100 p-2 border rounded d-flex align-items-center" style="min-height:48px;">
-          <input type="checkbox" class="form-check-input me-2" name="blockCheck" value="${idx+1}">
-          <span>${idx+1} - ${block}</span>
-        </label>
-      </div>
-    `;
-    });
-}
-
-// Abrir el modal al hacer clic en el botón de búsqueda
-document.getElementById('openSearchModalBtn').addEventListener('click', function() {
-    // Limpia resultados previos
-    document.getElementById('availableClassroomsResult').innerHTML = '';
-    document.getElementById('searchClassroomForm').reset();
-    const blockContainer = document.getElementById('blockCheckboxes');
-    blockContainer.innerHTML = '';
-    timeBlocks.forEach((block, idx) => {
-        blockContainer.innerHTML += `
-          <div class="col-6 col-md-4">
-            <label class="w-100 p-2 border rounded d-flex align-items-center" style="min-height:48px;">
-              <input type="checkbox" class="form-check-input me-2" name="blockCheck" value="${idx+1}">
-              <span>${idx+1} - ${block}</span>
-            </label>
-          </div>
-        `;
-    });
-    const modal = new bootstrap.Modal(document.getElementById('searchClassroomModal'));
-    modal.show();
-});
-
-// Manejar la búsqueda de salones disponibles
-document.getElementById('searchClassroomForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const day = document.getElementById('searchDay').value;
-    const blocks = Array.from(document.querySelectorAll('input[name="blockCheck"]:checked')).map(cb => cb.value);
-    const vista = document.getElementById('consultaVista').value;
-    const resultDiv = document.getElementById('availableClassroomsResult');
-    resultDiv.innerHTML = '<span class="text-info">Buscando salones disponibles...</span>';
-
-    try {
-        // Construir la URL con varios bloques
-        let url = `/api/seccion-horario/ocupacion-salones?idDiaSemana=${day}`;
-        blocks.forEach(b => url += `&idBloqueHorario=${b}`);
-
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('No se pudo consultar los salones disponibles');
-        const data = await response.json();
-
-        let html = '';
-        if (vista === 'conjunta') {
-            // Tu fragmento aquí:
-            let sets = Object.values(data).map(d => new Set(d.disponibles.map(s => s.idSalon)));
-            let interseccion = sets.reduce((a, b) => new Set([...a].filter(x => b.has(x))));
-            let salonesCompletos = Object.values(data)
-                .flatMap(d => d.disponibles)
-                .filter(s => interseccion.has(s.idSalon));
-            html = `<b>Salones disponibles en TODOS los bloques seleccionados:</b>
-                <ul>${[...interseccion].map(id => {
-                    const salon = salonesCompletos.find(s => s.idSalon == id);
-                    return `<li>Salón ${salon.idSalon} (Capacidad: ${salon.capacidad || '-'})</li>`;
-                }).join('')}</ul>`;
-        } else {
-            // Vista general por bloque
-            for (const key in data) {
-                const [_, dia, bloque] = key.match(/dia(\d+)_bloque(\d+)/);
-                html += `<div class="mb-2"><b>${diasSemana[parseInt(dia)]}, ${timeBlocks[parseInt(bloque)-1]}:</b><br>`;
-                html += `<span class="text-success">Disponibles:</span>
-                    <ul>${data[key].disponibles.map(s => `<li>Salón ${s.idSalon} (Capacidad: ${s.capacidad || '-'})</li>`).join('')}</ul>`;
-                html += `<span class="text-danger">Ocupados:</span>
-                    <ul>${data[key].ocupados.map(s => `<li>Salón ${s.idSalon} (Capacidad: ${s.capacidad || '-'})</li>`).join('')}</ul>`;
-                html += `</div>`;
-            }
-        }
-        resultDiv.innerHTML = html || '<span class="text-danger">No hay resultados.</span>';
-    } catch (error) {
-        resultDiv.innerHTML = '<span class="text-danger">Error al consultar salones disponibles.</span>';
-    }
-});
- </script>
+    // Incluir menú lateral
+    fetch('menulateral.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('menu-lateral').innerHTML = html;
+        })
+        .catch(err => console.log('Error cargando menú lateral:', err));
+</script>
 
 
 </body>
