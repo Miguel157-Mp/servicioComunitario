@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-
+<script>
+// Bloquea el acceso directo por URL si no está logueado
+if (!sessionStorage.getItem("usuarioLogueado")) {
+    window.location.href = "index.html";
+}
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +34,7 @@
             height: 100vh;
         }
 
-        /* Estilos del menú lateral (copiados de menulateral.html) */
+        /* Estilos del menú lateral */
         .sidebar {
             height: 100vh;
             width: 250px;
@@ -189,85 +194,6 @@
             order: 3;
         }
 
-        .social-cards {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            border: none;
-            padding: 20px;
-            text-align: center;
-            border-radius: 12px;
-            width: calc(33% - 10px);
-            transition: transform 0.3s ease, box-shadow 0.3s;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            padding-top: 30px;
-            padding-bottom: 70px;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 0;
-        }
-
-        .card>* {
-            position: relative;
-            z-index: 1;
-        }
-
-
-
-        .building-container {
-            background-color: white;
-            padding: 10px;
-            border-radius: 7px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 1010px;
-            top: 0;
-        }
-
-        .building-title {
-            font-size: 1.5em;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .floor-container {
-            margin-bottom: 20px;
-        }
-
-        .floor-title {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .floor-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            min-height: 50px;
-        }
-
         /* Estilos para la sección de mobiliario */
         .mobiliario-container {
             background-color: white;
@@ -397,186 +323,302 @@
             color: #795548;
             text-align: center;
         }
-        /* Media Queries para pantallas más pequeñas (hasta 768px de ancho) */
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column; /* Apila el menú y el contenido */
-    }
 
-    .sidebar {
-        position: relative; /* El menú lateral ya no es fijo, ocupa espacio */
-        width: 100%; /* Ocupa todo el ancho */
-        height: auto; /* Altura automática */
-        padding-top: 10px; /* Reducido el padding superior */
-        left: 0; /* Asegura que esté a la izquierda */
-        z-index: 999; /* Asegura que esté encima del contenido si es necesario */
-        overflow-y: auto; /* Permite scroll si el menú es largo */
-    }
+        /* Estilos para el panel derecho */
+        .right-panel {
+            padding: 20px;
+        
+            border-radius: 12px;
+  
+            height: fit-content;
+        }
 
-    .sidebar.closed {
-        width: 60px; /* Ancho pequeño cuando está cerrado */
-    }
+        .stats-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .sidebar.closed .sidebar-header {
-        display: none;
-    }
+        .stats-card h4 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: center;
+        }
 
-    .sidebar.closed .sidebar-content a span {
-        display: none;
-    }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-    .sidebar.closed .sidebar-content a {
-        padding: 10px 15px;
-        text-align: center;
-    }
+        .stat-item.small {
+            font-size: 0.9em;
+            color: #666;
+        }
 
-    .sidebar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px solid #0823ac;
-    }
+        .stat-number {
+            font-weight: bold;
+            color: #0823ac;
+            font-size: 1.2em;
+        }
 
-    .centered-bars {
-        margin-left: 0; /* Alinea el botón de toggle a la izquierda */
-    }
+        .stat-label {
+            color: #666;
+        }
 
-    #content {
-        margin-left: 0; /* El contenido ocupa todo el ancho */
-        padding: 15px; /* Reducido el padding del contenido */
-        height: auto; /* Altura automática para adaptarse al contenido */
-        grid-template-columns: 1fr; /* Una sola columna para el contenido */
-    }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
 
-    .main-content {
-        padding: 10px; /* Ajusta el padding del contenido principal */
-    }
+        .action-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    .header-section {
-        flex-direction: column; /* Apila los elementos del encabezado */
-        align-items: flex-start; /* Alinea a la izquierda */
-        padding: 15px; /* Reducido el padding del encabezado */
-    }
+        .checkup-btn {
+            background-color: #0823ac;
+            color: white;
+        }
 
-    .header-logo {
-        margin-bottom: 10px; /* Añadido margen inferior al logo */
-    }
+        .super-btn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
 
-    .header-logo img {
-        width: 100px; /* Reduce el tamaño del logo en pantallas pequeñas */
-        height: auto;
-    }
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
 
-    .header-text {
-        margin-bottom: 10px; /* Añadido margen inferior al texto del encabezado */
-    }
+        .previous-checkups {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
 
-    .header-text h1 {
-        font-size: 1.8em; /* Reduce el tamaño del título */
-    }
+        .previous-checkups h5 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
 
-    .header-text p {
-        font-size: 1em; /* Reduce el tamaño del subtítulo */
-    }
+        .service-link {
+            display: block;
+            color: #0823ac;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
 
-    .mobiliario-container {
-        width: 95%; /* Ocupa más ancho en pantallas pequeñas */
-        margin: 15px auto; /* Reduce el margen superior e inferior */
-        padding: 15px; /* Reduce el padding */
-    }
+        .help-text {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
 
-    .ubicacion-selector {
-        flex-direction: column; /* Apila los botones de ubicación */
-        gap: 5px; /* Reduce el espacio entre botones */
-        margin-bottom: 15px; /* Reduce el margen inferior */
-    }
+        .time-indicator {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+        }
 
-    .ubicacion-btn {
-        border-radius: 5px !important; /* Asegura bordes redondeados en todos los botones */
-        padding: 8px 12px; /* Reduce el padding de los botones */
-        font-size: 0.9em; /* Reduce el tamaño de la fuente */
-    }
+        /* Media Queries para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
 
-    .seleccion-salon,
-    .seleccion-mesas,
-    .seleccion-sillas {
-        flex-direction: column; /* Apila los campos de selección */
-        gap: 10px; /* Reduce el espacio entre los campos */
-        margin-bottom: 10px; /* Reduce el margen inferior */
-    }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding-top: 10px;
+                left: 0;
+                z-index: 999;
+                overflow-y: auto;
+            }
 
-    .campo-seleccion label {
-        font-size: 0.9em; /* Reduce el tamaño de la etiqueta */
-    }
+            .sidebar.closed {
+                width: 60px;
+            }
 
-    .campo-seleccion select {
-        padding: 6px; /* Reduce el padding del select */
-        font-size: 0.9em; /* Reduce el tamaño de la fuente del select */
-    }
+            .sidebar.closed .sidebar-header {
+                display: none;
+            }
 
-    .acciones-mobiliario {
-        flex-direction: row; /* Vuelve a la disposición horizontal */
-        justify-content: space-around; /* Distribuye los botones */
-        margin-top: 15px; /* Reduce el margen superior */
-    }
+            .sidebar.closed .sidebar-content a span {
+                display: none;
+            }
 
-    .acciones-mobiliario button {
-        padding: 8px 10px; /* Reduce el padding de los botones de acción */
-        font-size: 1em; /* Reduce el tamaño de la fuente */
-    }
+            .sidebar.closed .sidebar-content a {
+                padding: 10px 15px;
+                text-align: center;
+            }
 
-    .nota-transaccion {
-        font-size: 0.8em; /* Reduce el tamaño de la fuente de la nota */
-        padding: 10px; /* Reduce el padding de la nota */
-        margin-top: 15px; /* Reduce el margen superior */
-    }
-}
+            .sidebar-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #0823ac;
+            }
 
-/* Media Queries para pantallas aún más pequeñas (hasta 480px de ancho) */
-@media (max-width: 480px) {
-    .header-logo img {
-        width: 80px; /* Reduce aún más el logo */
-    }
+            .centered-bars {
+                margin-left: 0;
+            }
 
-    .header-text h1 {
-        font-size: 1.5em; /* Reduce aún más el título */
-    }
+            #content {
+                margin-left: 0;
+                padding: 15px;
+                height: auto;
+                grid-template-columns: 1fr;
+            }
 
-    .header-text p {
-        font-size: 0.9em; /* Reduce aún más el subtítulo */
-    }
+            .main-content {
+                padding: 10px;
+            }
 
-    .ubicacion-btn {
-        font-size: 0.8em; /* Reduce aún más el tamaño de la fuente de los botones de ubicación */
-        padding: 6px 10px;
-    }
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
 
-    .campo-seleccion label {
-        font-size: 0.8em; /* Reduce aún más el tamaño de la etiqueta */
-    }
+            .header-logo {
+                margin-bottom: 10px;
+            }
 
-    .campo-seleccion select {
-        font-size: 0.8em; /* Reduce aún más el tamaño de la fuente del select */
-        padding: 5px;
-    }
+            .header-logo img {
+                width: 100px;
+                height: auto;
+            }
 
-    .acciones-mobiliario button {
-        font-size: 0.9em; /* Reduce aún más el tamaño de la fuente de los botones de acción */
-        padding: 6px 8px;
-    }
+            .header-text {
+                margin-bottom: 10px;
+            }
 
-    .nota-transaccion {
-        font-size: 0.7em; /* Reduce aún más el tamaño de la fuente de la nota */
-        padding: 8px;
-    }
-}
+            .header-text h1 {
+                font-size: 1.8em;
+            }
+
+            .header-text p {
+                font-size: 1em;
+            }
+
+            .mobiliario-container {
+                width: 95%;
+                margin: 15px auto;
+                padding: 15px;
+            }
+
+            .ubicacion-selector {
+                flex-direction: column;
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+
+            .ubicacion-btn {
+                border-radius: 5px !important;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+
+            .seleccion-salon,
+            .seleccion-mesas,
+            .seleccion-sillas {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .campo-seleccion label {
+                font-size: 0.9em;
+            }
+
+            .campo-seleccion select {
+                padding: 6px;
+                font-size: 0.9em;
+            }
+
+            .acciones-mobiliario {
+                flex-direction: row;
+                justify-content: space-around;
+                margin-top: 15px;
+            }
+
+            .acciones-mobiliario button {
+                padding: 8px 10px;
+                font-size: 1em;
+            }
+
+            .nota-transaccion {
+                font-size: 0.8em;
+                padding: 10px;
+                margin-top: 15px;
+            }
+
+            .right-panel {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-logo img {
+                width: 80px;
+            }
+
+            .header-text h1 {
+                font-size: 1.5em;
+            }
+
+            .header-text p {
+                font-size: 0.9em;
+            }
+
+            .ubicacion-btn {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+
+            .campo-seleccion label {
+                font-size: 0.8em;
+            }
+
+            .campo-seleccion select {
+                font-size: 0.8em;
+                padding: 5px;
+            }
+
+            .acciones-mobiliario button {
+                font-size: 0.9em;
+                padding: 6px 8px;
+            }
+
+            .nota-transaccion {
+                font-size: 0.7em;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 
 <body>
-      <!-- Menú lateral integrado directamente (antes era un iframe) -->
-     <div id="menu-lateral"></div>
+    <!-- Menú lateral integrado directamente -->
+    <div id="menu-lateral"></div>
 
     <!-- Contenido principal del dashboard -->
     <div id="content">
@@ -589,219 +631,161 @@
                 <div class="header-logo">
                     <img src="./img/logousm.png" alt="logo usm" style="width: 120px; height: auto;">
                 </div>
-
                 <img src="./img/iconouser.png" alt="Usuario">
             </div>
             <h4 id="nombreusuario">¡Bienvenido!</h4>
-
             <br>
 
+            <div class="mobiliario-container">
+                <div class="ubicacion-selector">
+                    <button class="ubicacion-btn" data-ubicacion="mesas">Mesas</button>
+                    <button class="ubicacion-btn active" data-ubicacion="pupitres">Pupitres</button>
+                    <button class="ubicacion-btn" data-ubicacion="sillas">Sillas</button>
+                </div>
 
-            <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Mobiliario</title>
-    <style>
-        .mobiliario-container {
-            width: 80%;
-            margin: 20px auto;
-            border: 1px solid #ccc;
-            padding: 20px;
-        }
+                <div id="mobiliario-piso" class="mobiliario-seccion oculto">
+                    <h3>Seleccionar Mobiliario por Piso</h3>
+                    <button class="mobiliario-item" data-tipo="pupitre">Pupitres</button>
+                    <button class="mobiliario-item" data-tipo="mesa">Mesas</button>
+                    <div id="listado-mobiliario-piso"></div>
+                </div>
 
-        .ubicacion-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+                <div id="mobiliario-salon" class="mobiliario-seccion">
+                    <h3>Seleccionar Pupitres por Salón</h3>
+                    <div class="seleccion-salon">
+                        <div class="campo-seleccion">
+                            <label for="origen">Origen:</label>
+                            <select id="origen">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                        <div class="campo-seleccion">
+                            <label for="destino">Destino:</label>
+                            <select id="destino">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="listadoMobiliarioSalon">0</div>
+                    <div class="acciones-mobiliario">
+                        <button class="incorporar-btn" id="btnsumar" value="+1">+</button>
+                        <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
+                        <button class="btn btn-primary" id="enviarDatosPupitres" onclick="enviarDatosPupitres()">Traspasar Pupitres</button>
+                    </div>
+                </div>
 
-        .ubicacion-btn {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            background-color: #f9f9f9;
-        }
+                <div id="mobiliario-mesas" class="mobiliario-seccion oculto">
+                    <h3>Seleccionar Mesas por Salón</h3>
+                    <div class="seleccion-mesas">
+                        <div class="campo-seleccion">
+                            <label for="origen-mesas">Origen:</label>
+                            <select id="origen-mesas">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                        <div class="campo-seleccion">
+                            <label for="destino-mesas">Destino:</label>
+                            <select id="destino-mesas">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="listadoMobiliariomesas">0</div>
+                    <div class="acciones-mobiliario">
+                        <button class="incorporar-btn" id="btnsumar-mesas" value="+1">+</button>
+                        <button class="desincorporar-btn" id="btnrestar-mesas" value="-1">-</button>
+                        <button class="btn btn-primary" id="enviarDatosMesas" onclick="enviarDatosMesas()">Traspasar Mesas</button>
+                    </div>
+                </div>
 
-        .ubicacion-btn.active {
-            background-color: #e0e0e0;
-        }
+                <div id="mobiliario-sillas" class="mobiliario-seccion oculto">
+                    <h3>Seleccionar sillas por Salón</h3>
+                    <div class="seleccion-sillas">
+                        <div class="campo-seleccion">
+                            <label for="origen-sillas">Origen:</label>
+                            <select id="origen-sillas">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                        <div class="campo-seleccion">
+                            <label for="destino-sillas">Destino:</label>
+                            <select id="destino-sillas">
+                                <option value="">Seleccionar Salón</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="listadoMobiliariosillas">0</div>
+                    <div class="acciones-mobiliario">
+                        <button class="incorporar-btn" id="btnsumar-sillas" value="+1">+</button>
+                        <button class="desincorporar-btn" id="btnrestar-sillas" value="-1">-</button>
+                        <button class="btn btn-primary" id="enviarDatosSillas" onclick="enviarDatosSillas()">Traspasar Sillas</button>
+                    </div>
+                </div>
 
-        .mobiliario-seccion {
-            padding: 15px;
-            border: 1px solid #eee;
-            margin-bottom: 15px;
-        }
-
-        .mobiliario-seccion.oculto {
-            display: none;
-        }
-
-        .seleccion-salon, .seleccion-mesas, .seleccion-sillas {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .campo-seleccion {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .acciones-mobiliario {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .incorporar-btn, .desincorporar-btn {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .nota-transaccion {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f0f8ff;
-            border: 1px solid #add8e6;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: #000080;
-        }
-    </style>
-</head>
-<body>
-    <div class="main-content">
-        <div class="mobiliario-container">
-            <div class="ubicacion-selector">
-                <button class="ubicacion-btn " data-ubicacion="mesas">Mesas</button>
-                <button class="ubicacion-btn active" data-ubicacion="pupitres">Pupitres</button>
-                <button class="ubicacion-btn" data-ubicacion="sillas">Sillas</button>
-            </div>
-
-            <div id="mobiliario-piso" class="mobiliario-seccion oculto">
-                <h3>Seleccionar Mobiliario por Piso</h3>
-                <button class="mobiliario-item" data-tipo="pupitre">Pupitres</button>
-                <button class="mobiliario-item" data-tipo="mesa">Mesas</button>
-                <div id="listado-mobiliario-piso">
+                <div class="nota-transaccion">
+                    <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.</p>
                 </div>
             </div>
+        </div> <!-- Cierre de main-content -->
 
-            <div id="mobiliario-salon" class="mobiliario-seccion">
-                <h3>Seleccionar Pupitres por Salón</h3>
-                <div class="seleccion-salon">
-                    <div class="campo-seleccion">
-                        <label for="origen">Origen:</label>
-                        <select id="origen">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
-                    </div>
-                    <div class="campo-seleccion">
-                        <label for="destino">Destino:</label>
-                        <select id="destino">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
-                    </div>
+        <!-- Panel derecho - ahora al mismo nivel que main-content -->
+        <div class="right-panel">
+            <div class="stats-card">
+     <div class="action-buttons">
+                    <button class="action-btn checkup-btn">Salon Origen</button>
                 </div>
-                <div id="listadoMobiliarioSalon">0</div>
-                <div class="acciones-mobiliario">
-                    <button class="incorporar-btn" id="btnsumar" value="+1">+</button>
-                    <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
-                    <button class="btn btn-primary" id="enviarDatosPupitres" onclick="enviarDatosPupitres()">Traspasar
-                        Pupitres</button>
+                <div class="stat-item">
+                    <span class="stat-number">80</span>
+                    <span class="stat-label">Pupitres</span>
                 </div>
-            </div>
+                <div class="stat-item">
+                    <span class="stat-number">01</span>
+                    <span class="stat-label">Mesa</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">01</span>
+                    <span class="stat-label">Silla</span>
+                </div>
+                
+              <div class="action-buttons">
+                    <button class="action-btn checkup-btn">Salon Destino</button>
+                </div>
+                
+                <div class="stat-item small">
+                    <span class="stat-number">80</span>
+                    <span class="stat-label">Pupitres</span>
+                </div>
 
-            <div id="mobiliario-mesas" class="mobiliario-seccion oculto">
-                <h3>Seleccionar Mesas por Salón</h3>
-                <div class="seleccion-mesas">
-                    <div class="campo-seleccion">
-                        <label for="origen-mesas">Origen:</label>
-                        <select id="origen-mesas">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
-                    </div>
-                    <div class="campo-seleccion">
-                        <label for="destino-mesas">Destino:</label>
-                        <select id="destino-mesas">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
-                    </div>
+                 <div class="stat-item small">
+                    <span class="stat-number">01</span>
+                    <span class="stat-label">Mesa</span>
                 </div>
-                <div id="listadoMobiliariomesas">0</div>
-                <div class="acciones-mobiliario">
-                    <button class="incorporar-btn" id="btnsumar-mesas" value="+1">+</button>
-                    <button class="desincorporar-btn" id="btnrestar-mesas" value="-1">-</button>
-                    <button class="btn btn-primary" id="enviarDatosMesas" onclick="enviarDatosMesas()">Traspasar
-                        Mesas</button>
-                </div>
-            </div>
 
-            <div id="mobiliario-sillas" class="mobiliario-seccion oculto">
-                <h3>Seleccionar sillas por Salón</h3>
-                <div class="seleccion-sillas">
-                    <div class="campo-seleccion">
-                        <label for="origen-sillas">Origen:</label>
-                        <select id="origen-sillas">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
-                    </div>
-                    <div class="campo-seleccion">
-                        <label for="destino-sillas">Destino:</label>
-                        <select id="destino-sillas">
-                            <option value="">Seleccionar Salón</option>
-                        </select>
+                 <div class="stat-item small">
+                    <span class="stat-number">01</span>
+                    <span class="stat-label">Silla</span>
+                </div>
+                </div>
+                <div class="previous-checkups">
+                    <h5>Se traspasaron *numero* desde el salon # al salon # </h5>
+                    
                     </div>
                 </div>
-                <div id="listadoMobiliariosillas">0</div>
-                <div class="acciones-mobiliario">
-                    <button class="incorporar-btn" id="btnsumar-sillas" value="+1">+</button>
-                    <button class="desincorporar-btn" id="btnrestar-sillas" value="-1">-</button>
-                    <button class="btn btn-primary" id="enviarDatosSillas" onclick="enviarDatosSillas()">Traspasar
-                        Sillas</button>
-                </div>
-            </div>
-
-            <div class="nota-transaccion">
-                <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de
-                    hacerlo.</p>
             </div>
         </div>
-    </div>
+    </div> <!-- Cierre de #content -->
 
-
-        <script>
-             document.addEventListener('DOMContentLoaded', async () => {
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
             const ubicacionBtns = document.querySelectorAll('.ubicacion-btn');
             const mobiliarioPiso = document.getElementById('mobiliario-piso');
             const mobiliarioPupitres = document.getElementById('mobiliario-salon');
             const mobiliarioMesas = document.getElementById('mobiliario-mesas');
             const mobiliarioSillas = document.getElementById('mobiliario-sillas');
 
-            // Inicialmente, muestra solo la sección de mesas (ya que el botón "Mesas" tiene la clase "active")
+            // Inicialmente, muestra solo la sección de pupitres
             mobiliarioPiso.classList.add('oculto');
-            mobiliarioPupitres.classList.remove('oculto'); // Asegura que pupitres se muestre inicialmente si es necesario
+            mobiliarioPupitres.classList.remove('oculto');
             mobiliarioMesas.classList.add('oculto');
             mobiliarioSillas.classList.add('oculto');
 
@@ -827,7 +811,6 @@
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectPupitres.appendChild(optionDestino);
                 });
-                console.log('Opciones de pupitres creadas:', origenSelectPupitres.options.length);
             } catch (err) {
                 console.error('Error al cargar salones para pupitres:', err);
             }
@@ -854,7 +837,6 @@
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectMesas.appendChild(optionDestino);
                 });
-                console.log('Opciones de mesas creadas:', origenSelectMesas.options.length);
             } catch (err) {
                 console.error('Error al cargar salones para mesas:', err);
             }
@@ -878,18 +860,15 @@
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectSillas.appendChild(optionDestino);
                 });
-                console.log('Opciones de sillas creadas:', origenSelectSillas.options.length);
             } catch (err) {
                 console.error('Error al cargar salones para sillas:', err);
             }
-
 
             ubicacionBtns.forEach(btn => {
                 btn.addEventListener('click', function () {
                     ubicacionBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     const ubicacion = this.dataset.ubicacion;
-                    console.log('Ubicación seleccionada:', ubicacion);
 
                     mobiliarioPiso.classList.add('oculto');
                     mobiliarioPupitres.classList.add('oculto');
@@ -955,11 +934,9 @@
         // Función para enviar cantidad de pupitres
         function enviarDatosPupitres() {
             const origen = document.getElementById('origen').value;
- 
             const destino = document.getElementById('destino').value;
-      ;
             const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
-            console.log('Enviar Pupitres - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            
             fetch('/traspasar/traspasar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -984,7 +961,7 @@
             const origen = document.getElementById('origen-mesas').value;
             const destino = document.getElementById('destino-mesas').value;
             const cantidad = document.getElementById('listadoMobiliariomesas').innerHTML || 0;
-            console.log('Enviar Mesas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            
             fetch('/traspasarMesas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1009,7 +986,7 @@
             const origen = document.getElementById('origen-sillas').value;
             const destino = document.getElementById('destino-sillas').value;
             const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
-            console.log('Enviar Sillas - Origen:', origen, 'Destino:', destino, 'Cantidad:', cantidad);
+            
             fetch('/traspasarSillas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1028,22 +1005,14 @@
                 alert('Ocurrió un error en la petición de sillas.');
             });
         }
-            /*incluir menulateral*/
-            fetch('menulateral.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('menu-lateral').innerHTML = html;
-  })
-  .catch(err => console.log('Error cargando menú lateral:', err));
+
+        /*incluir menulateral*/
+        fetch('menulateral.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('menu-lateral').innerHTML = html;
+            })
+            .catch(err => console.log('Error cargando menú lateral:', err));
     </script>
-
-
-    </div>
-
-
-
-
-
 </body>
-
 </html>
