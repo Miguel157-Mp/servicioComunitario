@@ -149,12 +149,17 @@
             const messageDiv = document.getElementById('login-message');
             messageDiv.innerHTML = ''; // Limpia mensajes previos
 
-            try {
-                const response = await fetch('/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usuario, clave })
-                });
+    try {
+        const response = await fetch('/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario, clave })
+        });
+if (response.redirected) {
+    sessionStorage.setItem("usuarioLogueado", "true"); //  Marca como logueado
+    window.location.href = response.url;
+    return;
+}
 
                 const data = await response.json();
                 if (!data.success) {
