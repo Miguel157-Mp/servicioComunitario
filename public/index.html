@@ -136,11 +136,11 @@ document.querySelector('form[action="/submit"]').addEventListener('submit', asyn
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usuario, clave })
         });
-
-        if (response.redirected) {
-            window.location.href = response.url; // Redirige si es éxito
-            return;
-        }
+if (response.redirected) {
+    sessionStorage.setItem("usuarioLogueado", "true"); //  Marca como logueado
+    window.location.href = response.url;
+    return;
+}
 
         const data = await response.json();
         if (!data.success) {
