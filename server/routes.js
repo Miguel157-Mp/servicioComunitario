@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('../database/db'); // Importar el objeto pool
 const path = require('path');
 const router = express.Router();
-
+const bcrypt = require('bcryptjs');
 // Middleware para proteger rutas privadas
 function requireLogin(req, res, next) {
     if (!req.session.usuario) {
@@ -31,25 +31,30 @@ router.post('/submit', async (req, res, next) => {
 
     }
 
-    try {
-        const result = await pool.query('SELECT * FROM "public"."loginUsuario" WHERE usuario = $1 AND clave = $2', [usuario, clave]);
+   try {
+        // Buscar solo por usuario
+        const result = await pool.query('SELECT * FROM "public"."loginUsuario" WHERE usuario = $1', [usuario]);
 
         if (result.rows.length > 0) {
-            req.session.usuario = {
-                id: result.rows[0].id,
-                nombre: result.rows[0].nombre,
-                usuario: result.rows[0].usuario
-            };
-            res.redirect('/dashboard.html');
-        } else {
-console.warn('Credenciales incorrectas para usuario:', usuario);
-            res.status(401).json({
-                success: false,
-                message: 'Credenciales incorrectas. Por favor, inténtalo de nuevo.'
-            });
+            const user = result.rows[0];
+            // Comparar la clave ingresada con la clave encriptada
+            const match = await bcrypt.compare(clave, user.clave);
+            if (match) {
+                req.session.usuario = {
+                    id: user.id,
+                    nombre: user.nombre,
+                    usuario: user.usuario
+                };
+                return res.redirect('/dashboard.html');
+            }
         }
+        // Si no hay usuario o la clave no coincide
+        res.status(401).json({
+            success: false,
+            message: 'Credenciales incorrectas. Por favor, inténtalo de nuevo.'
+        });
     } catch (error) {
-        console.error('Error al ejecutar la consulta en /submit:', error.message, error.stack); // Log detallado del error
+        // ...existing code...
         res.status(500).json({
             success: false,
             message: 'Error al procesar la solicitud. Por favor, inténtalo más tarde.'
@@ -89,9 +94,21 @@ router.post('/register', async (req, res, next) => {
     }
 
     try {
-console.log('Ejecutando consulta SQL para /register:', { usuario, clave, nombre, cedula });
-        await pool.query('INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave) VALUES ($1, $2, $3, $4)', [nombre, cedula, usuario, clave]);
-        res.redirect('/index.html');
+
+        // Verificar si el usuario ya existe
+        const existingUser = await pool.query('SELECT * FROM "public"."loginUsuario" WHERE usuario = $1', [usuario]);
+        if (existingUser.rows.length > 0) {
+            console.warn('Usuario ya existe:', usuario);
+            return res.status(500).json({ error: 'El usuario ya existe' });
+        }
+        //encryptar la clave antes de guardarla
+        
+        const salt = await bcrypt.genSalt(10);
+        //hasear la clave
+        const hashedClave = await bcrypt.hash(clave, salt);
+        //Registrar usuario en la base de datos
+        await pool.query('INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)', [nombre, cedula, usuario, hashedClave, 2]);
+        res.redirect('./dashboard.html');
     } catch (error) {
 console.error('Error al registrar usuario en /register:', error.message, error.stack);
         next(error);

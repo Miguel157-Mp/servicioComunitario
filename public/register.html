@@ -72,7 +72,8 @@ body {
                             Registro de Usuario</h4>
                         <hr>
                     </div>
-                    <form action="/register" method="post">
+                    <div id="error-message" class="alert alert-danger" style="display:none;"></div>
+                    <form id="register-form" action="/register" method="post">
                         <div class="mb-2">
                             <label class="form-label" for="nombre">Nombre y Apellido</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
@@ -98,7 +99,36 @@ body {
                             </button>
                         </div>
                     </form>
-                    <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a>.</p>
+                    <script>
+                    document.getElementById('register-form').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const form = e.target;
+                        const data = new URLSearchParams(new FormData(form));
+                        const errorDiv = document.getElementById('error-message');
+                        errorDiv.style.display = 'none';
+                        errorDiv.textContent = '';
+                        try {
+                            const response = await fetch('/register', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: data
+                            });
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                                return;
+                            }
+                            const result = await response.json();
+                            if (result.error) {
+                                errorDiv.textContent = result.error;
+                                errorDiv.style.display = 'block';
+                            }
+                        } catch (err) {
+                            errorDiv.textContent = 'Error al registrar. Intente de nuevo.';
+                            errorDiv.style.display = 'block';
+                        }
+                    });
+                    </script>
+                    <!-- <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a>.</p> -->
                 </div>
             </div>
             <div class="col-md-6 d-none d-md-block">
