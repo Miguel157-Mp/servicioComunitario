@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <data name="usmLogo.ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>usmLogo.ico;System.Drawing.Icon, System.Drawing.Common</value>
-  </data>
-</root>

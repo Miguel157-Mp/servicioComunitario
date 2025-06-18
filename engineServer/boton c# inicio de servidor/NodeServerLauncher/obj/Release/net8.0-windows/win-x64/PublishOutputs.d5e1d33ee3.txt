@@ -1,2 +1,0 @@
-C:\Users\danio\Documents\universidad\servicio comunitario\boton c# inicio de servidor\NodeServerLauncher\bin\Release\net8.0-windows\win-x64\publish\Sistema de Agendamiento USM (ING Y ARQ) - ENGINE SERVER.pdb
-C:\Users\danio\Documents\universidad\servicio comunitario\boton c# inicio de servidor\NodeServerLauncher\bin\Release\net8.0-windows\win-x64\publish\Sistema de Agendamiento USM (ING Y ARQ) - ENGINE SERVER.exe
