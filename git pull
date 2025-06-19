@@ -1,0 +1,481 @@
+[33mcommit 2d4c1730be60186ee6a408132f9d0d0be22b7375[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Jun 18 19:26:32 2025 -0400
+
+    boton
+
+[33mcommit cc95ee7e947066c8f80cf5472231b8e393c201b0[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Jun 18 19:19:53 2025 -0400
+
+    archivos del boton
+
+[33mcommit 0761d34c1868ac13c0095403afb17a10f2c4c161[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 34c77ff 610f2a7
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Jun 18 18:16:01 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 34c77ff20e198bb0e9bc421ab127e388e656ca05[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Jun 18 18:15:53 2025 -0400
+
+    boton de encendido del servidor listo
+
+[33mcommit 610f2a7d1a5622c71a6bd55d6481e257893f8354[m
+Author: ChelseaVega <chelseavegasanchez@gmail.com>
+Date:   Wed Jun 18 15:17:10 2025 -0400
+
+    Validacion de entrada de paginas
+
+[33mcommit f80a993cdfba82bc77a7ed935d19916c69ef2e70[m
+Author: ChelseaVega <chelseavegasanchez@gmail.com>
+Date:   Wed Jun 18 14:35:14 2025 -0400
+
+    Arreglo de vista y validacion de paginas
+
+[33mcommit 3f94935cf201b3d3bc9f225d318a645ccbbaa923[m
+Merge: 532b605 4ab60c5
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Tue Jun 17 23:18:32 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 532b605514779fcf05d17ca3915e3600fa8ce6b2[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Tue Jun 17 23:18:05 2025 -0400
+
+    bcrypt, registro, validaciones, middleware
+
+[33mcommit 4ab60c59cf68d1ffc0f4366cefb839c34c029742[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Tue Jun 17 22:32:15 2025 -0400
+
+    Update README.md
+
+[33mcommit c3c348ab68bee1d77ec568a509599874ea1729fa[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Jun 17 20:19:20 2025 -0400
+
+    recueracion registro
+
+[33mcommit 77bf3c89fd2cf8662b97c9853fff6854753603e3[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Mon Jun 16 21:10:18 2025 -0400
+
+    agendamiento listo
+
+[33mcommit 5ef56621f7d35060893b9139afb4b0bc80d2bf67[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Sat Jun 14 17:59:21 2025 -0400
+
+    guardado con validaaciones para agendamiento + buscador  de salones disponible
+
+[33mcommit 568f22b310618df8bb2f762055ebbdd007b1c4c8[m
+Merge: 1c83791 f0b8f3b
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Fri Jun 13 17:19:27 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 1c837914a785b85226f4426b6597b074f75a3102[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Fri Jun 13 17:19:19 2025 -0400
+
+    puliendo agendamiento
+
+[33mcommit f0b8f3b30f70ab61cb1b36e79b3406fdd1b1fef5[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Thu Jun 12 21:19:14 2025 -0400
+
+    validacion login, logout menulateral
+
+[33mcommit a2074c9a374d9a86c431354b73f9a0caf99ae940[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Jun 11 10:44:48 2025 -0400
+
+    arreglado barra de navegacion + horario profesores
+
+[33mcommit e20a131a23b00d2342e92673c9d8646dcf43daed[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 29 17:36:03 2025 -0400
+
+    Revert "arreglado registrar nuevas materias y buscar profesores"
+    
+    This reverts commit 67d3f2e4f8ebb2b10f56c546389e062fac06099d.
+
+[33mcommit daa52d8386b53fa375e744d5c8635ca4c497402c[m
+Merge: 67d3f2e dabe4f6
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 29 14:27:56 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit dabe4f661d570c68ca71b7db7c1a41c292e6f1ad[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Thu May 29 00:21:34 2025 -0400
+
+    css agendamientoSalones
+
+[33mcommit f3681848f53ae207ea552fff770b736a29cea44d[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Thu May 29 00:06:34 2025 -0400
+
+    menulateral unificado(por favor llinas no separar gracias :) )
+
+[33mcommit 63b4a9889b4bf0fb2087c0a9ac1b24ce467a7a1a[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Wed May 28 23:46:15 2025 -0400
+
+    css dashboard
+
+[33mcommit 67d3f2e4f8ebb2b10f56c546389e062fac06099d[m[33m ([m[1;33mtag: [m[1;33mfuncionamiento[m[33m, [m[1;32mfuncionamiento[m[33m)[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue May 27 11:23:51 2025 -0400
+
+    arreglado registrar nuevas materias y buscar profesores
+
+[33mcommit 500f59d13af8b13e3363c3e79276b4a549f5ea20[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue May 27 09:39:01 2025 -0400
+
+    agendamiento + arreglos de profesores
+
+[33mcommit 83bcd4c28e083cb7b23b7317dd4a251f80274854[m
+Merge: e9c5df0 65d2eef
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Sat May 24 10:31:10 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit e9c5df0cafb6b8713450483d2f556b4e8fa2ff53[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Sat May 24 10:30:56 2025 -0400
+
+    integracion de mobiliario arreglado
+
+[33mcommit 65d2eef8e0f44f3a9cee5627abdf30f2c5d5e929[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 15 14:19:20 2025 -0400
+
+    revert mobiliario
+
+[33mcommit 3191a32d87fbc2db1421c87ad6ce001bbfcf15eb[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 15 11:08:55 2025 -0400
+
+    agendamiento de salones media vida falta terminar de conectar
+
+[33mcommit adff253926f44a93c467feca93b0557b9161c1f1[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 15 03:43:57 2025 -0400
+
+    agnedamiento
+
+[33mcommit f24d9b46fadf9cfcfccc55063c5a80994b3bc499[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Thu May 15 00:27:16 2025 -0400
+
+    arreglos de ccs horarios de profesores funcionando
+
+[33mcommit b46d042b3df148111c86a6da2b42cf1ebc623816[m
+Merge: 1ef05e3 500f50c
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed May 14 23:51:50 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 1ef05e3d898d9d80dbe31ad3a3a414cac72d1c05[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed May 14 23:49:12 2025 -0400
+
+    horario profesor
+
+[33mcommit 0898731e1f225d68073aeb62805343469db68dd0[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed May 14 23:33:52 2025 -0400
+
+    horario profesor
+
+[33mcommit 500f50c1fd9860b691bcb8509f37b9db0637053f[m
+Author: ChelseaVega <chelseavegasanchez@gmail.com>
+Date:   Wed May 14 22:07:14 2025 -0400
+
+    ultimos cambios
+
+[33mcommit cf7724bb61f325af4a2ae0cb60f8b1c738ed93f2[m
+Merge: 021b507 2c1ec25
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Sun May 11 06:00:56 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 2c1ec25bab364d346943981133b1d6fbf2ba6530[m
+Author: Miguel Pernia <perniamiguel2003@gmail.com>
+Date:   Sat May 10 19:42:18 2025 -0400
+
+    media query celulales
+    
+    mediaquery para celulares
+
+[33mcommit 8333ef311796c8d34221f7006e9c3665817f03c9[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Fri May 9 22:39:38 2025 -0400
+
+    login bootstrap
+    
+    login bootstrap
+
+[33mcommit 11dce67dc1eea723ab9d30959e3f9224bf83b967[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Fri May 9 22:34:56 2025 -0400
+
+    traspaso sillas y mesas
+    
+    traspaso sillas y mesas
+
+[33mcommit 021b5075e8a6f46c8e71cc90be94aa78a4871198[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Apr 23 18:57:50 2025 -0400
+
+    ,
+
+[33mcommit aa0d0884322a613b3c4c0b3db3fd1c8cbeb88a5c[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Apr 23 18:57:14 2025 -0400
+
+    guardado en bd con valdiacion tipo de mobiliario
+
+[33mcommit ded636cde79d1827ced451e0acaac15f45a296fe[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Apr 23 14:13:09 2025 -0400
+
+    formulario carga nuevo mobiliario + consulta (falta registrar la ruta para que haga el registro) y hacer las validacioens pertinentes
+
+[33mcommit 723e78f37b627b1496cd831deb4bcfc449532a96[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 22 17:28:37 2025 -0400
+
+    Base de datos actualizada
+
+[33mcommit 36e02119242f21332a23ec4559e472bad634497a[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 22 17:21:52 2025 -0400
+
+    ,
+
+[33mcommit 88eed3973b7ba6d9e80d9ac352e22a896cedc775[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 22 17:18:58 2025 -0400
+
+    de archivo de prueba seccion a original registroSeccion
+
+[33mcommit 6127e2413c973502882d619a4f60b9f30fb71113[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 22 17:15:51 2025 -0400
+
+    vista terminada de registro de seccion
+
+[33mcommit 2b5408815f05a2c046d90241aab36f8856cde49a[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Mon Apr 21 23:58:45 2025 -0400
+
+    añadida funcion de eliminar funcion
+
+[33mcommit a1712098d563569ddc3181072d61f80df32494f2[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Sun Apr 20 18:22:18 2025 -0400
+
+    añadida la funcionalidad de agregar + editar secciones
+
+[33mcommit e14c18eeaaaba7c74a525daced9ed84639f11cdc[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Thu Apr 17 12:56:48 2025 -0400
+
+    Update README.md
+
+[33mcommit e3f2827e0c4da5eafb89bd6a8dfeb75accb8c089[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Thu Apr 17 00:12:38 2025 -0400
+
+    cambios sumar y restar pupitres
+    
+    cambios sumar y restar pupitres
+
+[33mcommit fade8514d1c3ab1b92dc8f98ba0b99786f38d5f3[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Wed Apr 16 14:54:25 2025 -0400
+
+    Create README.md
+
+[33mcommit 029ca5626a8572183913ac172d45bf98bba40999[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Mon Apr 14 21:01:05 2025 -0400
+
+    nuevos cambios
+    
+    base de datos, import.js, cargar en el select los salones
+
+[33mcommit a952a1821747aa8d360be3ee81ce7e8fea70c72f[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Mon Apr 14 18:13:58 2025 -0400
+
+    se añade horario + prueba + link de dashboard a mobiliario
+
+[33mcommit 72bf9531b44070d74f350f790f616cdb652d6b7e[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Mon Apr 14 13:18:00 2025 -0400
+
+    editar ya funciona.
+
+[33mcommit a239de0863b66f900b660ff7eb29b34cc042b22b[m
+Merge: cbcfe8d b0a50f2
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Fri Apr 11 21:49:58 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit cbcfe8d77968eba0f38184f4b8cb9b3d0b5f2c36[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Fri Apr 11 21:49:52 2025 -0400
+
+    cambios editar
+    
+    cambios editar aun nofunciona
+
+[33mcommit b0a50f20cf1f03d8ce41f74d8f5083e8b0cb1279[m
+Author: ChelseaVega <139077299+ChelseaVega@users.noreply.github.com>
+Date:   Wed Apr 9 21:51:15 2025 -0400
+
+    Add files via upload
+
+[33mcommit 996823a66998ed4783a460bfc10f29d37eb04dd3[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Wed Apr 9 21:45:34 2025 -0400
+
+    cargar profesores en la tabla
+    
+    cargar profesores en la tabla
+
+[33mcommit 0fb82f17243738ca6d62c66a9b7cf6ea7b131e59[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Wed Apr 9 21:26:24 2025 -0400
+
+    cambios
+    
+    llinas y chelsea revisar bd
+
+[33mcommit 761f6120f2d46e8f86bf66c5bd375a48c3cef4ae[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Wed Apr 9 21:01:43 2025 -0400
+
+    cambios revisar
+    
+    cambios revisar
+
+[33mcommit b7a4c7f21825a1eab3b0b2f5e985ce5b7bf4b7b7[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Apr 9 19:58:59 2025 -0400
+
+    busqueda en la parte de profesores conectada
+
+[33mcommit 89e7b65b6abf5acbfe6c114b3416ab1d4a814292[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Wed Apr 9 14:55:56 2025 -0400
+
+    formulario agregado
+
+[33mcommit fd1bc4b7306a66244c35dffe5b50d2438e0ae3d6[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 8 15:25:18 2025 -0400
+
+    arreglo de calendario listo
+
+[33mcommit 559159e47ff597b83db2ab76f8f5025ef82cccf0[m
+Merge: cd20322 a20c5b8
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Tue Apr 8 14:41:57 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit a20c5b88d2d001f0a9d6078b5c8a5b433be6924b[m
+Author: ChelseaVega <chelseavegasanchez@gmail.com>
+Date:   Mon Apr 7 21:27:15 2025 -0400
+
+    cambie tontos
+
+[33mcommit a57c6fa29be3e92dc961fd19a0ea1479c4483b2f[m
+Author: chelsea <chelseavegsanchez@gmail.com>
+Date:   Mon Apr 7 21:20:45 2025 -0400
+
+    commit chelsea
+
+[33mcommit cd203223e7f2c990bfd5550461ac193ec2a41e74[m
+Author: dallivi10 <156099942+dallivi10@users.noreply.github.com>
+Date:   Mon Apr 7 21:20:14 2025 -0400
+
+    hola buenas
+
+[33mcommit 4fb8f70a6f4c19f383b67b7cc3b1575923932769[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Mon Apr 7 21:12:18 2025 -0400
+
+    cargar salones
+    
+    cargar salones
+
+[33mcommit 73c7a8485ed5d89b2214653bfd5661e1929f9ecc[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Mon Apr 7 20:24:50 2025 -0400
+
+    2
+    
+    2s
+
+[33mcommit 51c8ec748cbb1e1afdfb43f2a23bcf6dde9c5fa3[m
+Author: Miguel157-Mp <perniamiguel2003@gmail.com>
+Date:   Mon Apr 7 20:23:58 2025 -0400
+
+    1
+
+[33mcommit c98a690028e4a9937fd4e7630199c2cc34e63cf0[m
+Author: Miguel157-Mp <perniapma.usm@gmail.com>
+Date:   Mon Apr 7 20:21:14 2025 -0400
+
+    11
+
+[33mcommit ec596e2dc0a6eeb4a60ddd9f7779401d5e74ce0d[m
+Author: Miguel157-Mp <perniapma.usm@gmail.com>
+Date:   Mon Apr 7 20:17:20 2025 -0400
+
+    1
+
+[33mcommit ad0f1fa43577a1d07921155748b7924224061ccb[m
+Merge: 25b3d32 d7591b8
+Author: Miguel157-Mp <perniapma.usm@gmail.com>
+Date:   Mon Apr 7 20:16:14 2025 -0400
+
+    Merge branch 'main' of https://github.com/Miguel157-Mp/servicioComunitario
+
+[33mcommit 25b3d32d8b231dcd35573a24dab6d3e48b0beaca[m
+Author: Miguel157-Mp <perniapma.usm@gmail.com>
+Date:   Mon Apr 7 20:16:11 2025 -0400
+
+    menu
+    
+    1
+
+[33mcommit d7591b8189f789a1736331100d23ff81a7931e5e[m
+Author: dallivi10 <danielllinas2@gmail.com>
+Date:   Mon Apr 7 20:14:23 2025 -0400
+
+    commit llinas
+
+[33mcommit 9928ae8effefa417fdd7b16bb5986758a240eab3[m
+Author: Miguel157-Mp <perniapma.usm@gmail.com>
+Date:   Mon Apr 7 19:55:22 2025 -0400
+
+    primer commit
+    
+    primer commit
