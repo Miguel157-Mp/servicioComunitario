@@ -19,5 +19,27 @@ router.get('/list', async (req, res) => {
     }
 });
 
+// Ruta para obtener los pisos distintos
+router.get('/pisos', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT DISTINCT piso FROM public.salon ORDER BY piso');
+        // Devuelve solo el array de pisos
+        res.json(result.rows.map(row => row.piso));
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los pisos' });
+    }
+});
+
+// Ruta para obtener los módulos distintos
+router.get('/modulos', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT DISTINCT modulo FROM public.salon ORDER BY modulo');
+        // Devuelve solo el array de módulos
+        res.json(result.rows.map(row => row.modulo));
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los módulos' });
+    }
+});
+
 
 module.exports = router;
