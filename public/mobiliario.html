@@ -748,6 +748,7 @@
                     </p>
                 </div>
             </div>
+            <div id="divMessage" style="display: none;"></div>
         </div> <!-- Cierre de main-content -->
 
         <!-- Panel derecho - ahora al mismo nivel que main-content -->
@@ -1038,15 +1039,26 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Transacción de pupitres realizada con éxito.');
-                        window.location.reload();
+                        divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                     divMessage.innerHTML = "<div class='alert alert-success'>Transacción de pupitres realizada con éxito.</div>";    
+                     //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
+               
                     } else {
-                        alert('Error al realizar la transacción de pupitres: ' + (data.error || ''));
+                        divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de pupitres: " + (data.error || '') + "</div>";
                     }
                 })
                 .catch(error => {
                     console.error('Error en la petición de pupitres:', error);
-                    alert('Ocurrió un error en la petición de pupitres.');
+                    divMessage = document.getElementById('divMessage');
+                    divMessage.style.display = 'block';
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de pupitres.</div>";
+                      
                 });
         }
 
@@ -1064,15 +1076,28 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Transacción de mesas realizada con éxito.');
-                        window.location.reload(); // Recargar la página para actualizar los datos
+                        // Variable para el mensaje de éxito
+                        const divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                     divMessage.innerHTML = "<div class='alert alert-success'>Transacción de mesas realizada con éxito.</div>";
+                            //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
                     } else {
-                        alert('Error al realizar la transacción de mesas: ' + (data.error || ''));
+                        // Variable para el mensaje de error
+                        const divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de mesas: " + (data.error || '') + "</div>";
                     }
                 })
                 .catch(error => {
                     console.error('Error en la petición de mesas:', error);
-                    alert('Ocurrió un error en la petición de mesas.');
+                    // Variable para el mensaje de error
+                    const divMessage = document.getElementById('divMessage');
+                    divMessage.style.display = 'block';
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de mesas.</div>";
                 });
         }
 
@@ -1081,6 +1106,9 @@
             const origen = document.getElementById('origen-sillas').value;
             const destino = document.getElementById('destino-sillas').value;
             const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
+            // Variable para el mensaje de éxito
+            let divMessage = document.getElementById('divMessage');
+ 
 
             fetch('/traspasarSillas', {
                 method: 'POST',
@@ -1090,15 +1118,23 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Transacción de sillas realizada con éxito.');
-                        window.location.reload();
+                        //mensaje de éxito en div
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-success'>Transacción de sillas realizada con éxito.</div>";
+                        
+                            //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
                     } else {
-                        alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
+                        // mensaje de error en div
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de sillas: " + (data.error || '') + "</div>";
                     }
                 })
                 .catch(error => {
                     console.error('Error en la petición de sillas:', error);
-                    alert('Ocurrió un error en la petición de sillas.');
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de sillas.</div>";
                 });
         }
 
