@@ -377,21 +377,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Menú lateral -->
-        <div id="sidebar" class="sidebar">
-            <div class="centered-bars" id="toggleBtn">
-                <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-            </div>
-            <div class="sidebar-header">
-                Menú
-            </div>
-            <div class="sidebar-content">
-                <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-                <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-                <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-                <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
-                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-            </div>
-        </div>
+      <div id="menu-lateral"></div>
         
         <!-- Contenido principal -->
         <div id="content">
@@ -892,87 +878,15 @@
             document.getElementById('modalTipoSalon').addEventListener('hidden.bs.modal', cargarTiposDeSalon);
                     
         document.addEventListener('DOMContentLoaded', cargarPisosYModulos);
-                
-        // Llenar el select de edición al abrir el modal
-        document.getElementById('modalTipoSalon').addEventListener('show.bs.modal', async function() {
-            const res = await fetch('/api/salones/tipos');
-            const tipos = await res.json();
-            const select = document.getElementById('selectEditarTipo');
-            select.innerHTML = '<option value="">-- Seleccione para editar --</option>';
-            tipos.forEach(tipo => {
-                const opt = document.createElement('option');
-                opt.value = tipo.idTipoDeSalon;
-                opt.textContent = tipo.nbTipoDeSalon;
-                select.appendChild(opt);
-            });
-            // Limpiar campos
-            document.getElementById('nombreTipoSalon').value = '';
-            document.getElementById('idTipoSalonEditar').value = '';
-        });
+
         
-        // Al seleccionar un tipo para editar, carga el nombre en el input
-        document.getElementById('selectEditarTipo').addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            document.getElementById('nombreTipoSalon').value = selectedOption.text;
-            document.getElementById('idTipoSalonEditar').value = this.value;
-        });
-        
-        // Manejar submit para agregar o editar
-        document.getElementById('formTipoSalon').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const id = document.getElementById('idTipoSalonEditar').value;
-            const nombre = document.getElementById('nombreTipoSalon').value;
-            let res;
-            if (id) {
-                // Editar
-                res = await fetch(`/api/salones/tipos/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nbTipoDeSalon: nombre })
-                });
-            } else {
-                // Agregar
-                res = await fetch('/api/salones/tipos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nbTipoDeSalon: nombre })
-                });
-            }
-            if (res.ok) {
-                    mostrarMensajeModal('Guardado Correctamente', 'success');
-                    document.getElementById('formTipoSalon').reset();
-                    bootstrap.Modal.getInstance(document.getElementById('modalNuevoSalon')).hide();
-                } else {
-                    mostrarMensajeModal('Error al registrar salón', 'error');
-                }
-
-
-
-
-        });
-
-        // Mostrar mensaje en el modal
-        function mostrarMensajeModal(mensaje, tipo = "success") {
-            // tipo: "success" (verde) o "error" (rojo)
-            const header = document.getElementById('modalMensajeHeader');
-            const body = document.getElementById('modalMensajeBody');
-            const modal = new bootstrap.Modal(document.getElementById('modalMensaje'));
-
-            // Cambia color del header según tipo
-            if (tipo === "success") {
-                header.style.backgroundColor = "#28a745";
-                header.style.color = "white";
-            } else {
-                header.style.backgroundColor = "#dc3545";
-                header.style.color = "white";
-            }
-
-            body.textContent = mensaje;
-            modal.show();
-        }
-    
-    
-    
+        /*incluir menulateral*/
+        fetch('menulateral.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('menu-lateral').innerHTML = html;
+            })
+            .catch(err => console.log('Error cargando menú lateral:', err));
     </script>
 </body>
 </html>
