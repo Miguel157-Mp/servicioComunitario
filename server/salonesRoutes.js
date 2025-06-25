@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/list', async (req, res) => {
     try {
         const result = await pool.query('SELECT "idSalon", "capacidad" ,"modulo" FROM "public"."salon"'); // Selecciona solo los campos necesarios
-        console.log('Resultado de la consulta:', result.rows); // Muestra el resultado en la consola
+        
         res.json(result.rows);
          // Devuelve los datos como JSON
     } catch (error) {
@@ -41,5 +41,67 @@ router.get('/modulos', async (req, res) => {
     }
 });
 
+// Ruta para registrar un nuevo salón
+router.post('/', async (req, res) => {
+    const { idSalon, piso, modulo, capacidad, status, tipoDeSalon } = req.body;
+    try {
+        await pool.query(
+            `INSERT INTO public.salon("idSalon", piso, modulo, capacidad, status, "tipoDeSalon")
+             VALUES ($1, $2, $3, $4, $5, $6)`,
+            [idSalon, piso, modulo, capacidad, status, tipoDeSalon]
+        );
+        res.status(201).json({ message: 'Salón registrado correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al registrar el salón' });
+    }
+});
 
+// Ruta para obtener solo los idSalon
+router.get('/ids', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT "idSalon" FROM public.salon ORDER BY "idSalon" ASC');
+        res.json(result.rows.map(row => row.idSalon));
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los IDs de los salones' });
+    }
+});
+
+// Ruta para obtener los tipos de salón
+router.get('/tipos', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT "idTipoDeSalon", "nbTipoDeSalon" FROM public."tipoDeSalon" ORDER BY "nbTipoDeSalon" ASC');
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los tipos de salón' });
+    }
+});
+
+// Crear nuevo tipo de salón
+router.post('/tipos', async (req, res) => {
+    const { nbTipoDeSalon } = req.body;
+    try {
+        await pool.query(
+            'INSERT INTO public."tipoDeSalon" ("nbTipoDeSalon") VALUES ($1)',
+            [nbTipoDeSalon]
+        );
+        res.status(201).json({ message: 'Tipo de salón creado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear tipo de salón' });
+    }
+});
+
+// Editar tipo de salón
+router.put('/tipos/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nbTipoDeSalon } = req.body;
+    try {
+        await pool.query(
+            'UPDATE public."tipoDeSalon" SET "nbTipoDeSalon" = $1 WHERE "idTipoDeSalon" = $2',
+            [nbTipoDeSalon, id]
+        );
+        res.json({ message: 'Tipo de salón actualizado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar tipo de salón' });
+    }
+});
 module.exports = router;
