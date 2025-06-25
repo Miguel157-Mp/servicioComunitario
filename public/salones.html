@@ -431,49 +431,11 @@
                 
                 
                 
-                <!-- Tarjetas de resumen -->
-                <div class="card-container">
-                    <div class="card salon-card">
-                        <div class="card-header">Salón A-101</div>
-                        <div class="card-body">
-                            <p><strong>Capacidad:</strong> 30 estudiantes</p>
-                            <p><strong>Ubicación:</strong> Edificio A, Piso 1</p>
-                            <p><strong>Estado:</strong> <span class="status-badge status-good">Bueno</span></p>
-                            <p><strong>Mobiliario:</strong> 30 sillas, 15 mesas, 1 pizarra</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card salon-card">
-                        <div class="card-header">Salón B-202</div>
-                        <div class="card-body">
-                            <p><strong>Capacidad:</strong> 40 estudiantes</p>
-                            <p><strong>Ubicación:</strong> Edificio B, Piso 2</p>
-                            <p><strong>Estado:</strong> <span class="status-badge status-regular">Regular</span></p>
-                            <p><strong>Mobiliario:</strong> 38 sillas, 20 mesas, 1 proyector</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card mobiliario-card">
-                        <div class="card-header">Mobiliario</div>
-                        <div class="card-body">
-                            <p><strong>Sillas:</strong> 120 unidades</p>
-                            <p><strong>Mesas:</strong> 65 unidades</p>
-                            <p><strong>Pizarras:</strong> 15 unidades</p>
-                            <p><strong>Proyectores:</strong> 8 unidades</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card infra-card">
-                        <div class="card-header">Infraestructura</div>
-                        <div class="card-body">
-                            <p><strong>Salones:</strong> 12 disponibles</p>
-                            <p><strong>Laboratorios:</strong> 5 disponibles</p>
-                            <p><strong>Auditorios:</strong> 2 disponibles</p>
-                            <p><strong>Estado general:</strong> <span class="status-badge status-good">Bueno</span></p>
-                        </div>
-                    </div>
+                <!-- Actualiza el contenedor de tarjetas -->
+                <div class="card-container" id="salones-container">
+                    <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
                 </div>
-                
+
                 <!-- Tabla de salones -->
                 <h4 class="section-title">Detalle de Salones</h4>
                 <div class="table-container">
@@ -484,9 +446,9 @@
                                 <th>Piso</th>
                                 <th>Módulo</th>
                                 <th>Capacidad</th>
-                                <th>Estado Infraestructura</th>
+                                <th>Infraestructura</th>
                                 <th>Mobiliario</th>
-                                <th>Acciones</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -751,6 +713,78 @@
             </div>
         </div>
         </div>
+
+    <!-- Modal de detalles del salón -->
+<div class="modal fade" id="modalDetalleSalon" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalles del Salón: <span id="detalle-id-salon"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p><strong>Piso:</strong> <span id="detalle-piso"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Módulo:</strong> <span id="detalle-modulo"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Capacidad:</strong> <span id="detalle-capacidad"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Estado:</strong> <span id="detalle-estado" class="status-badge"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Tipo:</strong> <span id="detalle-tipo"></span></p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Infraestructura</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-infraestructura">
+                                <thead>
+                                    <tr>
+                                        <th>Elemento</th>
+                                        <th>Cantidad</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Se llenará dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Mobiliario</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-mobiliario">
+                                <thead>
+                                    <tr>
+                                        <th>Mobiliario</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Se llenará dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -877,9 +911,158 @@
             // También al cerrar el modal de tipo de salón, para refrescar la lista
             document.getElementById('modalTipoSalon').addEventListener('hidden.bs.modal', cargarTiposDeSalon);
                     
-        document.addEventListener('DOMContentLoaded', cargarPisosYModulos);
-
         
+
+         // Función para cargar y mostrar los salones
+            async function cargarYMostrarSalones(piso = 0, modulo = 7) {
+                try {
+                    let url = `/api/salones/detalles?piso=${encodeURIComponent(piso)}&modulo=${encodeURIComponent(modulo)}`;
+                    const response = await fetch(url);
+                    const salones = await response.json();
+                    const container = document.getElementById('salones-container');
+                    container.innerHTML = '';
+
+                    salones.forEach(salon => {
+                        const card = document.createElement('div');
+                        card.className = 'card salon-card';
+                        card.innerHTML = `
+                            <div class="card-header">Salón ${salon.idSalon}</div>
+                            <div class="card-body">
+                                <p><strong>Capacidad:</strong> ${salon.capacidad} estudiantes</p>
+                                <p><strong>Ubicación:</strong> Piso ${salon.piso}, Módulo ${salon.modulo}</p>
+                                <p><strong>Estado:</strong> <span class="status-badge ${getStatusClass(salon.status)}">${salon.status}</span></p>
+                                <p><strong>Tipo:</strong> ${salon.tipo_salon}</p>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-info btn-ver-detalles" data-id="${salon.idSalon}">
+                                        <i class="fas fa-eye"></i> Ver Detalles
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                    document.getElementById('selectPiso').value = piso;
+                    document.getElementById('selectModulo').value = modulo;
+                    // Agregar eventos a los botones de detalles
+                    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const salonId = this.getAttribute('data-id');
+                            mostrarDetallesSalon(salonId, salones);
+                        });
+                    });
+                    renderizarTablaSalones(salones);
+                } catch (error) {
+                    console.error('Error al cargar salones:', error);
+                    mostrarMensajeModal('Error al cargar los datos de los salones', 'error');
+                }
+            }
+
+            // Función auxiliar para obtener clase CSS según estado
+            function getStatusClass(status) {
+                status = status.toLowerCase();
+                if (status.includes('bueno')) return 'status-good';
+                if (status.includes('regular')) return 'status-regular';
+                if (status.includes('malo')) return 'status-bad';
+                return '';
+            }
+
+            // Función para mostrar detalles completos en modal
+            function mostrarDetallesSalon(salonId, salones) {
+                const salon = salones.find(s => s.idSalon == salonId);
+                if (!salon) return;
+
+                // Actualizar información básica
+                document.getElementById('detalle-id-salon').textContent = salon.idSalon;
+                document.getElementById('detalle-piso').textContent = salon.piso;
+                document.getElementById('detalle-modulo').textContent = salon.modulo;
+                document.getElementById('detalle-capacidad').textContent = salon.capacidad;
+                document.getElementById('detalle-tipo').textContent = salon.tipo_salon;
+                
+                // Actualizar estado con clase adecuada
+                const estadoElement = document.getElementById('detalle-estado');
+                estadoElement.textContent = salon.status;
+                estadoElement.className = 'status-badge ' + getStatusClass(salon.status);
+
+                // Llenar tabla de infraestructura
+                const tablaInfra = document.querySelector('#tabla-infraestructura tbody');
+                tablaInfra.innerHTML = '';
+                if (salon.infraestructura) {
+                    salon.infraestructura.forEach(item => {
+                        const row = `<tr>
+                            <td>${item.elemento}</td>
+                            <td>${item.cantidad}</td>
+                            <td>${item.estado}</td>
+                        </tr>`;
+                        tablaInfra.innerHTML += row;
+                    });
+                }
+
+                // Llenar tabla de mobiliario
+                const tablaMob = document.querySelector('#tabla-mobiliario tbody');
+                tablaMob.innerHTML = '';
+                if (salon.mobiliario) {
+                    salon.mobiliario.forEach(item => {
+                        const row = `<tr>
+                            <td>${item.mobiliario}</td>
+                            <td>${item.cantidad}</td>
+                        </tr>`;
+                        tablaMob.innerHTML += row;
+                    });
+                }
+
+                // Mostrar modal
+                const modal = new bootstrap.Modal(document.getElementById('modalDetalleSalon'));
+                modal.show();
+            }
+
+          
+             
+            //ejecuta acciones filtrar salones
+            document.getElementById('btnFiltrarSalones').addEventListener('click', function() {
+                const piso = document.getElementById('selectPiso').value;
+                const modulo = document.getElementById('selectModulo').value;
+                cargarYMostrarSalones(piso, modulo);
+            });
+
+            document.getElementById('btnFiltrarSalones').addEventListener('click', function() {
+                const piso = document.getElementById('selectPiso').value;
+                const modulo = document.getElementById('selectModulo').value;
+                cargarYMostrarSalones(piso, modulo);
+            });
+
+
+        function renderizarTablaSalones(salones) {
+            console.log(salones);
+            const tbody = document.querySelector('.table-container tbody');
+            tbody.innerHTML = '';
+            salones.forEach(salon => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${salon.idSalon}</td>
+                    <td>${salon.piso}</td>
+                    <td>${salon.modulo}</td>
+                    <td>${salon.capacidad}</td> 
+                    <td>
+                        ${(salon.infraestructura || []).map(i => 
+                            `<span class="badge bg-info badge-pill">${i.elemento}: ${i.cantidad} (${i.estado})</span>`
+                        ).join(' ')}
+                    </td>
+                    <td>
+                        ${(salon.mobiliario || []).map(m => 
+                            `<span class="badge bg-primary badge-pill">${m.mobiliario}: ${m.cantidad}</span>`
+                        ).join(' ')}
+                    </td>
+                    
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarPisosYModulos();
+            cargarYMostrarSalones(0, 7); // Esto carga los salones de piso 0 y módulo 7 al inicio
+        });
+
         /*incluir menulateral*/
         fetch('menulateral.html')
             .then(response => response.text())

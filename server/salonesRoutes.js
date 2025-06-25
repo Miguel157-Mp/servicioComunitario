@@ -104,4 +104,69 @@ router.put('/tipos/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar tipo de salón' });
     }
 });
+
+// Nueva ruta para obtener detalles completos de salones
+router.get('/detalles', async (req, res) => {
+    try {
+        // Toma los filtros del query string
+        const { piso, modulo } = req.query;
+        let where = [];
+        let values = [];
+        let idx = 1;
+
+        if (piso) {
+            where.push(`s.piso = $${idx++}`);
+            values.push(piso);
+        }
+        if (modulo) {
+            where.push(`s.modulo = $${idx++}`);
+            values.push(modulo);
+        }
+
+        const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+
+        const query = `
+        SELECT 
+            s."idSalon",
+            s.piso,
+            s.modulo,
+            s.capacidad,
+            s.status,
+            ts."nbTipoDeSalon" AS tipo_salon,
+            (
+                SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'elemento', ei."nbElementoDeInfraestructura",
+                    'cantidad', infs.cantidad,
+                    'estado', est."nbEstado"
+                ))
+                FROM public."infraestructuraSalon" infs
+                LEFT JOIN public."elementoDeInfraestructura" ei 
+                    ON infs."idElementoDeInfraestructura" = ei."idElementoDeInfraestructura"
+                LEFT JOIN public."estadoInfraestructura" est 
+                    ON infs."idEstadoInfraestructura" = est."idEstadoInfraestructura"
+                WHERE infs."idSalon" = s."idSalon"
+            ) AS infraestructura,
+            (
+                SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'mobiliario', tm."nbMobiliario",
+                    'cantidad', inv.cantidad
+                ))
+                FROM public."lugarInventario" inv
+                LEFT JOIN public."tipoDeMobiliario" tm 
+                    ON inv."idTipoDeMobiliario" = tm."idTipoDeMobiliario"
+                WHERE inv."idSalon" = s."idSalon"
+            ) AS mobiliario
+        FROM public."salon" s
+        INNER JOIN public."tipoDeSalon" ts ON s."idTipoDeSalon" = ts."idTipoDeSalon"
+        ${whereClause};
+        `;
+
+        const result = await pool.query(query, values);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener detalles de salones:', error.message, error.stack);
+        res.status(500).json({ error: 'Error al obtener detalles de salones' });
+    }
+});
+
 module.exports = router;
