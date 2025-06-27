@@ -785,6 +785,56 @@
         </div>
     </div>
 </div>
+
+<!-- Modal editar infraestructura -->
+<div class="modal fade" id="modalEditarInfra" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formEditarInfra" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Infraestructura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editarInfraId">
+        <div class="mb-2">
+          <label for="editarInfraCantidad" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="editarInfraCantidad" required>
+        </div>
+        <div class="mb-2">
+          <label for="editarInfraEstado" class="form-label">Estado</label>
+          <input type="text" class="form-control" id="editarInfraEstado" required>
+        </div>
+        <!-- Puedes agregar más campos si lo deseas -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal editar mobiliario -->
+<div class="modal fade" id="modalEditarMob" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formEditarMob" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Mobiliario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editarMobId">
+        <div class="mb-2">
+          <label for="editarMobCantidad" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="editarMobCantidad" required>
+        </div>
+        <!-- Puedes agregar más campos si lo deseas -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -992,11 +1042,19 @@
                             <td>${item.elemento}</td>
                             <td>${item.cantidad}</td>
                             <td>${item.estado}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning btn-editar-infra" data-id="${item.IdInfraestructuraSalon || item.idInfraestructuraSalon || ''}" data-cantidad="${item.cantidad}" data-estado="${item.estado}" data-elemento="${item.elemento}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-eliminar-infra" data-id="${item.IdInfraestructuraSalon || item.idInfraestructuraSalon || ''}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>`;
                         tablaInfra.innerHTML += row;
                     });
                 }
-
+                
                 // Llenar tabla de mobiliario
                 const tablaMob = document.querySelector('#tabla-mobiliario tbody');
                 tablaMob.innerHTML = '';
@@ -1005,6 +1063,14 @@
                         const row = `<tr>
                             <td>${item.mobiliario}</td>
                             <td>${item.cantidad}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning btn-editar-mob" data-id="${item.idLugarInventario || ''}" data-cantidad="${item.cantidad}" data-mobiliario="${item.mobiliario}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger btn-eliminar-mob" data-id="${item.idLugarInventario || ''}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
                         </tr>`;
                         tablaMob.innerHTML += row;
                     });
@@ -1063,6 +1129,100 @@
             cargarYMostrarSalones(0, 7); // Esto carga los salones de piso 0 y módulo 7 al inicio
         });
 
+        // Abrir modal editar infraestructura
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-editar-infra')) {
+                const btn = e.target.closest('.btn-editar-infra');
+                document.getElementById('editarInfraId').value = btn.dataset.id;
+                document.getElementById('editarInfraCantidad').value = btn.dataset.cantidad;
+                document.getElementById('editarInfraEstado').value = btn.dataset.estado;
+                new bootstrap.Modal(document.getElementById('modalEditarInfra')).show();
+            }
+        });
+        
+        // Guardar cambios infraestructura
+        document.getElementById('formEditarInfra').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editarInfraId').value;
+            const cantidad = document.getElementById('editarInfraCantidad').value;
+            const estado = document.getElementById('editarInfraEstado').value;
+            // Agrega aquí los demás campos si los tienes
+            const res = await fetch(`/api/infraestructura/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cantidad, /* otros campos */ })
+            });
+            if (res.ok) {
+                mostrarMensajeModal('Infraestructura actualizada', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarInfra')).hide();
+                cargarYMostrarSalones(); // Refresca la vista
+            } else {
+                mostrarMensajeModal('Error al actualizar', 'error');
+            }
+        });
+        
+        // Eliminar infraestructura
+        document.addEventListener('click', async function(e) {
+            if (e.target.closest('.btn-eliminar-infra')) {
+                const id = e.target.closest('.btn-eliminar-infra').dataset.id;
+                if (confirm('¿Seguro que deseas eliminar este elemento?')) {
+                    const res = await fetch(`/api/infraestructura/${id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        mostrarMensajeModal('Infraestructura eliminada', 'success');
+                        cargarYMostrarSalones();
+                    } else {
+                        mostrarMensajeModal('Error al eliminar', 'error');
+                    }
+                }
+            }
+        });
+        
+        // Abrir modal editar mobiliario
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-editar-mob')) {
+                const btn = e.target.closest('.btn-editar-mob');
+                document.getElementById('editarMobId').value = btn.dataset.id;
+                document.getElementById('editarMobCantidad').value = btn.dataset.cantidad;
+                new bootstrap.Modal(document.getElementById('modalEditarMob')).show();
+            }
+        });
+        
+        // Guardar cambios mobiliario
+        document.getElementById('formEditarMob').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editarMobId').value;
+            const cantidad = document.getElementById('editarMobCantidad').value;
+            // Agrega aquí los demás campos si los tienes
+            const res = await fetch(`/api/mobiliario/mobiliario/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cantidad /*, otros campos */ })
+            });
+            if (res.ok) {
+                mostrarMensajeModal('Mobiliario actualizado', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarMob')).hide();
+                cargarYMostrarSalones();
+            } else {
+                mostrarMensajeModal('Error al actualizar', 'error');
+            }
+        });
+        
+        // Eliminar mobiliario
+        document.addEventListener('click', async function(e) {
+            if (e.target.closest('.btn-eliminar-mob')) {
+                const id = e.target.closest('.btn-eliminar-mob').dataset.id;
+                if (confirm('¿Seguro que deseas eliminar este elemento?')) {
+                    const res = await fetch(`/api/mobiliario/mobiliario/${id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        mostrarMensajeModal('Mobiliario eliminado', 'success');
+                        cargarYMostrarSalones();
+                    } else {
+                        mostrarMensajeModal('Error al eliminar', 'error');
+                    }
+                }
+            }
+        });
+
         /*incluir menulateral*/
         fetch('menulateral.html')
             .then(response => response.text())
@@ -1070,6 +1230,8 @@
                 document.getElementById('menu-lateral').innerHTML = html;
             })
             .catch(err => console.log('Error cargando menú lateral:', err));
+
+        
     </script>
 </body>
 </html>

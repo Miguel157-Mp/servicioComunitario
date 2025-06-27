@@ -14,16 +14,21 @@ const traspasarMobiliario = require('./mover_mobiliario_traspasar');// Importar 
 const buscarSeccion = require('./buscarSeccion'); // Importar la ruta para buscar secciones
 const buscarMateria = require('./buscarMateria'); // Importar la ruta para buscar materias
 const guardarSeccion = require('./guardarSeccion'); // Importar la ruta para guardar secciones
+
 const actualizarSeccion = require('./actualizarSeccion'); // Importar la ruta para actualizar secciones
 const eliminarSeccion = require('./eliminarSeccion'); // Importar la ruta para eliminar secciones
 const traspasarMesas = require('./traspasarMesas'); // Importar la ruta para mover mesas
+
 const traspasarSillas = require('./traspasarSillas'); // Importar la ruta para mover sillas
 const buscarMobiliario = require('./buscarMobiliario'); // Importar la ruta para buscar mobiliario
 const guardarMobiliario = require('./guardarMobiliario'); // Importar la ruta para guardar mobiliario
+
 const horarioProfesor = require('./horarioProfesor'); // Importar la ruta para horario de profesor
 const seccionHorario = require('./seccionHorario'); // Importar la ruta para seccionHorario
 const seccionHorarioExamen = require('./seccionHorarioExamen'); // Importar la ruta para seccionHorarioExamen
-//const cargaMasivaSeccion = require('./cargaMasivaSeccion'); // Importar la ruta para carga masiva de materias
+
+const mobiliarioActualizarEditar = require('./mobiliarioActualizarEditar');
+const infraestructuraSalonRoutes = require('./infraestructuraSalonRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -100,6 +105,13 @@ app.use('/api/seccion-horario', seccionHorario);
 
 // Ruta para SeccionHorarioExamen
 app.use('/api/seccion-horario-examen', seccionHorarioExamen);
+
+// Ruta para actualizar y editar mobiliario
+app.use('/api/mobiliario', mobiliarioActualizarEditar);
+
+// Ruta para infraestructura de salones
+app.use('/api/infraestructura', infraestructuraSalonRoutes);
+
 
 
 // Rutas API
