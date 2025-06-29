@@ -135,6 +135,7 @@ router.get('/detalles', async (req, res) => {
             ts."nbTipoDeSalon" AS tipo_salon,
             (
                 SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'IdInfraestructuraSalon', infs."IdInfraestructuraSalon",
                     'elemento', ei."nbElementoDeInfraestructura",
                     'cantidad', infs.cantidad,
                     'estado', est."nbEstado"
@@ -148,6 +149,7 @@ router.get('/detalles', async (req, res) => {
             ) AS infraestructura,
             (
                 SELECT JSON_AGG(JSON_BUILD_OBJECT(
+                    'idLugarInventario', inv."idLugarInventario",
                     'mobiliario', tm."nbMobiliario",
                     'cantidad', inv.cantidad
                 ))

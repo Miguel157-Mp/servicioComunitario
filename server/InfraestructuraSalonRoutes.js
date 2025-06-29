@@ -38,6 +38,7 @@ router.delete('/:id', async (req, res) => {
         await pool.query('DELETE FROM public."infraestructuraSalon" WHERE "IdInfraestructuraSalon" = $1', [id]);
         res.json({ message: 'Infraestructura eliminada' });
     } catch (error) {
+        console.error('Error al eliminar infraestructura:', error); // <-- Esto te dará el error real en consola
         res.status(500).json({ error: 'Error al eliminar infraestructura' });
     }
 });
