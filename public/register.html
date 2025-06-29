@@ -1,4 +1,4 @@
-    <script>
+<script>
 // Bloquea el acceso directo por URL si no está logueado
 if (!sessionStorage.getItem("usuarioLogueado")) {
     window.location.href = "index.html";
@@ -109,35 +109,7 @@ body {
                             </button>
                         </div>
                     </form>
-                    <script>
-                    document.getElementById('register-form').addEventListener('submit', async function(e) {
-                        e.preventDefault();
-                        const form = e.target;
-                        const data = new URLSearchParams(new FormData(form));
-                        const errorDiv = document.getElementById('error-message');
-                        errorDiv.style.display = 'none';
-                        errorDiv.textContent = '';
-                        try {
-                            const response = await fetch('/register', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: data
-                            });
-                            if (response.redirected) {
-                                window.location.href = response.url;
-                                return;
-                            }
-                            const result = await response.json();
-                            if (result.error) {
-                                errorDiv.textContent = result.error;
-                                errorDiv.style.display = 'block';
-                            }
-                        } catch (err) {
-                            errorDiv.textContent = 'Error al registrar. Intente de nuevo.';
-                            errorDiv.style.display = 'block';
-                        }
-                    });
-                    </script>
+                    
                     <!-- <p class="text-center mt-3">¿Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a>.</p> -->
                 </div>
             </div>
@@ -147,6 +119,38 @@ body {
             </div>
         </div>
     </div>
+    <script>
+// Validar acceso a register.html solo para admin (idRol === 1)
+fetch('/usuario')
+  .then(response => {
+    if (!response.ok) throw new Error('No autorizado');
+    return response.json();
+  })
+  .then(usuario => {
+    if (!usuario || typeof usuario.idRol === 'undefined' || usuario.idRol === null) {
+      sessionStorage.removeItem('idRol');
+      window.location.href = 'index.html';
+      return;
+    }
+    // Guardar idRol en sessionStorage
+    sessionStorage.setItem('idRol', usuario.idRol);
+    if (usuario.idRol !== 1) {
+      // Mostrar mensaje de error en pantalla
+      const errorDiv = document.getElementById('error-message');
+      if (errorDiv) {
+        errorDiv.textContent = 'Acceso denegado. Solo administradores pueden registrar usuarios.';
+        errorDiv.style.display = 'block';
+      }
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+  })
+  .catch(() => {
+    sessionStorage.removeItem('idRol');
+    window.location.href = 'index.html';
+  });
+</script>
     
 </body>
 

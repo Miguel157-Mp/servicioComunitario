@@ -1,12 +1,3 @@
-<script>
-//capturar idRol
-
-const idRol = document.getElementById('idRol').value;
-console.log("ID del Rol:", idRol);
-</script>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -190,6 +181,9 @@ window.validarMenuPorRol = function validarMenuPorRol() {
       }
     })
     .catch(error => {
+      // Mostrar mensaje de error si la sesión es inválida o el fetch falla
+      const registerLink = document.querySelector('a[href="./register.html"]');
+      if (registerLink) registerLink.style.display = 'none';
       console.error('Error al obtener el usuario:', error);
     });
 }

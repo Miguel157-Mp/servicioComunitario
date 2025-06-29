@@ -11,6 +11,14 @@ function requireLogin(req, res, next) {
   next();
 }
 
+// Middleware para permitir solo administradores
+function requireAdmin(req, res, next) {
+  if (!req.session.usuario || req.session.usuario.idRol !== 1) {
+    return res.status(403).json({ error: "Acceso denegado. Solo administradores pueden registrar usuarios." });
+  }
+  next();
+}
+
 // Ruta principal protegida
 router.get("/", requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "../dashboard.html"));
@@ -39,23 +47,25 @@ router.post("/submit", async (req, res, next) => {
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
+      console.log('Resultado de la consulta de loginusuario:', user); // DEPURACIÓN
       // Comparar la clave ingresada con la clave encriptada
       const match = await bcrypt.compare(clave, user.clave);
       if (match) {
         req.session.usuario = {
-          id: user.id,
+          id: user.id || user.idusuario || user.id_user, // Ajusta según el log
           nombre: user.nombre,
           usuario: user.usuario,
-          idRol: user.idRol,
+          idRol: Number(user.idRol || user.idrol || user.id_rol), // Ajusta según el log
         };
+        console.log('Login exitoso. Usuario guardado en sesión:', req.session.usuario); // DEPURACIÓN
         // Send JSON response instead of redirect
         return res.json({
           success: true,
           usuario: {
-            id: user.id,
+            id: user.id || user.idusuario || user.id_user, // Ajusta según el log
             nombre: user.nombre,
             usuario: user.usuario,
-            idRol: user.idRol,
+            idRol: Number(user.idRol || user.idrol || user.id_rol), // Ajusta según el log
           },
         });
       }
@@ -78,8 +88,10 @@ router.post("/submit", async (req, res, next) => {
 
 // Ruta para obtener datos del usuario
 router.get("/usuario", requireLogin, (req, res) => {
+  console.log('Consulta a /usuario. Usuario en sesión:', req.session.usuario); // DEPURACIÓN
   if (req.session.usuario) {
-    res.json(req.session.usuario);
+    // Forzar idRol a número en la respuesta
+    res.json({ ...req.session.usuario, idRol: Number(req.session.usuario.idRol) });
   } else {
     res.status(401).json({ error: "No autorizado" });
   }
@@ -98,7 +110,7 @@ router.get("/logout", (req, res) => {
 });
 
 // Ruta para el registro de usuarios
-router.post("/register", async (req, res, next) => {
+router.post("/register", requireLogin, requireAdmin, async (req, res, next) => {
   const { usuario, clave, nombre, cedula } = req.body;
 
   if (!usuario || !clave || !nombre || !cedula) {
@@ -126,14 +138,16 @@ router.post("/register", async (req, res, next) => {
       'INSERT INTO "public"."loginusuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)',
       [nombre, cedula, usuario, hashedClave, 2]
     );
-    res.redirect("./dashboard.html");
+    // En vez de redirigir, responder con JSON de éxito
+    return res.json({ success: true, message: "Usuario registrado correctamente" });
   } catch (error) {
     console.error(
       "Error al registrar usuario en /register:",
       error.message,
       error.stack
     );
-    next(error);
+    // Responder con error en formato JSON
+    return res.status(500).json({ error: "Error al registrar usuario" });
   }
 });
 

@@ -831,34 +831,21 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                     buildingContainer.innerHTML = '<p>Error al cargar los salones. Intenta nuevamente más tarde.</p>';
                 }
             });
-            /*incluir menulateral*/
-            fetch('menulateral.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('menu-lateral').innerHTML = html;
-    if (window.validarMenuPorRol) window.validarMenuPorRol();
-  })
-  .catch(err => console.log('Error cargando menú lateral:', err));
+           // ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);
         </script>
-        <script>
-// Validar acceso a Registrar Usuario en la página principal (dashboard)
-fetch('/usuario')
-  .then(response => {
-    if (!response.ok) throw new Error('No autorizado');
-    return response.json();
-  })
-  .then(usuario => {
-    const idRol = usuario.idRol;
-    // Si no es admin, ocultar el enlace de registro si existe
-    if (idRol !== 1) {
-      const registerLink = document.querySelector('a[href="./register.html"]');
-      if (registerLink) registerLink.style.display = 'none';
-    }
-  })
-  .catch(error => {
-    console.error('Error al obtener el usuario:', error);
-  });
-</script>
+     
 </body>
 
 </html>

@@ -1325,26 +1325,19 @@ document.getElementById("confirmarEliminarButton").addEventListener("click", asy
     // Cargar datos iniciales
     await cargarSecciones();
 });
-// Validar acceso a Registrar Usuario en la página principal (dashboard)
-fetch('/usuario')
-  .then(response => {
-    if (!response.ok) throw new Error('No autorizado');
-    return response.json();
-  })
-  .then(usuario => {
-    const idRol = usuario.idRol;
-    const registerLink = document.querySelector('a[href="./register.html"]');
-    if (registerLink) {
-      if (idRol === 1) {
-        registerLink.style.display = '';
-      } else {
-        registerLink.style.display = 'none';
-      }
-    }
-  })
-  .catch(error => {
-    console.error('Error al obtener el usuario:', error);
-  });
+// ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);
 </script>
 
 </body>

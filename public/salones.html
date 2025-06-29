@@ -917,6 +917,20 @@
         
         
         document.addEventListener('DOMContentLoaded', cargarPisosYModulos);
+        
+// ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);
     </script>
 </body>
 </html>
