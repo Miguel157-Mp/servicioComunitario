@@ -1,9 +1,8 @@
-
 <script>
-// Bloquea el acceso directo por URL si no está logueado
-if (!sessionStorage.getItem("usuarioLogueado")) {
-    window.location.href = "index.html";
-}
+//capturar idRol
+
+const idRol = document.getElementById('idRol').value;
+console.log("ID del Rol:", idRol);
 </script>
 
 
@@ -171,5 +170,35 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
 
  
     </script>
+    <script>
+// Validar acceso a Registrar Usuario en el menú lateral
+window.validarMenuPorRol = function validarMenuPorRol() {
+  fetch('/usuario')
+    .then(response => {
+      if (!response.ok) throw new Error('No autorizado');
+      return response.json();
+    })
+    .then(usuario => {
+      const idRol = usuario.idRol;
+      const registerLink = document.querySelector('a[href="./register.html"]');
+      if (registerLink) {
+        if (idRol === 1) {
+          registerLink.style.display = '';
+        } else {
+          registerLink.style.display = 'none';
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error al obtener el usuario:', error);
+    });
+}
+// Ejecutar la validación cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.validarMenuPorRol);
+} else {
+  window.validarMenuPorRol();
+}
+</script>
 </body>
 </html>

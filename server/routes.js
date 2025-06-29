@@ -33,7 +33,7 @@ router.post("/submit", async (req, res, next) => {
   try {
     // Buscar solo por usuario
     const result = await pool.query(
-      'SELECT * FROM "public"."loginUsuario" WHERE usuario = $1',
+      'SELECT * FROM "public"."loginusuario" WHERE usuario = $1',
       [usuario]
     );
 
@@ -46,6 +46,7 @@ router.post("/submit", async (req, res, next) => {
           id: user.id,
           nombre: user.nombre,
           usuario: user.usuario,
+          idRol: user.idRol,
         };
         // Send JSON response instead of redirect
         return res.json({
@@ -54,6 +55,7 @@ router.post("/submit", async (req, res, next) => {
             id: user.id,
             nombre: user.nombre,
             usuario: user.usuario,
+            idRol: user.idRol,
           },
         });
       }
@@ -107,7 +109,7 @@ router.post("/register", async (req, res, next) => {
   try {
     // Verificar si el usuario ya existe
     const existingUser = await pool.query(
-      'SELECT * FROM "public"."loginUsuario" WHERE usuario = $1',
+      'SELECT * FROM "public"."loginusuario" WHERE usuario = $1',
       [usuario]
     );
     if (existingUser.rows.length > 0) {
@@ -121,7 +123,7 @@ router.post("/register", async (req, res, next) => {
     const hashedClave = await bcrypt.hash(clave, salt);
     //Registrar usuario en la base de datos
     await pool.query(
-      'INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)',
+      'INSERT INTO "public"."loginusuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)',
       [nombre, cedula, usuario, hashedClave, 2]
     );
     res.redirect("./dashboard.html");

@@ -1,4 +1,4 @@
-        <script>
+<script>
 // Bloquea el acceso directo por URL si no está logueado
 if (!sessionStorage.getItem("usuarioLogueado")) {
     window.location.href = "index.html";
@@ -1175,8 +1175,29 @@ function generateScheduleTable() {
             document.getElementById('menu-lateral').innerHTML = html;
         })
         .catch(err => console.log('Error cargando menú lateral:', err));
+
+        // Validar acceso a Registrar Usuario en la página principal (dashboard)
+fetch('/usuario')
+  .then(response => {
+    if (!response.ok) throw new Error('No autorizado');
+    return response.json();
+  })
+  .then(usuario => {
+    const idRol = usuario.idRol;
+    const registerLink = document.querySelector('a[href="./register.html"]');
+    if (registerLink) {
+      if (idRol === 1) {
+        registerLink.style.display = '';
+      } else {
+        registerLink.style.display = 'none';
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Error al obtener el usuario:', error);
+  });
 </script>
 
 
 </body>
-</html> 
+</html>
