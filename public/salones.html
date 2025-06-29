@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <style>
         /* Estilos generales (copiados del dashboard existente) */
         body, html {
@@ -347,26 +348,36 @@
         .infra-card {
             border-left: 4px solid #17a2b8;
         }
+
+/* Estilos adicionales para botones personalizados */
+    .btn-custom {
+    font-size: 0.75rem !important;
+    padding: 6px 14px !important;
+}
+    .btn-agregar-tipo {
+    height: 38px; /* Misma altura que los campos de formulario */
+    width: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-agregar-tipo:hover {
+    background-color: #0823ac;
+    color: white;
+    transform: scale(1.05);
+}
+
+      
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Menú lateral -->
-        <div id="sidebar" class="sidebar">
-            <div class="centered-bars" id="toggleBtn">
-                <img src="./img/bars-solid.svg" width="20px" alt="Bars Icon" class="white-icon">
-            </div>
-            <div class="sidebar-header">
-                Menú
-            </div>
-            <div class="sidebar-content">
-                <a href="./dashboard.html"><i class="fas fa-home"></i> <span>Inicio</span></a>
-                <a href="#"><i class="fas fa-user"></i> <span>Perfil</span></a>
-                <a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a>
-                <a href="#"><i class="fas fa-building"></i> <span>Salones</span></a>
-                <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
-            </div>
-        </div>
+      <div id="menu-lateral"></div>
         
         <!-- Contenido principal -->
         <div id="content">
@@ -385,80 +396,46 @@
                 <span >Estás en el Área de Salones, Mobiliario e Infraestructura</span>
                 <br>
                 
-                
-                
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="selectPiso" class="form-label">Piso</label>
+                <!-- Sección de filtros y botones de acción -->
+                    <div class="row align-items-end mb-3">
+                    <!-- Filtros a la izquierda -->
+                    <div class="col-md-7 d-flex gap-2">
+                        <div>
+                        <label for="selectPiso" class="form-label mb-0">Piso</label>
                         <select id="selectPiso" class="form-select">
-                        <option value="">Todos los pisos</option>
-                        <!-- Opciones de pisos se llenarán dinámicamente -->
+                            <option value="">Todos los pisos</option>
                         </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="selectModulo" class="form-label">Módulo</label>
+                        </div>
+                        <div>
+                        <label for="selectModulo" class="form-label mb-0">Módulo</label>
                         <select id="selectModulo" class="form-select">
-                        <option value="">Todos los módulos</option>
-                        <!-- Opciones de módulos se llenarán dinámicamente -->
+                            <option value="">Todos los módulos</option>
                         </select>
+                        </div>
+                        <button id="btnFiltrarSalones" class="btn btn-primary align-self-end">Filtrar Salones</button>
                     </div>
-                    </div>
-                <button id="btnFiltrarSalones" class="btn btn-primary">Filtrar Salones</button>
-
-                <!-- Botones de acción -->
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-custom btn-mobiliario" data-bs-toggle="modal" data-bs-target="#modalMobiliario">
+                    <!-- Botones a la derecha -->
+                    <div class="col-md-5 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-custom btn-mobiliario" data-bs-toggle="modal" data-bs-target="#modalMobiliario">
                         <i class="fas fa-chair"></i> Registrar Mobiliario
-                    </button>
-                    <button type="button" class="btn btn-custom btn-infraestructura" data-bs-toggle="modal" data-bs-target="#modalInfraestructura">
+                        </button>
+                        <button type="button" class="btn btn-custom btn-infraestructura" data-bs-toggle="modal" data-bs-target="#modalInfraestructura">
                         <i class="fas fa-building"></i> Registrar Infraestructura
-                    </button>
+                        </button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalNuevoSalon">
+                        <i class="fas fa-plus-circle"></i> Nuevo Salón
+                        </button>
+                    </div>
+                    </div>
+                
+                
+                
+                
+                <!-- Actualiza el contenedor de tarjetas -->
+                <div class="card-container" id="salones-container">
+                    <!-- Las tarjetas se generarán dinámicamente con JavaScript -->
                 </div>
-                
-                
-                <!-- Tarjetas de resumen -->
-                <div class="card-container">
-                    <div class="card salon-card">
-                        <div class="card-header">Salón A-101</div>
-                        <div class="card-body">
-                            <p><strong>Capacidad:</strong> 30 estudiantes</p>
-                            <p><strong>Ubicación:</strong> Edificio A, Piso 1</p>
-                            <p><strong>Estado:</strong> <span class="status-badge status-good">Bueno</span></p>
-                            <p><strong>Mobiliario:</strong> 30 sillas, 15 mesas, 1 pizarra</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card salon-card">
-                        <div class="card-header">Salón B-202</div>
-                        <div class="card-body">
-                            <p><strong>Capacidad:</strong> 40 estudiantes</p>
-                            <p><strong>Ubicación:</strong> Edificio B, Piso 2</p>
-                            <p><strong>Estado:</strong> <span class="status-badge status-regular">Regular</span></p>
-                            <p><strong>Mobiliario:</strong> 38 sillas, 20 mesas, 1 proyector</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card mobiliario-card">
-                        <div class="card-header">Mobiliario</div>
-                        <div class="card-body">
-                            <p><strong>Sillas:</strong> 120 unidades</p>
-                            <p><strong>Mesas:</strong> 65 unidades</p>
-                            <p><strong>Pizarras:</strong> 15 unidades</p>
-                            <p><strong>Proyectores:</strong> 8 unidades</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card infra-card">
-                        <div class="card-header">Infraestructura</div>
-                        <div class="card-body">
-                            <p><strong>Salones:</strong> 12 disponibles</p>
-                            <p><strong>Laboratorios:</strong> 5 disponibles</p>
-                            <p><strong>Auditorios:</strong> 2 disponibles</p>
-                            <p><strong>Estado general:</strong> <span class="status-badge status-good">Bueno</span></p>
-                        </div>
-                    </div>
-                </div>
-                
+
                 <!-- Tabla de salones -->
                 <h4 class="section-title">Detalle de Salones</h4>
                 <div class="table-container">
@@ -469,9 +446,9 @@
                                 <th>Piso</th>
                                 <th>Módulo</th>
                                 <th>Capacidad</th>
-                                <th>Estado Infraestructura</th>
+                                <th>Infraestructura</th>
                                 <th>Mobiliario</th>
-                                <th>Acciones</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -597,14 +574,9 @@
                 <div class="modal-body">
                     <form id="formInfraestructura">
                         <div class="mb-3">
-                            <label for="selectSalon" class="form-label">Salón</label>
-                            <select class="form-select" id="selectSalon" required>
-                                <option value="" selected disabled>Seleccionar salón</option>
-                                <option value="A-101">A-101</option>
-                                <option value="B-202">B-202</option>
-                                <option value="C-303">C-303</option>
-                                <option value="D-104">D-104</option>
-                                <option value="E-205">E-205</option>
+                        <label for="selectSalonInfra" class="form-label">Salón</label>
+                            <select id="selectSalonInfra" class="form-select" required>
+                                <option value="">Seleccione un salón</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -637,49 +609,292 @@
             </div>
         </div>
     </div>
+
+   <!-- Modal para registrar nuevo salón - CORREGIDO -->
+    <div class="modal fade" id="modalNuevoSalon" tabindex="-1" aria-labelledby="modalNuevoSalonLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="formNuevoSalon" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNuevoSalonLabel">Registrar Nuevo Salón</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label for="nuevoIdSalon" class="form-label">ID Salón</label>
+                        <input type="number" class="form-control" id="nuevoIdSalon" name="idSalon" placeholder="Ingrese el ID del salón" required>
+                    </div>
+            
+                    <div class="mb-2">
+                        <label for="nuevoPiso" class="form-label">Piso</label>
+                        <input type="number" class="form-control" id="nuevoPiso" name="piso" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="nuevoModulo" class="form-label">Módulo</label>
+                        <input type="text" class="form-control" id="nuevoModulo" name="modulo" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="nuevoCapacidad" class="form-label">Capacidad</label>
+                        <input type="number" class="form-control" id="nuevoCapacidad" name="capacidad" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="nuevoStatus" class="form-label">Status</label>
+                        <select class="form-select" id="nuevoStatus" name="status" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="mb-2 d-flex align-items-end gap-2">
+                        <div style="flex:1;">
+                            <label for="nuevoTipo" class="form-label">Tipo de Salón</label>
+                            <select class="form-select" id="nuevoTipo" name="tipoDeSalon" required>
+                                <option value="">Seleccione un tipo</option>
+                                <option value="aula">Aula Regular</option>
+                                <option value="laboratorio">Laboratorio</option>
+                            </select>
+                        </div>
+                        <!-- Botón CORREGIDO con estilos adecuados -->
+                        <button type="button" class="btn btn-outline-success btn-agregar-tipo" 
+                                id="btnAgregarTipoSalonModal" data-bs-toggle="modal" data-bs-target="#modalTipoSalon">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-50 me-2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success w-50">Registrar</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+
+ <!-- Modal para agregar tipo de salón -->
+    <div class="modal fade modal-tipo-salon" id="modalTipoSalon" tabindex="-1" aria-labelledby="modalTipoSalonLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTipoSalonLabel">Agregar Tipo de Salón</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <label for="tipoSalonSelect" class="form-label fw-medium mb-3">Seleccione un tipo existente</label>
+                        <select class="form-select" id="tipoSalonSelect">
+                            <option value="">Seleccionar...</option>
+                            <option value="aula">Aula Regular</option>
+                            <option value="laboratorio">Laboratorio</option>
+                            <option value="auditorio">Auditorio</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="nuevoTipoInput" class="form-label fw-medium mb-3">O crear nuevo tipo</label>
+                        <input type="text" class="form-control" id="nuevoTipoInput" placeholder="Ingrese nuevo tipo de salón">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Modal de mensajes -->
+        <div class="modal fade" id="modalMensaje" tabindex="-1" aria-labelledby="modalMensajeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header" id="modalMensajeHeader">
+                <h5 class="modal-title" id="modalMensajeLabel">Mensaje</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body" id="modalMensajeBody">
+                <!-- Aquí va el mensaje -->
+            </div>
+            </div>
+        </div>
+        </div>
+
+    <!-- Modal de detalles del salón -->
+<div class="modal fade" id="modalDetalleSalon" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalles del Salón: <span id="detalle-id-salon"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <p><strong>Piso:</strong> <span id="detalle-piso"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Módulo:</strong> <span id="detalle-modulo"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Capacidad:</strong> <span id="detalle-capacidad"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Estado:</strong> <span id="detalle-estado" class="status-badge"></span></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><strong>Tipo:</strong> <span id="detalle-tipo"></span></p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Infraestructura</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-infraestructura">
+                                <thead>
+                                    <tr>
+                                        <th>Elemento</th>
+                                        <th>Cantidad</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Se llenará dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Mobiliario</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="tabla-mobiliario">
+                                <thead>
+                                    <tr>
+                                        <th>Mobiliario</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Se llenará dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal editar infraestructura -->
+<div class="modal fade" id="modalEditarInfra" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formEditarInfra" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Infraestructura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editarInfraId">
+        <div class="mb-2">
+          <label for="editarInfraCantidad" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="editarInfraCantidad" required>
+        </div>
+        <div class="mb-2">
+          <label for="editarInfraEstado" class="form-label">Estado</label>
+          <input type="text" class="form-control" id="editarInfraEstado" required>
+        </div>
+        <!-- Puedes agregar más campos si lo deseas -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal editar mobiliario -->
+<div class="modal fade" id="modalEditarMob" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formEditarMob" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Mobiliario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editarMobId">
+        <div class="mb-2">
+          <label for="editarMobCantidad" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="editarMobCantidad" required>
+        </div>
+        <!-- Puedes agregar más campos si lo deseas -->
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Confirmación Eliminar -->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">Confirmar eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmacionMensaje">¿Está seguro que desea eliminar este elemento?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Extrae el nombre de usuario
-        document.addEventListener("DOMContentLoaded", function () {
-           
+                // ================== UTILIDADES ==================
+        function mostrarMensajeModal(mensaje, tipo = "success") {
+            const header = document.getElementById('modalMensajeHeader');
+            const body = document.getElementById('modalMensajeBody');
+            const modal = new bootstrap.Modal(document.getElementById('modalMensaje'));
+        
+            if (tipo === "success") {
+                header.style.backgroundColor = "#28a745";
+                header.style.color = "white";
+            } else {
+                header.style.backgroundColor = "#dc3545";
+                header.style.color = "white";
+            }
+            body.textContent = mensaje;
+            modal.show();
+        }
+        
+        // ================== CARGA INICIAL ==================
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarPisosYModulos();
+            cargarYMostrarSalones(0, 7); // Por defecto piso 0 y módulo 7
             document.getElementById("nombreusuario").textContent = `¡Bienvenido, ${nombreUsuario}!`;
-            
-            // Manejar formularios
-            document.getElementById("formMobiliario").addEventListener("submit", function(e) {
-                e.preventDefault();
-                alert("Mobiliario registrado exitosamente!");
-                document.getElementById("modalMobiliario").classList.remove("show");
-                document.querySelector(".modal-backdrop").remove();
-                this.reset();
-            });
-            
-            document.getElementById("formInfraestructura").addEventListener("submit", function(e) {
-                e.preventDefault();
-                alert("Infraestructura registrada exitosamente!");
-                document.getElementById("modalInfraestructura").classList.remove("show");
-                document.querySelector(".modal-backdrop").remove();
-                this.reset();
-            });
-            
-            // Simular datos dinámicos
-            document.querySelectorAll(".status-badge").forEach(badge => {
-                if (badge.textContent.includes("Bueno")) {
-                    badge.classList.add("status-good");
-                } else if (badge.textContent.includes("Regular")) {
-                    badge.classList.add("status-regular");
-                } else if (badge.textContent.includes("Malo")) {
-                    badge.classList.add("status-bad");
-                }
-            });
         });
-
-        //llenado dinamico de los selectores de piso y modulo
-            async function cargarPisosYModulos() {
+        
+        // ================== FILTRO DE SALONES ==================
+        document.getElementById('btnFiltrarSalones').addEventListener('click', function() {
+            const piso = document.getElementById('selectPiso').value;
+            const modulo = document.getElementById('selectModulo').value;
+            cargarYMostrarSalones(piso, modulo);
+        });
+        
+        // ================== CARGA DE SELECTORES ==================
+        async function cargarPisosYModulos() {
             // Cargar pisos
             const resPisos = await fetch('/api/salones/pisos');
             const pisos = await resPisos.json();
             const selectPiso = document.getElementById('selectPiso');
+            selectPiso.innerHTML = '<option value="">Todos los pisos</option>';
             pisos.forEach(piso => {
                 const opt = document.createElement('option');
                 opt.value = piso;
@@ -691,6 +906,7 @@
             const resModulos = await fetch('/api/salones/modulos');
             const modulos = await resModulos.json();
             const selectModulo = document.getElementById('selectModulo');
+            selectModulo.innerHTML = '<option value="">Todos los módulos</option>';
             modulos.forEach(modulo => {
                 const opt = document.createElement('option');
                 opt.value = modulo;
@@ -701,28 +917,6 @@
         
         
         document.addEventListener('DOMContentLoaded', cargarPisosYModulos);
-
-
-        // Validar acceso a Registrar Usuario en la página principal (dashboard)
-fetch('/usuario')
-  .then(response => {
-    if (!response.ok) throw new Error('No autorizado');
-    return response.json();
-  })
-  .then(usuario => {
-    const idRol = usuario.idRol;
-    const registerLink = document.querySelector('a[href="./register.html"]');
-    if (registerLink) {
-      if (idRol === 1) {
-        registerLink.style.display = '';
-      } else {
-        registerLink.style.display = 'none';
-      }
-    }
-  })
-  .catch(error => {
-    console.error('Error al obtener el usuario:', error);
-  });
     </script>
 </body>
 </html>

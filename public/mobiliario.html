@@ -1,8 +1,8 @@
 <script>
-// Bloquea el acceso directo por URL si no está logueado
-if (!sessionStorage.getItem("usuarioLogueado")) {
-    window.location.href = "index.html";
-}
+    // Bloquea el acceso directo por URL si no está logueado
+    if (!sessionStorage.getItem("usuarioLogueado")) {
+        window.location.href = "index.html";
+    }
 </script>
 
 <!DOCTYPE html>
@@ -329,9 +329,9 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
         /* Estilos para el panel derecho */
         .right-panel {
             padding: 20px;
-        
+
             border-radius: 12px;
-  
+
             height: fit-content;
         }
 
@@ -615,7 +615,6 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                 padding: 8px;
             }
         }
-
     </style>
 </head>
 
@@ -669,11 +668,17 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                             </select>
                         </div>
                     </div>
+                    <br>
+                    <label for="listadoMobiliarioSalon"><b>Cantidad de Pupitres:</b></label>
+                    <div
+                        class="alert alert-primary d-flex align-items-center justify-content-between col-3">
                     <div id="listadoMobiliarioSalon">0</div>
+                    </div>
                     <div class="acciones-mobiliario">
                         <button class="incorporar-btn" id="btnsumar" value="+1">+</button>
                         <button class="desincorporar-btn" id="btnrestar" value="-1">-</button>
-                        <button class="btn btn-primary" id="enviarDatosPupitres" onclick="enviarDatosPupitres()">Traspasar Pupitres</button>
+                        <button class="btn btn-primary" id="enviarDatosPupitres"
+                            onclick="enviarDatosPupitres()">Traspasar Pupitres</button>
                     </div>
                 </div>
 
@@ -693,11 +698,17 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                             </select>
                         </div>
                     </div>
+                    <br>
+                    <label for="listadoMobiliariomesas"><b>Cantidad de Mesas:</b></label>
+                    <div
+                        class="alert alert-primary d-flex align-items-center justify-content-between col-3">
                     <div id="listadoMobiliariomesas">0</div>
+                    </div>
                     <div class="acciones-mobiliario">
                         <button class="incorporar-btn" id="btnsumar-mesas" value="+1">+</button>
                         <button class="desincorporar-btn" id="btnrestar-mesas" value="-1">-</button>
-                        <button class="btn btn-primary" id="enviarDatosMesas" onclick="enviarDatosMesas()">Traspasar Mesas</button>
+                        <button class="btn btn-primary" id="enviarDatosMesas" onclick="enviarDatosMesas()">Traspasar
+                            Mesas</button>
                     </div>
                 </div>
 
@@ -717,67 +728,73 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                             </select>
                         </div>
                     </div>
-                    <div id="listadoMobiliariosillas">0</div>
+                    <br>
+                    <label for="listadoMobiliariosillas"><b>Cantidad de Sillas:</b></label>
+                    <div
+                        class="alert alert-primary d-flex align-items-center justify-content-between col-3">
+
+                        <div id="listadoMobiliariosillas">0</div>
+                    </div>
                     <div class="acciones-mobiliario">
                         <button class="incorporar-btn" id="btnsumar-sillas" value="+1">+</button>
                         <button class="desincorporar-btn" id="btnrestar-sillas" value="-1">-</button>
-                        <button class="btn btn-primary" id="enviarDatosSillas" onclick="enviarDatosSillas()">Traspasar Sillas</button>
+                        <button class="btn btn-primary" id="enviarDatosSillas" onclick="enviarDatosSillas()">Traspasar
+                            Sillas</button>
                     </div>
                 </div>
 
                 <div class="nota-transaccion">
-                    <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.</p>
+                    <p>Antes de proceder a realizar la transacción de un salón a otro valor, revíselo antes de hacerlo.
+                    </p>
                 </div>
             </div>
+            <div id="divMessage" style="display: none;"></div>
         </div> <!-- Cierre de main-content -->
 
         <!-- Panel derecho - ahora al mismo nivel que main-content -->
         <div class="right-panel">
             <div class="stats-card">
-     <div class="action-buttons">
+                <div class="action-buttons">
                     <button class="action-btn checkup-btn">Salon Origen</button>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">80</span>
+                    <span class="stat-number" id="capacidadDiv"></span>
                     <span class="stat-label">Pupitres</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">01</span>
+                    <span class="stat-number" id="capacidadMesasOrigen"></span>
                     <span class="stat-label">Mesa</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">01</span>
+                    <span class="stat-number" id="capacidadSillasOrigen"></span>
                     <span class="stat-label">Silla</span>
                 </div>
-                
-              <div class="action-buttons">
+
+                <div class="action-buttons">
                     <button class="action-btn checkup-btn">Salon Destino</button>
                 </div>
-                
+
                 <div class="stat-item small">
-                    <span class="stat-number">80</span>
+                    <span class="stat-number" id="capacidadDivDestino"></span>
                     <span class="stat-label">Pupitres</span>
                 </div>
 
-                 <div class="stat-item small">
-                    <span class="stat-number">01</span>
+                <div class="stat-item small">
+                    <span class="stat-number" id="capacidadMesasDestino"></span>
                     <span class="stat-label">Mesa</span>
                 </div>
 
-                 <div class="stat-item small">
-                    <span class="stat-number">01</span>
+                <div class="stat-item small">
+                    <span class="stat-number" id="capacidadSillasDestino"></span>
                     <span class="stat-label">Silla</span>
                 </div>
-                </div>
-                <div class="previous-checkups">
-                    <h5>Se traspasaron *numero* desde el salon # al salon # </h5>
-                    
-                    </div>
-                </div>
             </div>
+
         </div>
+    </div>
+    </div>
     </div> <!-- Cierre de #content -->
- 
+
 
     <script>
 
@@ -804,10 +821,12 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                 const salonesPupitres = await responsePupitres.json();
                 const origenSelectPupitres = document.getElementById('origen');
                 const destinoSelectPupitres = document.getElementById('destino');
+                //Recuperar capacidad del json
+                const capacidadDisplaySpan = document.getElementById('capacidadDiv');
+                const capacidadDisplaySpanDestino = document.getElementById('capacidadDivDestino');
 
                 origenSelectPupitres.innerHTML = '<option value="">Seleccionar Salón</option>';
                 destinoSelectPupitres.innerHTML = '<option value="">Seleccionar Salón</option>';
-
                 salonesPupitres.forEach(salon => {
                     const optionOrigen = document.createElement('option');
                     optionOrigen.value = salon.idSalon;
@@ -816,6 +835,28 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
 
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectPupitres.appendChild(optionDestino);
+                });
+
+                // Event listener para el select de Origen
+                origenSelectPupitres.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesPupitres.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadDisplaySpan.textContent = selectedSalon.capacidad;
+                    } else {
+                        capacidadDisplaySpan.textContent = '';
+                    }
+                });
+
+                // Event listener para el select de Destino
+                destinoSelectPupitres.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesPupitres.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadDisplaySpanDestino.textContent = selectedSalon.capacidad;
+                    } else {
+                        capacidadDisplaySpanDestino.textContent = '';
+                    }
                 });
             } catch (err) {
                 console.error('Error al cargar salones para pupitres:', err);
@@ -830,6 +871,9 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                 const salonesMesas = await responseMesas.json();
                 const origenSelectMesas = document.getElementById('origen-mesas');
                 const destinoSelectMesas = document.getElementById('destino-mesas');
+                // MESAS: Mostrar cantidad de origen y destino
+                const capacidadMesasOrigen = document.getElementById('capacidadMesasOrigen');
+                const capacidadMesasDestino = document.getElementById('capacidadMesasDestino');
 
                 origenSelectMesas.innerHTML = '<option value="">Seleccionar Salón</option>';
                 destinoSelectMesas.innerHTML = '<option value="">Seleccionar Salón</option>';
@@ -843,6 +887,26 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectMesas.appendChild(optionDestino);
                 });
+
+                origenSelectMesas.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesMesas.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadMesasOrigen.textContent = selectedSalon.cantidad;
+                    } else {
+                        capacidadMesasOrigen.textContent = '';
+                    }
+                });
+
+                destinoSelectMesas.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesMesas.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadMesasDestino.textContent = selectedSalon.cantidad;
+                    } else {
+                        capacidadMesasDestino.textContent = '';
+                    }
+                });
             } catch (err) {
                 console.error('Error al cargar salones para mesas:', err);
             }
@@ -853,6 +917,10 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                 const salonesSillas = await responseSillas.json();
                 const origenSelectSillas = document.getElementById('origen-sillas');
                 const destinoSelectSillas = document.getElementById('destino-sillas');
+
+                // SILLAS: Mostrar cantidad de origen y destino
+                const capacidadSillasOrigen = document.getElementById('capacidadSillasOrigen');
+                const capacidadSillasDestino = document.getElementById('capacidadSillasDestino');
 
                 origenSelectSillas.innerHTML = '<option value="">Seleccionar Salón</option>';
                 destinoSelectSillas.innerHTML = '<option value="">Seleccionar Salón</option>';
@@ -865,6 +933,26 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
 
                     const optionDestino = optionOrigen.cloneNode(true);
                     destinoSelectSillas.appendChild(optionDestino);
+                });
+
+                origenSelectSillas.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesSillas.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadSillasOrigen.textContent = selectedSalon.cantidad;
+                    } else {
+                        capacidadSillasOrigen.textContent = '';
+                    }
+                });
+
+                destinoSelectSillas.addEventListener('change', (event) => {
+                    const selectedId = event.target.value;
+                    const selectedSalon = salonesSillas.find(salon => salon.idSalon == selectedId);
+                    if (selectedSalon) {
+                        capacidadSillasDestino.textContent = selectedSalon.cantidad;
+                    } else {
+                        capacidadSillasDestino.textContent = '';
+                    }
                 });
             } catch (err) {
                 console.error('Error al cargar salones para sillas:', err);
@@ -942,24 +1030,36 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
             const origen = document.getElementById('origen').value;
             const destino = document.getElementById('destino').value;
             const cantidad = document.getElementById('listadoMobiliarioSalon').innerHTML || 0;
-            
+
             fetch('/traspasar/traspasar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tipo: 'pupitre', origen, destino, cantidad })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de pupitres realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de pupitres: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de pupitres:', error);
-                alert('Ocurrió un error en la petición de pupitres.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                     divMessage.innerHTML = "<div class='alert alert-success'>Transacción de pupitres realizada con éxito.</div>";    
+                     //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
+               
+                    } else {
+                        divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de pupitres: " + (data.error || '') + "</div>";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la petición de pupitres:', error);
+                    divMessage = document.getElementById('divMessage');
+                    divMessage.style.display = 'block';
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de pupitres.</div>";
+                      
+                });
         }
 
         // Función para enviar cantidad de mesas
@@ -967,24 +1067,38 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
             const origen = document.getElementById('origen-mesas').value;
             const destino = document.getElementById('destino-mesas').value;
             const cantidad = document.getElementById('listadoMobiliariomesas').innerHTML || 0;
-            
+
             fetch('/traspasarMesas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tipo: 'mesa', origen, destino, cantidad })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de mesas realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de mesas: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de mesas:', error);
-                alert('Ocurrió un error en la petición de mesas.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Variable para el mensaje de éxito
+                        const divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+                     divMessage.innerHTML = "<div class='alert alert-success'>Transacción de mesas realizada con éxito.</div>";
+                            //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
+                    } else {
+                        // Variable para el mensaje de error
+                        const divMessage = document.getElementById('divMessage');
+                        divMessage.style.display = 'block';
+
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de mesas: " + (data.error || '') + "</div>";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la petición de mesas:', error);
+                    // Variable para el mensaje de error
+                    const divMessage = document.getElementById('divMessage');
+                    divMessage.style.display = 'block';
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de mesas.</div>";
+                });
         }
 
         // Función para enviar cantidad de sillas
@@ -992,24 +1106,36 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
             const origen = document.getElementById('origen-sillas').value;
             const destino = document.getElementById('destino-sillas').value;
             const cantidad = document.getElementById('listadoMobiliariosillas').innerHTML || 0;
-            
+            // Variable para el mensaje de éxito
+            let divMessage = document.getElementById('divMessage');
+ 
+
             fetch('/traspasarSillas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tipo: 'silla', origen, destino, cantidad })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transacción de sillas realizada con éxito.');
-                } else {
-                    alert('Error al realizar la transacción de sillas: ' + (data.error || ''));
-                }
-            })
-            .catch(error => {
-                console.error('Error en la petición de sillas:', error);
-                alert('Ocurrió un error en la petición de sillas.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        //mensaje de éxito en div
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-success'>Transacción de sillas realizada con éxito.</div>";
+                        
+                            //tiempo de espera para recargar la página
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800); // Recargar después de 2 segundos  
+                    } else {
+                        // mensaje de error en div
+                        divMessage.style.display = 'block';
+                        divMessage.innerHTML = "<div class='alert alert-danger'>Error al realizar la transacción de sillas: " + (data.error || '') + "</div>";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la petición de sillas:', error);
+                    divMessage.innerHTML = "<div class='alert alert-danger'>Ocurrió un error en la petición de sillas.</div>";
+                });
         }
 
         /*incluir menulateral*/
@@ -1039,4 +1165,5 @@ fetch('/usuario')
   });
     </script>
 </body>
+
 </html>
