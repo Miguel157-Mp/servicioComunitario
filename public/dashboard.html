@@ -1,4 +1,4 @@
-    <script>
+<script>
 // Bloquea el acceso directo por URL si no está logueado
 if (!sessionStorage.getItem("usuarioLogueado")) {
     window.location.href = "index.html";
@@ -831,14 +831,21 @@ if (!sessionStorage.getItem("usuarioLogueado")) {
                     buildingContainer.innerHTML = '<p>Error al cargar los salones. Intenta nuevamente más tarde.</p>';
                 }
             });
-            /*incluir menulateral*/
-            fetch('menulateral.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('menu-lateral').innerHTML = html;
-  })
-  .catch(err => console.log('Error cargando menú lateral:', err));
+           // ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);
         </script>
+     
 </body>
 
 </html>

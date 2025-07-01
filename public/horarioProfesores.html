@@ -683,13 +683,20 @@ function setupEventListeners() {
         }
     });
 }
-         /*incluir menulateral*/
-            fetch('menulateral.html')
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById('menu-lateral').innerHTML = html;
-  })
-  .catch(err => console.log('Error cargando menú lateral:', err));
+   // ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);(err => console.log('Error cargando menú lateral:', err));
+  
 </script>
 </body>
-</html> 
+</html>
