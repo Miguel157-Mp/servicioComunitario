@@ -247,7 +247,35 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-
+router.get('/agendados-por-profesor/:idProfesor', async (req, res) => {
+    const { idProfesor } = req.params;
+    try {
+        const result = await pool.query(
+            `SELECT
+                sh."IdSeccionHorario",
+                sh."idBloqueHorario",
+                sh."idDiaSemana",
+                sh."idSalon",
+                s."idSeccion",
+                p."idProfesor",
+                p."nbProfesor" AS nombre_profesor,
+                m."nbMateria" AS nombre_materia,
+                sh."idBloqueHorario" as idBloqueHorario,
+                sh."idDiaSemana" as idDiaSemana,
+                sh."idSalon" as idSalon
+            FROM public."seccionHorario" sh
+            INNER JOIN public."seccion" s ON s."idSeccion" = sh."idSeccion"
+            INNER JOIN public."profesor" p ON s."idProfesor" = p."idProfesor"
+            INNER JOIN public."materia" m ON s."idMateria" = m."idMateria"
+            WHERE p."idProfesor" = $1`,
+            [idProfesor]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al consultar horarios agendados por profesor:', error);
+        res.status(500).json({ message: 'Error al consultar horarios agendados por profesor' });
+    }
+});
 
 
 

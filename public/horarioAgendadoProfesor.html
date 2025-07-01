@@ -1,0 +1,652 @@
+<script>
+// Bloquea el acceso directo por URL si no está logueado
+if (!sessionStorage.getItem("usuarioLogueado")) {
+    window.location.href = "index.html";
+}
+</script>
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="./vendor/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="./vendor/js/bootstrap.bundle.min.js"></script>
+    
+    <title>Horario de Profesores - Universidad Santa Maria</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Estilos del menú lateral */
+      
+        .centered-bars {
+            text-align: center;
+            margin: 0 auto;
+            width: 20px;
+            cursor: pointer;
+        }
+
+        .centered-bars img {
+            transition: transform 0.3s ease;
+        }
+
+        .centered-bars.rotated img {
+            transform: rotate(180deg);
+        }
+
+        .white-icon {
+            filter: invert(100%);
+        }
+
+        /* Contenido principal */
+        #content {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        #content.closed {
+            margin-left: 60px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+           
+        .header-logo img {
+            width: 120px;
+            height: auto;
+        }
+        
+        /* Estilos del tablero de horarios */
+        .main-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .schedule-container {
+            flex: 3;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            overflow-x: auto;
+        }
+        
+        .form-container {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+        
+        /* Tabla de horarios */
+        .schedule-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+        
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        .schedule-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            height: 50px;
+        }
+
+        .schedule-table td {
+            word-break: break-word;
+            white-space: normal;
+            vertical-align: middle;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .time-column {
+            background-color: var(--light-color);
+            font-weight: 500;
+            white-space: nowrap;
+            width: 120px;
+        }
+        
+        .selected {
+            background-color: rgba(46, 204, 113, 0.3);
+            border: 2px solid var(--success-color);
+        }
+        
+        .booked {
+            background-color: rgba(52, 152, 219, 0.2);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        /* Formulario */
+        .form-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn.btn-sm.btn-danger.ms-2 {
+            padding: 2px 8px !important;
+            font-size: 1 rem !important;
+            line-height: 2 !important;
+        }
+
+
+        
+        /* Lista de selecciones */
+        .selection-list {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .selection-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: #f8f9fa;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+
+        .classroom-booked {
+            background-color: #f8d7da !important; /* Rojo claro */
+            border: 2px solid #dc3545 !important;
+            position: relative;
+        }
+        .classroom-booked .cell-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            margin-top: 4px;
+        }
+        .classroom-booked .cell-actions .btn {
+            padding: 2px 6px !important;
+            font-size: 0.85rem !important;
+            line-height: 1 !important;
+            min-width: 28px;
+            min-height: 28px;
+        }
+
+        .selected-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    margin: 0 auto;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    box-shadow: 0 0 2px #3332;
+}
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .form-container {
+                position: static;
+            }
+        }
+        .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+  gap: 20px 40px; /* fila 20px, columnas 40px */
+  justify-content: center; /* centrado horizontal */
+  max-width: 600px; /* para no hacerla muy ancha */
+  margin: 0 auto 1.5rem auto;
+}
+
+.form-group {
+  min-width: 280px;
+}
+
+.btn-container {
+  min-width: 270px;
+  justify-self: start; /* alineamos el botón a la izquierda en su celda */
+}
+.profesor-available {
+    background: #e9fbe9 !important;
+}
+.classroom-booked {
+    background: #f8d7da !important;
+}
+.both-booked {
+    background: linear-gradient(135deg, #e9fbe9 60%, #f8d7da 100%) !important;
+}
+
+#blockCheckboxes label {
+  min-height: 48px;
+  font-size: 1.1em;
+  text-size-adjust: 14%;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Menú lateral -->
+    <!-- Menú lateral integrado directamente (antes era un iframe) -->
+     <div id="menu-lateral"></div>
+
+    <!-- Contenido principal -->
+    <div id="content">
+     
+        
+        <h4 id="nombreusuario">¡Bienvenido!</h4>
+        <span style="font-size: 0.8rem;">Estás en el Área de Horarios de Profesores</span>
+        
+        <div class="main-container">
+            <!-- Contenedor del tablero de horarios -->
+            <div class="schedule-container">
+                <h1 class="page-title">Exportacion de Horarios en PDF</h1>
+                <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="switchHorario" autocomplete="off">
+                <label class="form-check-label" for="switchHorario" id="switchLabel">Horario Normal</label>
+                </div>
+               <div class="form-grid">
+    <button id="btnExportarPDF" class="btn btn-danger mb-3">
+  <i class="fas fa-file-pdf"></i> Exportar Horario en PDF
+</button>
+  <div class="form-group" style="width: 300px;">
+    <label for="professorSelect" class="form-label">Seleccionar Profesor</label>
+    <select id="professorSelect" class="form-control">
+      <option value="">Buscar profesor...</option>
+    </select>
+  </div>
+  
+
+</div>
+
+                
+                <div class="table-responsive">
+                    <table class="schedule-table" id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th>Bloque Horario</th>
+                                <th>Lun</th>
+                                <th>Mar</th>
+                                <th>Mié</th>
+                                <th>Jue</th>
+                                <th>Vie</th>
+                                <th>Sáb</th>
+                                <th>Dom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se generarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+           
+
+<script>
+
+    const diasSemana = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+const bloquesNormales = [
+    { id: 1, rango: '07:00AM - 07:45AM' },
+    { id: 2, rango: '07:45AM - 08:30AM' },
+    { id: 3, rango: '08:30AM - 09:15AM' },
+    { id: 4, rango: '09:15AM - 10:00AM' },
+    { id: 5, rango: '10:00AM - 10:45AM' },
+    { id: 6, rango: '10:45AM - 11:30AM' },
+    { id: 7, rango: '11:30AM - 12:15PM' },
+    { id: 8, rango: '12:15PM - 01:00PM' },
+    { id: 9, rango: '01:00PM - 01:45PM' },
+    { id: 10, rango: '01:45PM - 02:30PM' },
+    { id: 11, rango: '02:30PM - 03:15PM' },
+    { id: 12, rango: '03:15PM - 04:00PM' },
+    { id: 13, rango: '04:00PM - 04:45PM' },
+    { id: 14, rango: '04:45PM - 05:30PM' },
+    { id: 15, rango: '05:30PM - 06:15PM' }
+];
+const bloquesExamen = [
+    { id: 16, rango: '07:00AM - 08:00AM' },
+    { id: 17, rango: '08:00AM - 09:00AM' },
+    { id: 18, rango: '09:00AM - 10:00AM' },
+    { id: 19, rango: '10:00AM - 11:00AM' },
+    { id: 20, rango: '11:00AM - 12:00PM' },
+    { id: 21, rango: '12:00PM - 01:00PM' },
+    { id: 23, rango: '01:00PM - 02:00PM' },
+    { id: 24, rango: '02:00PM - 03:00PM' },
+    { id: 25, rango: '03:00PM - 04:00PM' },
+    { id: 26, rango: '04:00PM - 05:00PM' },
+    { id: 27, rango: '05:00PM - 06:00PM' },
+    { id: 28, rango: '06:00PM - 07:00PM' }
+];
+
+let isExamenMode = false;
+let profesores = [];
+
+function getHorarioProfesorEndpoint(idProfesor) {
+    return isExamenMode
+        ? `/api/seccion-horario-examen/agendados-por-profesor/${idProfesor}`
+        : `/api/seccion-horario/agendados-por-profesor/${idProfesor}`;
+}
+
+// Cargar lista de profesores desde la API
+async function cargarProfesores() {
+    try {
+        const response = await fetch('/registrarprofesor');
+        if (!response.ok) throw new Error('Error al obtener profesores');
+        profesores = await response.json();
+        const select = document.getElementById('professorSelect');
+        while (select.options.length > 1) select.remove(1);
+        profesores.forEach(profesor => {
+            const option = document.createElement('option');
+            option.value = profesor.idProfesor;
+            option.textContent = `${profesor.nbProfesor} (${profesor.cedula})`;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        alert('Error al cargar profesores');
+    }
+}
+
+// Renderiza la cuadrícula semanal con el horario agendado del profesor
+async function renderHorarioEnCuadricula() {
+    const profesorId = document.getElementById('professorSelect').value;
+    const tbody = document.querySelector('#scheduleTable tbody');
+    tbody.innerHTML = '';
+
+    // Selecciona los bloques según el modo
+    const bloques = isExamenMode ? bloquesExamen : bloquesNormales;
+
+    // Inicializa la matriz vacía
+    let horario = {};
+    for (let bloque of bloques) {
+        horario[bloque.id] = {};
+        for (let i = 1; i <= 7; i++) {
+            horario[bloque.id][i] = '';
+        }
+    }
+
+    if (!profesorId) {
+        // Renderiza la cuadrícula vacía
+        bloques.forEach(bloque => {
+            let fila = `<tr><td class="time-column">${bloque.rango}</td>`;
+            for (let i = 1; i <= 7; i++) {
+                fila += `<td></td>`;
+            }
+            fila += `</tr>`;
+            tbody.innerHTML += fila;
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch(getHorarioProfesorEndpoint(profesorId));
+        if (!response.ok) throw new Error('Error al obtener horario');
+        const data = await response.json();
+        console.log('Datos recibidos del backend:', data); 
+
+        // Llena la matriz con los datos recibidos
+        data.forEach(item => {
+            // Ajusta los nombres de las propiedades según tu backend
+            const bloqueId = parseInt(item.idBloqueHorario || item.bloque_horario || item.bloque || item.idBloque || item.id);
+            const dia = parseInt(item.idDiaSemana || item.dia || item.dia_semana || item.diaSemana);
+            if (bloqueId && dia) {
+                horario[bloqueId][dia] = `${item.nombre_materia || ''}<br><span style="font-size:0.9em;color:#555">${item.salon || item.idSalon || ''}</span>`;
+            }
+        });
+
+        // Renderiza la cuadrícula
+        bloques.forEach(bloque => {
+            let fila = `<tr><td class="time-column">${bloque.rango}</td>`;
+            for (let i = 1; i <= 7; i++) {
+                fila += `<td>${horario[bloque.id][i] || ''}</td>`;
+            }
+            fila += `</tr>`;
+            tbody.innerHTML += fila;
+        });
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-danger">Error al cargar horario</td></tr>`;
+    }
+}
+
+// Eventos
+document.addEventListener('DOMContentLoaded', () => {
+    cargarProfesores();
+    renderHorarioEnCuadricula();
+    document.getElementById('professorSelect').addEventListener('change', renderHorarioEnCuadricula);
+    document.getElementById('switchHorario').addEventListener('change', function() {
+        isExamenMode = this.checked;
+        document.getElementById('switchLabel').textContent = isExamenMode 
+            ? 'Horario Examen' 
+            : 'Horario Normal';
+        renderHorarioEnCuadricula();
+    });
+});
+
+// ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);
+</script>
+
+
+
+<!-- exportar a pdf carga de libreria  -->
+    <script src="./libs/jspdf.umd.min.js"></script>
+    <script src="./libs/html2canvas.min.js"></script>
+    <script src="./libs/jspdf.plugin.autotable.min.js"></script>
+    
+
+<script>
+// ...existing code...
+document.getElementById('btnExportarPDF').addEventListener('click', function() {
+    const { jsPDF } = window.jspdf;
+    // Usa orientación horizontal y tamaño A4
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    // Obtén el nombre del profesor seleccionado
+    const select = document.getElementById('professorSelect');
+    const profesorNombre = select.options[select.selectedIndex].text;
+
+    // Membrete
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text('Universidad Santa Maria', 14, 15);
+    doc.setFontSize(12);
+    doc.text('Facultad de Ingeniería y Arquitectura', 14, 22);
+    doc.text('Sede La Florencia', 14, 29);
+    doc.setFontSize(11);
+    doc.text('Horario Agendado de Profesor', 14, 36);
+    doc.setFontSize(11);
+    doc.text(`Profesor: ${profesorNombre}`, 14, 43);
+
+    // Prepara los datos de la tabla
+    const table = document.getElementById('scheduleTable');
+    const head = [];
+    table.querySelectorAll('thead tr th').forEach(th => head.push(th.innerText));
+    const body = [];
+    table.querySelectorAll('tbody tr').forEach(tr => {
+        const row = [];
+        tr.querySelectorAll('td').forEach(td => {
+            row.push(td.innerText.replace(/\n/g, ' ').trim());
+        });
+        body.push(row);
+    });
+
+    // Renderiza la tabla en el PDF
+    doc.autoTable({
+        head: [head],
+        body: body,
+        startY: 50,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [44, 62, 80],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold',
+            halign: 'center',
+            valign: 'middle',
+            fontSize: 11,
+            cellPadding: 4,
+            font: 'helvetica'
+        },
+        bodyStyles: {
+            fontSize: 10,
+            halign: 'center',
+            valign: 'middle',
+            cellPadding: 4,
+            textColor: [44, 62, 80],
+            font: 'helvetica'
+        },
+        alternateRowStyles: {
+            fillColor: [249, 249, 249],
+        },
+        columnStyles: {
+            0: { cellWidth: 40, fontStyle: 'bold', halign: 'center', fillColor: [236, 240, 241], textColor: [44, 62, 80] },
+            1: { cellWidth: 32 },
+            2: { cellWidth: 32 },
+            3: { cellWidth: 32 },
+            4: { cellWidth: 32 },
+            5: { cellWidth: 32 },
+            6: { cellWidth: 32 },
+            7: { cellWidth: 32 }
+        },
+        styles: {
+            lineColor: [224, 224, 224],
+            lineWidth: 0.5,
+            font: 'helvetica'
+        },
+        tableWidth: 'auto', // Ajusta automáticamente el ancho de la tabla
+        margin: { left: 10, right: 10 }
+    });
+
+    doc.save(`horario_profesor_${profesorNombre}.pdf`);
+
+});
+
+// ========== INCLUIR Y VALIDAR MENÚ LATERAL POR ROL ========== 
+function cargarMenuLateralYValidarRol() {
+  fetch('menulateral.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menu-lateral').innerHTML = html;
+      if (window.validarMenuPorRol) window.validarMenuPorRol();
+    })
+    .catch(err => {
+      document.getElementById('menu-lateral').innerHTML = '<div style="color:red">Error cargando menú</div>';
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarMenuLateralYValidarRol);(err => console.log('Error cargando menú lateral:', err));
+</script>
+</body>
+</html>

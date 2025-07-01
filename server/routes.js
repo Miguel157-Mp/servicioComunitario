@@ -41,13 +41,13 @@ router.post("/submit", async (req, res, next) => {
   try {
     // Buscar solo por usuario
     const result = await pool.query(
-      'SELECT * FROM "public"."loginusuario" WHERE usuario = $1',
+      'SELECT * FROM "public"."loginUsuario" WHERE usuario = $1',
       [usuario]
     );
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
-      console.log('Resultado de la consulta de loginusuario:', user); // DEPURACIÓN
+      console.log('Resultado de la consulta de loginUsuario:', user); // DEPURACIÓN
       // Comparar la clave ingresada con la clave encriptada
       const match = await bcrypt.compare(clave, user.clave);
       if (match) {
@@ -121,7 +121,7 @@ router.post("/register", requireLogin, requireAdmin, async (req, res, next) => {
   try {
     // Verificar si el usuario ya existe
     const existingUser = await pool.query(
-      'SELECT * FROM "public"."loginusuario" WHERE usuario = $1',
+      'SELECT * FROM "public"."loginUsuario" WHERE usuario = $1',
       [usuario]
     );
     if (existingUser.rows.length > 0) {
@@ -135,7 +135,7 @@ router.post("/register", requireLogin, requireAdmin, async (req, res, next) => {
     const hashedClave = await bcrypt.hash(clave, salt);
     //Registrar usuario en la base de datos
     await pool.query(
-      'INSERT INTO "public"."loginusuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)',
+      'INSERT INTO "public"."loginUsuario" (nombre, cedula, usuario, clave, "idRol") VALUES ($1, $2, $3, $4, $5)',
       [nombre, cedula, usuario, hashedClave, 2]
     );
     // En vez de redirigir, responder con JSON de éxito
