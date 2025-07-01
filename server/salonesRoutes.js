@@ -127,40 +127,46 @@ router.get('/detalles', async (req, res) => {
 
         const query = `
         SELECT 
-            s."idSalon",
-            s.piso,
-            s.modulo,
-            s.capacidad,
-            s.status,
-            ts."nbTipoDeSalon" AS tipo_salon,
-            (
-                SELECT JSON_AGG(JSON_BUILD_OBJECT(
-                    'IdInfraestructuraSalon', infs."IdInfraestructuraSalon",
-                    'elemento', ei."nbElementoDeInfraestructura",
-                    'cantidad', infs.cantidad,
-                    'estado', est."nbEstado"
-                ))
-                FROM public."infraestructuraSalon" infs
-                LEFT JOIN public."elementoDeInfraestructura" ei 
-                    ON infs."idElementoDeInfraestructura" = ei."idElementoDeInfraestructura"
-                LEFT JOIN public."estadoInfraestructura" est 
-                    ON infs."idEstadoInfraestructura" = est."idEstadoInfraestructura"
-                WHERE infs."idSalon" = s."idSalon"
-            ) AS infraestructura,
-            (
-                SELECT JSON_AGG(JSON_BUILD_OBJECT(
-                    'idLugarInventario', inv."idLugarInventario",
-                    'mobiliario', tm."nbMobiliario",
-                    'cantidad', inv.cantidad
-                ))
-                FROM public."lugarInventario" inv
-                LEFT JOIN public."tipoDeMobiliario" tm 
-                    ON inv."idTipoDeMobiliario" = tm."idTipoDeMobiliario"
-                WHERE inv."idSalon" = s."idSalon"
-            ) AS mobiliario
-        FROM public."salon" s
-        INNER JOIN public."tipoDeSalon" ts ON s."idTipoDeSalon" = ts."idTipoDeSalon"
-        ${whereClause};
+    s."idSalon",
+    s.piso,
+    s.modulo,
+    s.capacidad,
+    s.status,
+    ts."nbTipoDeSalon" AS tipo_salon,
+    (
+        SELECT JSON_AGG(JSON_BUILD_OBJECT(
+            'idInfraestructuraSalon', infs."IdInfraestructuraSalon",
+            'cantidad', infs.cantidad,
+            'idElementoDeInfraestructura', infs."idElementoDeInfraestructura",
+            'idSalon', infs."idSalon",
+            'idEstadoInfraestructura', infs."idEstadoInfraestructura",
+            'descripcion', infs.descripcion,
+            'elemento', ei."nbElementoDeInfraestructura",
+            'estado', est."nbEstado"
+        ))
+        FROM public."infraestructuraSalon" infs
+        LEFT JOIN public."elementoDeInfraestructura" ei 
+            ON infs."idElementoDeInfraestructura" = ei."idElementoDeInfraestructura"
+        LEFT JOIN public."estadoInfraestructura" est 
+            ON infs."idEstadoInfraestructura" = est."idEstadoInfraestructura"
+        WHERE infs."idSalon" = s."idSalon"
+    ) AS infraestructura,
+    (
+        SELECT JSON_AGG(JSON_BUILD_OBJECT(
+            'idLugarInventario', inv."idLugarInventario",
+            'cantidad', inv.cantidad,
+            'idTipoDeMobiliario', inv."idTipoDeMobiliario",
+            'idSalon', inv."idSalon",
+            'mobiliario', tm."nbMobiliario"
+        ))
+        FROM public."lugarInventario" inv
+        LEFT JOIN public."tipoDeMobiliario" tm 
+            ON inv."idTipoDeMobiliario" = tm."idTipoDeMobiliario"
+        WHERE inv."idSalon" = s."idSalon"
+    ) AS mobiliario
+FROM public."salon" s
+INNER JOIN public."tipoDeSalon" ts ON s."idTipoDeSalon" = ts."idTipoDeSalon"
+${whereClause};
         `;
 
         const result = await pool.query(query, values);

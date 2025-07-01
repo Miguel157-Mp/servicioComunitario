@@ -95,7 +95,7 @@ app.use('/eliminarSeccion', eliminarSeccion);
 app.use('/buscarMobiliario', buscarMobiliario);
 
 // Ruta para guardar mobiliario
-app.use('/guardarMobiliario', guardarMobiliario); 
+app.use('/api/mobiliario', guardarMobiliario);
 
 // Ruta para HorarioProfesor
 app.use('/api/horario-profesor', horarioProfesor);

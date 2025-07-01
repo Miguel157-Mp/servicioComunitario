@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    
     <style>
         /* Estilos generales (copiados del dashboard existente) */
         body, html {
@@ -437,7 +438,12 @@
                 </div>
 
                 <!-- Tabla de salones -->
-                <h4 class="section-title">Detalle de Salones</h4>
+                <div class="d-flex align-items-center mb-2">
+                <h4 class="section-title mb-0 me-3">Detalle de Salones</h4>
+                <button id="btnExportarPDF" class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Exportar Detalles en PDF
+                </button>
+                </div>
                 <div class="table-container">
                     <table class="table table-hover">
                         <thead>
@@ -522,94 +528,76 @@
         </div>
     </div>
     
-    <!-- Modal para registrar mobiliario -->
-    <div class="modal fade" id="modalMobiliario" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-chair me-2"></i>Registrar Nuevo Mobiliario</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formMobiliario">
-                        <div class="mb-3">
-                            <label for="tipoMobiliario" class="form-label">Tipo de Mobiliario</label>
-                            <input type="text" class="form-control" id="tipoMobiliario" placeholder="Ej: Silla, Mesa, Pizarra" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descripcionMobiliario" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcionMobiliario" rows="3" placeholder="Características del mobiliario"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cantidadMobiliario" class="form-label">Cantidad</label>
-                            <input type="number" class="form-control" id="cantidadMobiliario" min="1" value="1" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="estadoMobiliario" class="form-label">Estado</label>
-                            <select class="form-select" id="estadoMobiliario" required>
-                                <option value="" selected disabled>Seleccionar estado</option>
-                                <option value="bueno">Bueno</option>
-                                <option value="regular">Regular</option>
-                                <option value="malo">Malo</option>
-                                <option value="nuevo">Nuevo</option>
-                            </select>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Registrar Mobiliario</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  
+  <!-- Modal para registrar mobiliario -->
+<div class="modal fade" id="modalMobiliario" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="formMobiliario" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar Mobiliario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="selectSalonMob" class="form-label">Salón</label>
+          <select id="selectSalonMob" class="form-select" required></select>
         </div>
-    </div>
-    
-    <!-- Modal para registrar infraestructura -->
-    <div class="modal fade" id="modalInfraestructura" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-building me-2"></i>Registrar Infraestructura</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formInfraestructura">
-                        <div class="mb-3">
-                        <label for="selectSalonInfra" class="form-label">Salón</label>
-                            <select id="selectSalonInfra" class="form-select" required>
-                                <option value="">Seleccione un salón</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="piso" class="form-label">Piso</label>
-                            <input type="number" class="form-control" id="piso" min="1" max="10" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="modulo" class="form-label">Módulo</label>
-                            <input type="text" class="form-control" id="modulo" placeholder="Ej: A, B, C..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="capacidad" class="form-label">Capacidad</label>
-                            <input type="number" class="form-control" id="capacidad" min="1" max="100" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="estadoInfra" class="form-label">Estado de Infraestructura</label>
-                            <select class="form-select" id="estadoInfra" required>
-                                <option value="" selected disabled>Seleccionar estado</option>
-                                <option value="bueno">Bueno</option>
-                                <option value="regular">Regular</option>
-                                <option value="malo">Malo</option>
-                                <option value="en-reparacion">En Reparación</option>
-                            </select>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Registrar Infraestructura</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="mb-3">
+          <label for="selectTipoMobiliario" class="form-label">Tipo de Mobiliario</label>
+          <select id="selectTipoMobiliario" class="form-select" required></select>
         </div>
-    </div>
-
+        <div class="mb-3">
+          <label for="cantidadMobiliario" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="cantidadMobiliario" min="1" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+            <!-- Modal editar infraestructura -->
+                <!-- Modal editar infraestructura -->
+        <div class="modal fade" id="modalEditarInfra" tabindex="-1" aria-labelledby="modalEditarInfraLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <form id="formEditarInfra" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarInfraLabel">Editar Infraestructura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <!-- Campos ocultos para IDs -->
+                <input type="hidden" id="editarInfraId">
+                <input type="hidden" id="editarInfraSalon">
+                <input type="hidden" id="editarInfraElementoId">
+                <div class="mb-3">
+                <label for="editarInfraElemento" class="form-label">Elemento</label>
+                <input type="text" class="form-control" id="editarInfraElemento" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="editarInfraCantidad" class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" id="editarInfraCantidad" min="1" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editarInfraEstado" class="form-label">Estado</label>
+                  <select class="form-select" id="editarInfraEstado" required>
+                    <!-- Opciones se llenan dinámicamente -->
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editarInfraDescripcion" class="form-label">Descripción</label>
+                  <textarea class="form-control" id="editarInfraDescripcion" rows="2"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
    <!-- Modal para registrar nuevo salón - CORREGIDO -->
     <div class="modal fade" id="modalNuevoSalon" tabindex="-1" aria-labelledby="modalNuevoSalonLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -700,7 +688,7 @@
     </div>
 
             <!-- Modal de mensajes -->
-        <div class="modal fade" id="modalMensaje" tabindex="-1" aria-labelledby="modalMensajeLabel" aria-hidden="true">
+        <div class="modal fade" id="modalMensaje" tabindex="-1" aria-labelledby="modalMensajeLabel" aria-hidden="true" style="z-index: 2000;" >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
             <div class="modal-header" id="modalMensajeHeader">
@@ -786,28 +774,39 @@
     </div>
 </div>
 
-<!-- Modal editar infraestructura -->
-<div class="modal fade" id="modalEditarInfra" tabindex="-1">
+
+<!-- Modal de registrar infraestructura -->
+<div class="modal fade" id="modalInfraestructura" tabindex="-1" aria-labelledby="modalInfraLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formEditarInfra" class="modal-content">
+    <form id="formInfraestructura" class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Editar Infraestructura</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title" id="modalInfraLabel">Registrar Infraestructura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <input type="hidden" id="editarInfraId">
-        <div class="mb-2">
-          <label for="editarInfraCantidad" class="form-label">Cantidad</label>
-          <input type="number" class="form-control" id="editarInfraCantidad" required>
+        <div class="mb-3">
+          <label for="selectSalonInfra" class="form-label">Salón</label>
+          <select id="selectSalonInfra" class="form-select" required></select>
         </div>
-        <div class="mb-2">
-          <label for="editarInfraEstado" class="form-label">Estado</label>
-          <input type="text" class="form-control" id="editarInfraEstado" required>
+        <div class="mb-3">
+          <label for="selectElementoInfra" class="form-label">Elemento</label>
+          <select id="selectElementoInfra" class="form-select" required></select>
         </div>
-        <!-- Puedes agregar más campos si lo deseas -->
+        <div class="mb-3">
+          <label for="cantidadInfra" class="form-label">Cantidad</label>
+          <input type="number" class="form-control" id="cantidadInfra" min="1" required>
+        </div>
+        <div class="mb-3">
+          <label for="estadoInfra" class="form-label">Estado</label>
+          <select id="estadoInfra" class="form-select" required></select>
+        </div>
+        <div class="mb-3">
+          <label for="descripcionInfra" class="form-label">Descripción</label>
+          <textarea class="form-control" id="descripcionInfra"></textarea>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Guardar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
       </div>
     </form>
   </div>
@@ -823,6 +822,8 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="editarMobId">
+        <input type="hidden" id="editarMobTipo">
+        <input type="hidden" id="editarMobSalon">
         <div class="mb-2">
           <label for="editarMobCantidad" class="form-label">Cantidad</label>
           <input type="number" class="form-control" id="editarMobCantidad" required>
@@ -872,7 +873,7 @@
             }
             body.textContent = mensaje;
             modal.show();
-        }
+                }
         
         // ================== CARGA INICIAL ==================
         document.addEventListener('DOMContentLoaded', function () {
@@ -1017,7 +1018,13 @@
                         <td>${item.cantidad}</td>
                         <td>${item.estado}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning btn-editar-infra" data-id="${item.IdInfraestructuraSalon || item.idInfraestructuraSalon || ''}" data-cantidad="${item.cantidad}" data-estado="${item.estado}" data-elemento="${item.elemento}">
+                            <button class="btn btn-sm btn-warning btn-editar-infra"
+                                data-id="${item.idInfraestructuraSalon || ''}"
+                                data-cantidad="${item.cantidad}"
+                                data-idelementoinfraestructura="${item.idElementoDeInfraestructura || ''}"
+                                data-idsalon="${item.idSalon || ''}"
+                                data-idestadoinfraestructura="${item.idEstadoInfraestructura || ''}"
+                                data-descripcion="${item.descripcion || ''}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn btn-sm btn-danger btn-eliminar-infra" data-id="${item.IdInfraestructuraSalon || item.idInfraestructuraSalon || ''}">
@@ -1041,7 +1048,12 @@
                         <td>${item.mobiliario}</td>
                         <td>${item.cantidad}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning btn-editar-mob" data-id="${item.idLugarInventario || ''}" data-cantidad="${item.cantidad}" data-mobiliario="${item.mobiliario}">
+                             <button class="btn btn-sm btn-warning btn-editar-mob"
+                                data-id="${item.idLugarInventario || ''}"
+                                data-cantidad="${item.cantidad}"
+                                data-idtipodemobiliario="${item.idTipoDeMobiliario || ''}"
+                                data-idsalon="${item.idSalon || ''}"
+                                data-mobiliario="${item.mobiliario}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn btn-sm btn-danger btn-eliminar-mob" data-id="${item.idLugarInventario || ''}">
@@ -1059,18 +1071,33 @@
         // ================== MODALES DE EDICIÓN ==================
         
         // Editar Infraestructura
-        document.getElementById('tabla-infraestructura').addEventListener('click', function(e) {
+        document.getElementById('tabla-infraestructura').addEventListener('click', async function(e) {
             if (e.target.closest('.btn-editar-infra')) {
                 const btn = e.target.closest('.btn-editar-infra');
                 document.getElementById('editarInfraId').value = btn.dataset.id;
                 document.getElementById('editarInfraCantidad').value = btn.dataset.cantidad;
-                document.getElementById('editarInfraEstado').value = btn.dataset.estado;
+                document.getElementById('editarInfraElemento').value = btn.closest('tr').querySelector('td').textContent; // Nombre visible
+                document.getElementById('editarInfraElementoId').value = btn.dataset.idelementoinfraestructura; // ID oculto
+                document.getElementById('editarInfraSalon').value = btn.dataset.idsalon;
+                document.getElementById('editarInfraDescripcion').value = btn.dataset.descripcion;
+        
+                // Llenar el select de estados
+                const resEstados = await fetch('/api/infraestructura/estados');
+                const estados = await resEstados.json();
+                const selectEstado = document.getElementById('editarInfraEstado');
+                selectEstado.innerHTML = '<option value="">Seleccionar estado</option>';
+                estados.forEach(est => {
+                    selectEstado.innerHTML += `<option value="${est.idEstadoInfraestructura}">${est.nbEstado}</option>`;
+                });
+                // Selecciona el estado actual
+                selectEstado.value = btn.dataset.idestadoinfraestructura || '';
+        
                 new bootstrap.Modal(document.getElementById('modalEditarInfra')).show();
             }
         });
         
         // Guardar cambios infraestructura
-        document.getElementById('formEditarInfra').addEventListener('submit', async function(e) {
+        document.getElementById('modalInfraestructura').addEventListener('submit', async function(e) {
             e.preventDefault();
             const id = document.getElementById('editarInfraId').value;
             const cantidad = document.getElementById('editarInfraCantidad').value;
@@ -1099,8 +1126,10 @@
         document.getElementById('tabla-mobiliario').addEventListener('click', function(e) {
             if (e.target.closest('.btn-editar-mob')) {
                 const btn = e.target.closest('.btn-editar-mob');
-                document.getElementById('editarMobId').value = btn.dataset.id;
-                document.getElementById('editarMobCantidad').value = btn.dataset.cantidad;
+        document.getElementById('editarMobId').value = btn.dataset.id;
+        document.getElementById('editarMobCantidad').value = btn.dataset.cantidad;
+        document.getElementById('editarMobTipo').value = btn.dataset.idtipodemobiliario;
+        document.getElementById('editarMobSalon').value = btn.dataset.idsalon;
                 new bootstrap.Modal(document.getElementById('modalEditarMob')).show();
             }
         });
@@ -1110,7 +1139,9 @@
             e.preventDefault();
             const id = document.getElementById('editarMobId').value;
             const cantidad = document.getElementById('editarMobCantidad').value;
-            if (!id || !cantidad) {
+            const idTipoDeMobiliario = document.getElementById('editarMobTipo').value;
+            const idSalon = document.getElementById('editarMobSalon').value;
+            if (!id || !cantidad || !idTipoDeMobiliario || !idSalon) {
                 mostrarMensajeModal('Datos incompletos para actualizar', 'error');
                 return;
             }
@@ -1118,7 +1149,7 @@
                 const res = await fetch(`/api/mobiliario/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cantidad })
+                    body: JSON.stringify({ cantidad, idTipoDeMobiliario, idSalon })
                 });
                 const data = await res.json();
                 bootstrap.Modal.getInstance(document.getElementById('modalEditarMob')).hide();
@@ -1132,6 +1163,40 @@
                 mostrarMensajeModal('Error de conexión al actualizar', 'error');
             }
         });
+
+        // ================== GUARDADO MODAL INFRAESTRUCTURA ==================
+            document.getElementById('formEditarInfra').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editarInfraId').value;
+            const cantidad = document.getElementById('editarInfraCantidad').value;
+            const idElementoDeInfraestructura = document.getElementById('editarInfraElementoId').value;
+            const idSalon = document.getElementById('editarInfraSalon').value;
+            const idEstadoInfraestructura = document.getElementById('editarInfraEstado').value;
+            const descripcion = document.getElementById('editarInfraDescripcion').value;
+        
+            if (!id || !cantidad || !idElementoDeInfraestructura || !idSalon || !idEstadoInfraestructura) {
+                mostrarMensajeModal('Datos incompletos para actualizar', 'error');
+                return;
+            }
+            try {
+                const res = await fetch(`/api/infraestructura/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cantidad, idElementoDeInfraestructura, idSalon, idEstadoInfraestructura, descripcion })
+                });
+                const data = await res.json();
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarInfra')).hide();
+                if (res.ok) {
+                    mostrarMensajeModal('Infraestructura actualizada', 'success');
+                    cargarYMostrarSalones();
+                } else {
+                    mostrarMensajeModal(data.error || 'Error al actualizar', 'error');
+                }
+            } catch (error) {
+                mostrarMensajeModal('Error de conexión al actualizar', 'error');
+            }
+        });
+
         // ================== MODAL DE CONFIRMACIÓN ELIMINAR ==================
         let eliminarTipo = '';
         let eliminarId = null;
@@ -1189,13 +1254,171 @@
                 mostrarMensajeModal('Error de conexión al eliminar', 'error');
             }
         }); 
+
+            // Llenar selects al abrir el modal de registrar infraestructura
+            document.querySelector('[data-bs-target="#modalInfraestructura"]').addEventListener('click', async function() {
+                // 1. Llenar salones según filtro actual
+                const piso = document.getElementById('selectPiso').value;
+                const modulo = document.getElementById('selectModulo').value;
+                const resSalones = await fetch(`/api/salones/detalles?piso=${piso}&modulo=${modulo}`);
+                const salones = await resSalones.json();
+                const selectSalon = document.getElementById('selectSalonInfra');
+                selectSalon.innerHTML = '<option value="">Seleccione un salón</option>';
+                salones.forEach(s => {
+                    selectSalon.innerHTML += `<option value="${s.idSalon}">Salón ${s.idSalon} (Piso ${s.piso}, Módulo ${s.modulo})</option>`;
+                });
+
+                // 2. Llenar elementos de infraestructura
+                const resElementos = await fetch('/api/infraestructura/elementos');
+                const elementos = await resElementos.json();
+                const selectElemento = document.getElementById('selectElementoInfra');
+                selectElemento.innerHTML = '<option value="">Seleccione un elemento</option>';
+                elementos.forEach(e => {
+                    selectElemento.innerHTML += `<option value="${e.idElementoDeInfraestructura}">${e.nbElementoDeInfraestructura}</option>`;
+                });
+
+                // 3. Llenar estados de infraestructura
+                const resEstados = await fetch('/api/infraestructura/estados');
+                const estados = await resEstados.json();
+                const selectEstado = document.getElementById('estadoInfra');
+                selectEstado.innerHTML = '<option value="">Seleccionar estado</option>';
+                estados.forEach(est => {
+                    selectEstado.innerHTML += `<option value="${est.idEstadoInfraestructura}">${est.nbEstado}</option>`;
+                });
+            });
+
+            // Registrar infraestructura
+            document.getElementById('formInfraestructura').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const idSalon = document.getElementById('selectSalonInfra').value;
+                const idElementoDeInfraestructura = document.getElementById('selectElementoInfra').value;
+                const cantidad = document.getElementById('cantidadInfra').value;
+                const idEstadoInfraestructura = document.getElementById('estadoInfra').value;
+                const descripcion = document.getElementById('descripcionInfra').value;
+
+                const res = await fetch('/api/infraestructura', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cantidad, idElementoDeInfraestructura, idSalon, idEstadoInfraestructura, descripcion })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    mostrarMensajeModal('Infraestructura registrada correctamente', 'success');
+                    
+                    bootstrap.Modal.getInstance(document.getElementById('modalInfraestructura')).hide();
+                    
+                    cargarYMostrarSalones();
+                } else {
+                    mostrarMensajeModal(data.error || 'Error al registrar', 'error');
+                }
+            });
+
+            // ================== LLENADO DE MOBILIARIO ==================
+             document.querySelector('[data-bs-target="#modalMobiliario"]').addEventListener('click', async function() {
+                    // Llenar salones
+                    const resSalones = await fetch('/api/salones/list');
+                    const salones = await resSalones.json();
+                    const selectSalon = document.getElementById('selectSalonMob');
+                    selectSalon.innerHTML = '<option value="">Seleccione un salón</option>';
+                    salones.forEach(s => {
+                        selectSalon.innerHTML += `<option value="${s.idSalon}">Salón ${s.idSalon} (Módulo ${s.modulo})</option>`;
+                    });
+
+                    // Llenar tipos de mobiliario
+                    const resTipos = await fetch('/api/mobiliario/tipos');
+                    const tipos = await resTipos.json();
+                    const selectTipo = document.getElementById('selectTipoMobiliario');
+                    selectTipo.innerHTML = '<option value="">Seleccione un tipo</option>';
+                    tipos.forEach(t => {
+                        selectTipo.innerHTML += `<option value="${t.idTipoDeMobiliario}">${t.nbMobiliario}</option>`;
+                    });
+                });
+
+
+        // ================== ENVIO DE MOBILIARIO A BACKEND ==================
+
+            document.getElementById('formMobiliario').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const idSalon = document.getElementById('selectSalonMob').value;
+            const idTipoDeMobiliario = document.getElementById('selectTipoMobiliario').value;
+            const cantidad = document.getElementById('cantidadMobiliario').value;
+        
+            if (!idSalon || !idTipoDeMobiliario || !cantidad) {
+                mostrarMensajeModal('Datos incompletos para registrar', 'error');
+                return;
+            }
+        
+            const res = await fetch('/api/mobiliario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify([{ idSalon, idTipoDeMobiliario, cantidad }])
+            });
+            const data = await res.json();
+            if (res.ok) {
+                mostrarMensajeModal('Mobiliario registrado correctamente', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('modalMobiliario')).hide();
+                cargarYMostrarSalones();
+            } else {
+                mostrarMensajeModal(data.error || 'Error al registrar', 'error');
+            }
+        });
+
+    
+
+        // ================== MANEJO MENSAJE MODAL ==================
+         
+         
         // ================== MENÚ LATERAL ==================
+        console.log('Intentando cargar menú lateral...');
         fetch('menulateral.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('menu-lateral').innerHTML = html;
+                console.log('Menú lateral cargado');
             })
             .catch(err => console.log('Error cargando menú lateral:', err));
     </script>
+
+
+    <!-- exportar a pdf carga de libreria  -->
+    <script src="./libs/html2canvas.min.js"></script>
+    <script src="./libs/jspdf.umd.min.js"></script>
+
+    <script>
+            document.getElementById('btnExportarPDF').addEventListener('click', function() {
+                // Selecciona la tabla de detalles (ajusta el selector si es necesario)
+                const tabla = document.querySelector('.table-container');
+
+                html2canvas(tabla).then(function(canvas) {
+                    const imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+
+                    // Logo
+                    const logo = new Image();
+                    logo.src = './img/logousm.png';
+
+                    logo.onload = function() {
+                        // Membrete
+                        pdf.addImage(logo, 'PNG', 10, 10, 30, 30);
+                        pdf.setFontSize(14);
+                        pdf.text('Universidad Santa Maria', 50, 18);
+                        pdf.setFontSize(12);
+                        pdf.text('Facultad de Ingeniería y Arquitectura', 50, 26);
+                        pdf.text('Sede La Florencia', 50, 34);
+                        pdf.setFontSize(11);
+                        pdf.text('Apartado: Infraestructura y Mobiliario', 50, 42);
+
+                        // Imagen de la tabla (ajusta el tamaño si es necesario)
+                        pdf.addImage(imgData, 'PNG', 10, 50, 190, 0);
+
+                        // Descargar
+                        pdf.save('detalle_salones.pdf');
+                    };
+                });
+            });
+    </script>
+
+
 </body>
 </html>

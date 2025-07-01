@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 
             // Verificar si ya existe un registro con el mismo idTipoDeMobiliario y idSalon
             const existingRecord = await pool.query(
-                'SELECT "cantidad" FROM public."lugarInventario" l WHERE l."idSalon" = $1 AND l."idTipodeMobiliario" = $2',
+                'SELECT "cantidad" FROM public."lugarInventario" l WHERE l."idSalon" = $1 AND l."idTipoDeMobiliario" = $2',
                 [idSalon, idTipoDeMobiliario]
             );
             console.log('Respuesta de SELECT:', existingRecord.rows);
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
                 console.log(`Actualizando cantidad: ${existingRecord.rows[0].cantidad} + ${cantidad} = ${nuevaCantidad}`);
 
                 const updateResult = await pool.query(
-                    'UPDATE public."lugarInventario" SET "cantidad" = $1 WHERE "idSalon" = $2 AND "idTipodeMobiliario" = $3;',
+                    'UPDATE public."lugarInventario" SET "cantidad" = $1 WHERE "idSalon" = $2 AND "idTipoDeMobiliario" = $3;',
                     [nuevaCantidad, idSalon, idTipoDeMobiliario]
                 );
                 console.log('Respuesta de UPDATE:', updateResult);
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
                 console.log(`Insertando nuevo registro para idSalon=${idSalon}, idTipoDeMobiliario=${idTipoDeMobiliario}, cantidad=${cantidad}`);
 
                 const insertResult = await pool.query(
-                    'INSERT INTO public."lugarInventario" ("idSalon", "idTipodeMobiliario", "cantidad") VALUES ($1, $2, $3);',
+                    'INSERT INTO public."lugarInventario" ("idSalon", "idTipoDeMobiliario", "cantidad") VALUES ($1, $2, $3);',
                     [idSalon, idTipoDeMobiliario, cantidad]
                 );
                 console.log('Respuesta de INSERT:', insertResult);

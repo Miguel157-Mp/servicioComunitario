@@ -10,7 +10,7 @@ router.put('/:id', async (req, res) => {
     console.log('Params:', req.params);
     console.log('Body:', req.body);
     try {
-        await pool.query(
+        const result = await pool.query(
             'UPDATE public."lugarInventario" SET cantidad = $1, "idTipoDeMobiliario" = $2, "idSalon" = $3 WHERE "idLugarInventario" = $4',
             [cantidad, idTipoDeMobiliario, idSalon, id]
         );
@@ -21,6 +21,19 @@ router.put('/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar mobiliario' });
     }
 });
+
+// Obtener tipos de mobiliario
+router.get('/tipos', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT "idTipoDeMobiliario", "nbMobiliario", descripcion FROM public."tipoDeMobiliario"'
+        );
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener tipos de mobiliario' });
+    }
+});
+
 
 // Eliminar mobiliario
 router.delete('/:id', async (req, res) => {
