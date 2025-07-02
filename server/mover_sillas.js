@@ -13,9 +13,9 @@ router.get('/salones/', async (req, res) => {
             FROM
                 public."lugarInventario" li
             INNER JOIN
-                public."TipoDeMobiliario" tm ON li."idTipodeMobiliario" = tm."idTipoDeMobiliario"
+                public."tipoDeMobiliario" tm ON li."idTipoDeMobiliario" = tm."idTipoDeMobiliario"
             WHERE
-                li."idTipodeMobiliario" = 2
+                li."idTipoDeMobiliario" = 2
         `);
         console.log('Sillas con nombre:', result.rows);
         res.json(result.rows); // Devuelve los datos como JSON

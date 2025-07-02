@@ -1052,7 +1052,7 @@
                              <button class="btn btn-sm btn-warning btn-editar-mob"
                                 data-id="${item.idLugarInventario || ''}"
                                 data-cantidad="${item.cantidad}"
-                                data-idtipodemobiliario="${item.idTipoDeMobiliario || ''}"
+                                data-idtipoDemobiliario="${item.idTipoDeMobiliario || ''}"
                                 data-idsalon="${item.idSalon || ''}"
                                 data-mobiliario="${item.mobiliario}">
                                 <i class="fas fa-edit"></i>
@@ -1129,7 +1129,7 @@
                 const btn = e.target.closest('.btn-editar-mob');
         document.getElementById('editarMobId').value = btn.dataset.id;
         document.getElementById('editarMobCantidad').value = btn.dataset.cantidad;
-        document.getElementById('editarMobTipo').value = btn.dataset.idtipodemobiliario;
+        document.getElementById('editarMobTipo').value = btn.dataset.idtipoDemobiliario;
         document.getElementById('editarMobSalon').value = btn.dataset.idsalon;
                 new bootstrap.Modal(document.getElementById('modalEditarMob')).show();
             }
